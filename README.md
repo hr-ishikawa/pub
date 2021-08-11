@@ -1,1 +1,4 @@
-# Hiroo Ishikawa Public Repository
+## Hiroo Ishikawa Public Repository
+
+HTTP URL: https://hr-ishikawa.github.io/pub/
+
