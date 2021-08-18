@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
+
+<title>4 Moji Juku-go</title>
+
+<style type="text/css">
+
+.j{
+	height: 4.8em;
+	width:  1.2em;
+	padding: 3px 3px 3px 3px;
+	margin:  3px 3px 3px 3px;
+	float: left; 
+	border: solid 1px #ccc;
+}
+.m{
+	color: #000;
+	display: block;
+	font-size: 20px;
+	font-family: "ＭＳ 明朝";
+	text-align: center;
+	height: 1.2em;
+	width:  1.2em;
+	padding: 2px 2px 0px 2px;
+	text-decoration: none;
+	border: solid 1px #FFF;
+	background-color: #FFF;
+}
+.m:hover,		/* IEではNG */
+.m:active{
+	border:    solid 1px #000;
+}
+</style>
+
+<script Language="JavaScript">
+<!--
+var jkg0 = ["色即是空","臥薪嘗胆","軽自動車","森羅万象","七転八倒","無量大数","無限軌道","厚顔無恥",
+			"改善要望","空前絶後"];
+var jkg0str = jkg0.join(",");
+var jkg0flg = [];
+var jkg = [];
+var sel1 = undefined;
+var sel2 = undefined;
+var chr1 = "";
+var chr2 = "";
+
+function cl(){
+	var sel = document.activeElement.id;
+	jw = sel.split(",");
+	if( jkg0flg[jw[0]] ){ return }	// 正解済み
+	if(!sel1){	// 1文字目
+		sel1 = sel;
+		chr1 = document.getElementById(sel1).innerHTML
+		j1 = parseInt(jw[0]);
+		m1 = parseInt(jw[1]);
+		document.getElementById(sel1).style.color = "#F00";
+	}else{		// 2文字目
+		if(sel==sel1){return;}
+		sel2 = sel;
+		chr2 = document.getElementById(sel2).innerHTML
+		j2 = parseInt(jw[0]);
+		m2 = parseInt(jw[1]);
+		// 文字を入れ替え
+		if(j1==j2){
+			jkgw = jkg[j1];
+			jkgw = mreplace(jkgw,m1,chr2);
+			jkgw = mreplace(jkgw,m2,chr1);
+			jkg[j1] = jkgw;
+			check(jkgw,j1);
+		}else{
+			jkgw1 = mreplace(jkg[j1],m1,chr2);
+			jkgw2 = mreplace(jkg[j2],m2,chr1);
+			jkg[j1] = jkgw1;
+			jkg[j2] = jkgw2;
+			check(jkgw1,j1);
+			check(jkgw2,j2);
+		}
+		document.getElementById(sel1).innerHTML = chr2
+		document.getElementById(sel2).innerHTML = chr1
+		document.getElementById(sel1).style.color = "";
+		sel1 = undefined;
+		sel2 = undefined;
+		
+//		alert(jkg.join("\n"));
+	}
+}
+
+// 文字の置き換え
+function mreplace(str, pos, chr){
+		return str.substr(0,pos) + chr + str.substr(pos+1)
+}
+// 正解チェック&ハイライト
+function check(str,j0){
+		if(jkg0str.indexOf(str)>=0){	// 正解なら
+			for(j=0;j<=3;j++){
+				document.getElementById(j0 +","+ j).style.backgroundColor = "#CCC";
+				document.getElementById(j0 +","+ j).style.borderColor     = "#CCC";
+			}
+			jkg0flg[j0] = true;
+
+			// 完成か
+			for(i=0;i<=jkg0.length-1;i++){
+				if( jkg0flg[i] != true ){ return; };
+			}
+			document.getElementById("header").innerHTML   = "完成です";
+			document.getElementById("header").style.color = "#F33";
+			document.getElementById("b1").innerHTML       = "もう１回";
+		}
+}
+
+-->
+</script>
+
+</head>
+<body>
+<noscript>JavaScriptが使えません・・・<br /></noscript>
+
+<h3 id="header">４文字熟語</h3>
+
+<script Language="JavaScript">
+<!--
+
+	// ランダマイズ
+	var jkgw = jkg0.join("")
+//	alert(jkg0str);
+	for(i=0;i<=jkg0.length-1;i++){
+		jkg[i] = "";
+		for(j=0;j<=3;j++){
+			k = parseInt(Math.random()*jkgw.length);
+			jkg[i] += jkgw.substr(k,1);
+			jkgw = jkgw.substr(0,k) + jkgw.substr(k+1);
+		}
+	}
+
+	// 表示する
+	for(i=0;i<=jkg.length-1;i++){
+		document.write('<div class="j">');
+		for(j=0;j<=3;j++){
+			document.write('<a href="javascript:cl();" id="'+ i +','+ j +'" class="m">'+ jkg[i].substr(j,1) +'</a>');
+		}
+		document.write('</div>');
+	}
+-->
+</script>
+
+<br /><br /><br /><br /><br /><br /><br /><br />
+<button type="button" id="b1" onClick="location.reload();">やり直し</button>
+
+</body>
+</html>
