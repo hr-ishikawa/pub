@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+<meta http-equiv="Content-Type" content="text/html; charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Pragma" content="no-cache">
 
@@ -21,7 +21,7 @@
 	color: #000;
 	display: block;
 	font-size: 20px;
-	font-family: "‚l‚r –¾’©";
+	font-family: "ï¼­ï¼³ æ˜æœ";
 	text-align: center;
 	height: 1.2em;
 	width:  1.2em;
@@ -30,7 +30,7 @@
 	border: solid 1px #FFF;
 	background-color: #FFF;
 }
-.m:hover,		/* IE‚Å‚ÍNG */
+.m:hover,		/* IEã§ã¯NG */
 .m:active{
 	border:    solid 1px #000;
 }
@@ -38,8 +38,8 @@
 
 <script Language="JavaScript">
 <!--
-var jkg0 = ["F‘¦¥‹ó","‰çd¦’_","Œy©“®Ô","X—…–œÛ","µ“]”ª“|","–³—Ê‘å”","–³ŒÀ‹O“¹","ŒúŠç–³’p",
-			"‰ü‘P—v–]","‹ó‘OâŒã"];
+var jkg0 = ["è‰²å³æ˜¯ç©º","è‡¥è–ªå˜—èƒ†","è»½è‡ªå‹•è»Š","æ£®ç¾…ä¸‡è±¡","ä¸ƒè»¢å…«å€’","ç„¡é‡å¤§æ•°","ç„¡é™è»Œé“","åšé¡”ç„¡æ¥",
+			"æ”¹å–„è¦æœ›","ç©ºå‰çµ¶å¾Œ"];
 var jkg0str = jkg0.join(",");
 var jkg0flg = [];
 var jkg = [];
@@ -51,20 +51,20 @@ var chr2 = "";
 function cl(){
 	var sel = document.activeElement.id;
 	jw = sel.split(",");
-	if( jkg0flg[jw[0]] ){ return }	// ³‰ğÏ‚İ
-	if(!sel1){	// 1•¶š–Ú
+	if( jkg0flg[jw[0]] ){ return }	// æ­£è§£æ¸ˆã¿
+	if(!sel1){	// 1æ–‡å­—ç›®
 		sel1 = sel;
 		chr1 = document.getElementById(sel1).innerHTML
 		j1 = parseInt(jw[0]);
 		m1 = parseInt(jw[1]);
 		document.getElementById(sel1).style.color = "#F00";
-	}else{		// 2•¶š–Ú
+	}else{		// 2æ–‡å­—ç›®
 		if(sel==sel1){return;}
 		sel2 = sel;
 		chr2 = document.getElementById(sel2).innerHTML
 		j2 = parseInt(jw[0]);
 		m2 = parseInt(jw[1]);
-		// •¶š‚ğ“ü‚ê‘Ö‚¦
+		// æ–‡å­—ã‚’å…¥ã‚Œæ›¿ãˆ
 		if(j1==j2){
 			jkgw = jkg[j1];
 			jkgw = mreplace(jkgw,m1,chr2);
@@ -89,26 +89,26 @@ function cl(){
 	}
 }
 
-// •¶š‚Ì’u‚«Š·‚¦
+// æ–‡å­—ã®ç½®ãæ›ãˆ
 function mreplace(str, pos, chr){
 		return str.substr(0,pos) + chr + str.substr(pos+1)
 }
-// ³‰ğƒ`ƒFƒbƒN&ƒnƒCƒ‰ƒCƒg
+// æ­£è§£ãƒã‚§ãƒƒã‚¯&ãƒã‚¤ãƒ©ã‚¤ãƒˆ
 function check(str,j0){
-		if(jkg0str.indexOf(str)>=0){	// ³‰ğ‚È‚ç
+		if(jkg0str.indexOf(str)>=0){	// æ­£è§£ãªã‚‰
 			for(j=0;j<=3;j++){
 				document.getElementById(j0 +","+ j).style.backgroundColor = "#CCC";
 				document.getElementById(j0 +","+ j).style.borderColor     = "#CCC";
 			}
 			jkg0flg[j0] = true;
 
-			// Š®¬‚©
+			// å®Œæˆã‹
 			for(i=0;i<=jkg0.length-1;i++){
 				if( jkg0flg[i] != true ){ return; };
 			}
-			document.getElementById("header").innerHTML   = "Š®¬‚Å‚·";
+			document.getElementById("header").innerHTML   = "å®Œæˆã§ã™";
 			document.getElementById("header").style.color = "#F33";
-			document.getElementById("b1").innerHTML       = "‚à‚¤‚P‰ñ";
+			document.getElementById("b1").innerHTML       = "ã‚‚ã†ï¼‘å›";
 		}
 }
 
@@ -117,14 +117,14 @@ function check(str,j0){
 
 </head>
 <body>
-<noscript>JavaScript‚ªg‚¦‚Ü‚¹‚ñEEE<br /></noscript>
+<noscript>JavaScriptãŒä½¿ãˆã¾ã›ã‚“ãƒ»ãƒ»ãƒ»<br /></noscript>
 
-<h3 id="header">‚S•¶šnŒê</h3>
+<h3 id="header">ï¼”æ–‡å­—ç†Ÿèª</h3>
 
 <script Language="JavaScript">
 <!--
 
-	// ƒ‰ƒ“ƒ_ƒ}ƒCƒY
+	// ãƒ©ãƒ³ãƒ€ãƒã‚¤ã‚º
 	var jkgw = jkg0.join("")
 //	alert(jkg0str);
 	for(i=0;i<=jkg0.length-1;i++){
@@ -136,7 +136,7 @@ function check(str,j0){
 		}
 	}
 
-	// •\¦‚·‚é
+	// è¡¨ç¤ºã™ã‚‹
 	for(i=0;i<=jkg.length-1;i++){
 		document.write('<div class="j">');
 		for(j=0;j<=3;j++){
@@ -148,7 +148,7 @@ function check(str,j0){
 </script>
 
 <br /><br /><br /><br /><br /><br /><br /><br />
-<button type="button" id="b1" onClick="location.reload();">‚â‚è’¼‚µ</button>
+<button type="button" id="b1" onClick="location.reload();">ã‚„ã‚Šç›´ã—</button>
 
 </body>
 </html>
