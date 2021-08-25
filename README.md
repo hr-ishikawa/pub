@@ -2,10 +2,9 @@
 
 |ファイル名|説明|
 |-----|-----|
-|PyCaret_Regression_boston.ipynb||
-|PyCaret_Regression_daimonds.ipynb||
-|py_plot_samples.html||
-|4ji.html<br>4ji.cgi<br>4j_flask_appi.py||
+|PyCaret_Regression_boston.ipynb<br>PyCaret_Regression_daimonds.ipynb|PyCaretサンプルコード(回帰版)|
+|py_plot_samples.html|Matplotlib, Seaborn, 他 サンプルコード|
+|4ji.html<br>4ji.cgi<br>4j_flask_appi.py|静的HTML版<br>CGI版(サーバ側でHTML生成)<br>flask版(同)|
 |index.html||
 
 README.md
