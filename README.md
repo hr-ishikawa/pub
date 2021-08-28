@@ -1,4 +1,4 @@
-## Hiroo Ishikawa Public Repository
+## Hiroo Ishikawa's Repository
 
 |ファイル名|説明|
 |-----|-----|
