@@ -2,7 +2,48 @@
 https://auto.gluon.ai/stable/api/autogluon.predictor.html
 
 ## **TabularPredictor**
+https://auto.gluon.ai/stable/api/autogluon.predictor.html#autogluon.tabular.TabularPredictor
+```
+class autogluon.tabular.TabularPredictor（
+    label、
+    problem_type = None、 # Default=None = Auto  'binary', 'multiclass', 'regression', 'quantile'
+    eval_metric = None、  # Default=None = Auto 
+        # Classification: ['accuracy', 'balanced_accuracy', 
+        #     'f1', 'f1_macro', 'f1_micro', 'f1_weighted', 'roc_auc', 'roc_auc_ovo_macro7, 
+        #     'average_precision', 'precision', 'precision_macro', 'precision_micro', ' Precision_weighted', 
+        #     'recall', 'recall_macro', 'recall_micro', 'recall_weighted', 
+        #     'log_loss', 'pac_score']                          
+        # Regression:  ['root_mean_squared_error', 'mean_squared_error', 'mean_absolute_error', 
+        #     'median_absolute_error', 'r2']             
+    path = None、
+    verbosity = 2、
+    sample_weight = None、
+    weight_evaluation = False、
+    groups = None、** kwargs
+）
+```
+
 ## **fit**
+https://auto.gluon.ai/stable/api/autogluon.predictor.html#autogluon.tabular.TabularPredictor.fit
+
+```
+fit(
+    train_data, 
+    tuning_data = None, 
+    time_limit = None, 
+    presets = None,   # default = ['medium_quality_faster_train'] 
+        # best_quality
+        # high_quality_fast_inference_only_refi
+        # good_quality_faster_inference_only_refit
+        # medium_quality_faster_train
+        # optimize_for_deployment
+        # ignore_text
+    hyperparameters= None, #  ['default', 'light', 'very_light', 'toy', 'multimodal']
+    feature_metadata = 'infer', 
+    **kwargs
+)
+```
+
 |Param|Desc|説明|
 |-----|----|----|
 |train_data:<br>str or TabularDataset or pd.DataFrame|Table of the training data, which is similar to a pandas DataFrame. If str is passed, train_data will be loaded using the str value as the file path.|トレーニングデータのテーブルで、pandasのDataFrameに似ています。strが渡された場合、train_dataはstrの値をファイルパスとしてロードされます。|
