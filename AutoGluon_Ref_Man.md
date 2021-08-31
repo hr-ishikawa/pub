@@ -17,10 +17,13 @@ predictor = TabularPredictor(label=target_colname, eval_metric=metric, path=save
 results = predictor.fit_summary()
 
 # 予測
-y_pred = predictor.predict(df_test.drop(columns=[target_colname]))   # 目的変数欄を除いておく
+y_pred = predictor.predict(df_test.drop(columns=[target_colname]))   # 目的変数列を除いておく
 
 # 評価
 perf = predictor.evaluate_predictions(y_true=df_test[target_colname], y_pred=y_pred, auxiliary_metrics=True)
+
+# 保存モデルの読込
+predictor = TabularPredictor.load(save_path)
 ```
 
 ## **TabularPredictor**
@@ -52,7 +55,7 @@ https://auto.gluon.ai/stable/api/autogluon.predictor.html#autogluon.tabular.Tabu
 fit(
     train_data, 
     tuning_data = None, 
-    time_limit = None, 
+    time_limit = None, # recommend: None
     presets = None,   # default = ['medium_quality_faster_train'] 
         # best_quality
         # high_quality_fast_inference_only_refi
