@@ -1,5 +1,27 @@
 # **AutoGluon Predictors**
 https://auto.gluon.ai/stable/api/autogluon.predictor.html
+```
+# インストール
+!pip install -U "mxnet_cu101<2.0.0"   # for GPU: CUDA 10.1 for goolge colaboratory (Aug. 2021)
+!pip install autogluon
+
+# ライブラリ
+import autogluon as ag
+from autogluon.tabular import TabularPredictor
+
+# 学習
+predictor = TabularPredictor(label=target_colname, eval_metric=metric, path=save_path)\
+                        .fit(df_train, presets=presets)
+
+# 学習結果
+results = predictor.fit_summary()
+
+# 予測
+y_pred = predictor.predict(df_test.drop(columns=[target_colname]))   # 目的変数欄を除いておく
+
+# 評価
+perf = predictor.evaluate_predictions(y_true=df_test[target_colname], y_pred=y_pred, auxiliary_metrics=True)
+```
 
 ## **TabularPredictor**
 https://auto.gluon.ai/stable/api/autogluon.predictor.html#autogluon.tabular.TabularPredictor
@@ -38,7 +60,7 @@ fit(
         # medium_quality_faster_train
         # optimize_for_deployment
         # ignore_text
-    hyperparameters= None, #  ['default', 'light', 'very_light', 'toy', 'multimodal']
+    hyperparameters = None, #  ['default', 'light', 'very_light', 'toy', 'multimodal']
     feature_metadata = 'infer', 
     **kwargs
 )
