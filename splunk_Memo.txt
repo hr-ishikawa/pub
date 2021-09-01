@@ -1,0 +1,115 @@
+splunk
+
+クイックリファレンス:
+  https://www.splunk.com/pdfs/solution-guides/splunk-quick-reference-guide-jp.pdf
+Serch Reference:
+  https://docs.splunk.com/Documentation/SplunkCloud/8.0.2004/SearchReference/Search
+
+
+Default fields: source, sourcetype, host, _time, _raw
+
+■ Search:
+  search earliest=date    # 期間指定、タイムピッカーに優先する　
+                          # date: -7d@d  @d=対象時刻を含む日付の切れ目
+  regex field="..."       # fieldに対して正規表現でフィルタ 
+
+eval field_new1=func(field1), field_new2=func(field2)  # fieldを作成
+
+rex (src_field=_raw) "...(?<field1>)...(?<field2>)..." # fieldを抽出(抽出元フィールド)
+
+stats func(field1) AS new_field1, ...                  #
+stats func(field1) AS new_field1, ... by group_field   #
+
+◆chart
+
+transaction field maxspan|maxpause|startswith|endswith=  # fieldをキーにしてeventをまとめる(maxspan:持続時間|maxpause:間隔)
+
+eventstats                                             # イベントをまたいでの統計を追加
+streamstats                                            # スライディングウィンドウ
+
+rename old_name1 AS new_name1, ...                     # 
+
+timechart span=xxx field1 field2 ... by group1 group2  # 一定間隔の時系列データを作成
+
+timechart count span=1h AS CPH| timechart max(CPH) avg(CPH) span=1d
+
+bin field bins=20 | stats count by field               # Hsistogram: fieldを分割してカウント
+
+fields +|- field1, field2, ...                         # fieldを選択 (White|Black list)
+
+top|rare (limit=n) field1, field2, ...                 # fieldの最頻値|最小頻値を表示
+
+◆Table lookup (外部テーブルの登録・利用)
+lookup LOOKUP table_in_field AS field_in OUTPUT|OUTPUTNEW table_out_field AS field_in
+# csvファイルを作成、
+# setting>lookup>
+# ルックアップ テーブル ファイル(作成したcsvファイルをアップロード)
+# ルックアップ定義(アップロードしたcsvファイルにSearchでの参照用の名前(LOOKUP)を定期)
+
+eval Functions:
+  round(field,digit)
+
+Stats Functions:
+  avg(field), min, max, sum, sumsq, median, mode, range, percNN() <NN percentile>,
+  stdev, stdevp, var, first, last,
+  count, dc <dedup count>, 
+  list, values
+
+# Trend Column Chart (stuck)
+source=WinEventLog:Application earliest=-30d | timechart count AS Cnt30d span=1d by EventType
+
+# Pie chart
+source=WinEventLog:Application earliest=-30d | stats count AS Cnt30d by EventType
+source=WinEventLog:Application earliest=-7d  | stats count AS Cnt07d by EventType
+
+# Table (Summary Total=Yes)
+source=WinEventLog:Application earliest=-30d | stats count AS Cnt30d by EventType | eventstats sum(Cnt30d) AS Sum30d | eval Pct30d=round(100*Cnt30d/Sum30d,2) | fields - Sum30d
+| join EventType type=outer 
+[ search source=WinEventLog:Application earliest=-7d | stats count AS Cnt7d by EventType | eventstats sum(Cnt7d) AS Sum7d | eval Pct7d=round(100*Cnt7d/Sum7d,2) | fields - Sum7d]
+| Fields EventType, Cnt30d, Pct30d, Cnt7d, Pct7d 
+| rename Cnt30d AS "Counter in 30 days" Cnt7d AS "Counter in 7 days" Pct30d AS "Percent in 30 days (%)" Pct7d AS "Percent in 7 days (%)"
+
+# 1時間ごとのイベントをカウントし、1日単位で最大値、平均を求める
+source=WinEventLog:Application earliest=-31d@d | timechart count span=1h AS CPH| timechart max(CPH) avg(CPH) span=1d
+
+# Top
+source=WinEventLog:Application earliest=-7d | top 7 EventType EventCode
+source=WinEventLog:Application earliest=-7d | stats count AS Cnt07d by EventType EventCode | sort - Cnt07d | head 7
+
+makeresults  # event dataの作成
+
+◆テーブル操作
+  - append      # 行追加
+  - appendcols  # 列追加
+  - join key_field type=inner|outer|left  # 表の結合
+
+# サブサーチの結果をJOINする
+source=WinEventLog:Application earliest=-30d | stats count AS Cnt30d by EventType | eventstats sum(Cnt30d) AS Sum30d | eval Pct30d=round(100*Cnt30d/Sum30d,2) | fields - Sum30d
+| join EventType type=outer 
+[ search source=WinEventLog:Application earliest=-7d | stats count AS Cnt7d by EventType | eventstats sum(Cnt7d) AS Sum7d | eval Pct7d=round(100*Cnt7d/Sum7d,2) | fields - Sum7d]
+| Fields EventType, Cnt30d, Pct30d, Cnt7d, Pct7d 
+| rename Cnt30d AS "Counter in 30 days" Cnt7d AS "Counter in 7 days" Pct30d AS "Percent in 30 days (%)" Pct7d AS "Percent in 7 days (%)"
+
+# サブサーチの結果をJOIN、Pie chartでトレリス表示
+source=WinEventLog:Application earliest=-7d | stats count AS Cnt07d by EventType | join EventType type=outer [search source=WinEventLog:Application earliest=-30d | stats count AS Cnt30d by EventType]
+
+■ Machine Learning
+| fit LinearRegression field_to_Pred from field1 field2 ... fit_intercept=false into Model
+
+■ Chart property/オプション
+Dashboards and Visualizations>
+Chart configuration reference
+  https://docs.splunk.com/Documentation/Splunk/7.3.3/Viz/ChartConfigurationReference
+
+charting.chart.makerSize   (4)
+charting.chart.rangeValues ([0,50,80,100]) 
+charting.gaugeColors       ([0x84E900,0xFFE800,0xBF3030])
+charting.axisY2.scale      (inherit|linear|log)
+charting.data.count
+charting.chart.resultTruncationLimit
+
+Use trellis layout to split visualizations
+  https://docs.splunk.com/Documentation/Splunk/7.3.3/Viz/VisualizationTrellis
+
+trellis.scales.shared      (1|0) 1: Shared scales,0:Independent scales [Line and area charts, Bar and column charts]
+trellis.enabled            (0|1) 0: disabled 
