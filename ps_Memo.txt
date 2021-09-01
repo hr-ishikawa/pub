@@ -1,0 +1,1805 @@
+===================
+http://qiita.com/jca02266/items/a0c71ae90d055ab3893c
+powershell チートシート
+
+https://technet.microsoft.com/ja-jp/magazine/hh551144.aspx
+Windows PowerShell: スクリプト作成の短期集中講座
+
+https://technet.microsoft.com/ja-jp/scriptcenter/dd772285.aspx
+Windows PowerShell コマンドレットのタスク別ガイド
+
+===================
+---------------
+■PowerShellバージョン
+> $PSVersionTable
+Name                           Value
+----                           -----
+PSVersion                      5.1.19041.1151
+PSEdition                      Desktop
+PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0...}
+BuildVersion                   10.0.19041.1151
+CLRVersion                     4.0.30319.42000
+WSManStackVersion              3.0
+PSRemotingProtocolVersion      2.3
+SerializationVersion           1.1.0.1
+
+> winver
+Windows 10; 21H1, (OS Build. 19043.1165)
+
+
+■スクリプト実行権限ポリシー
+Get-ExecutionPolicy
+RemoteSigned
+
+powershell -ExecutionPolicy RemoteSigned -file script.ps1  # 権限ポリシーを指定して実行
+
+■ObjectのMethod、Propertyを調べる
+Get-Member
+
+Get-Date | Get-Member
+
+   TypeName: System.DateTime
+
+Name                 MemberType     Definition
+----                 ----------     ----------
+Add                  Method         datetime Add(timespan value)
+AddDays              Method         datetime AddDays(double value)
+<<略>>
+DisplayHint          NoteProperty   DisplayHintType DisplayHint=DateTime
+Date                 Property       datetime Date {get;}
+Day                  Property       int Day {get;}
+<<略>>
+Year                 Property       int Year {get;}
+DateTime             ScriptProperty System.Object DateTime {get=if ((& { Set-StrictMode -Version 1; $this.DisplayHin...
+
+■PowerShell変数を調べる
+$a='AAA'
+$a.GetType().FullName   # System.String
+
+---------------
+■promptを変更
+function prompt {
+  'PS '+((get-location).ProviderPath.substring(0,(Get-Location).ProviderPath.IndexOf('\',2)))+'\..\'+(Split-Path (Get-Location) -Leaf) + '> '
+}
+
+
+---------------
+■Option CommonParameters
+(かっこ内はエイリアス)
+-Debug (db)
+-ErrorAction (ea)
+	Continue。	# 警告メッセージを表示し、コマンドの実行を続行します。既定値は "Continue" です。
+	Inquire。	# 警告メッセージを表示し、実行を続ける前に確認メッセージを表示します。この値はほとんど使用しません。
+	SilentlyContinue。# 警告メッセージを表示せず、コマンドの実行を続けます。
+	Stop。  	# 警告メッセージを表示し、コマンドの実行を停止します。
+-ErrorVariable (ev)	# 変数に格納
+-OutVariable (ov)	# コマンドからの出力オブジェクトを指定された変数に格納
+-OutBuffer (ob)
+-PipelineVariable (pv)	# パイプラインを通過する名前付きコマンドのために、現在のパイプライン要素の値を変数として格納
+-Verbose (vb)		# コマンドによって実行された操作の詳細情報を表示
+-WarningAction (wa)
+	Continue。	# 警告メッセージを表示し、コマンドの実行を続行します。既定値は "Continue" です。
+	Inquire。	# 警告メッセージを表示し、実行を続ける前に確認メッセージを表示します。この値はほとんど使用しません。
+	SilentlyContinue。# 警告メッセージを表示せず、コマンドの実行を続けます。
+	Stop。  	# 警告メッセージを表示し、コマンドの実行を停止します。
+-WarningVariable (wv)	# 変数に格納
+
+-CONFIRM[:{$TRUE | $FALSE}]
+-WhatIf (wi)
+	   -Confirm (cf)
+
+---------------
+■エラー処理
+$erroractionpreference = 
+ -Continue
+ -SilentlyContinue
+ -Inquire
+ -Stop
+
+---------------
+■Powershell コマンド実行にエラー判断
+
+◆$?
+
+成功の場合、$?は$true、失敗の場合は$false
+
+◆Trap{}
+trap{
+	Write-Output 'Exception Occured.'
+	Write-Output $Error[0]
+	Write-Output $Error[0].InvocationInfo.PositionMessage
+}
+ 
+◆Try{}Catch{}で処理
+Try{
+	#Errorが発生する恐れのあるコード
+}Catch{
+	#エラーが発生した場合の処理を記述
+}
+
+---------------
+■文字列をコマンドとして実行
+Invoke-Expression "command"
+
+■外部コマンド実行
+fc.exe file1 file2	# ファイル名で指定
+
+$r = &'dir'	# &: fork(終了は待たない)
+Write-Output $r
+
+$r = &$pg_flag -d -f $wk_flac 2>&1
+Write-Output $r
+
+◆別プロセスで実行(forkのようなもの)　-Waitで終了を待つ -NoNewWindowでウィンドウを開かない
+Start-Process 'notepad.exe' -Wait -NoNewWindow -ArgumentList 'test.txt'
+$proc = Start-Process -FilePath 'robocopy.exe' -ArgumentList '.\dir1  .\dir2 /S /E /COPY:DATSOU /PURGE /R:5 /W:30 /MT:1' -Wait -PassThru -WorkingDirectory $PSScriptRoot -RedirectStandardOutput '.\robocopy.log' -RedirectStandardError '.\robocopy_err.log'
+# -ArgumentList の値はリスト
+
+-------
+■pipe/redirect(リダイレクト)
+Get-ChildItem ABCD.txt 2>   errmsg.txt
+Get-ChildItem ABCD.txt 2>&1 mixedmsg.txt
+Get-ChildItem ABCD.txt > Out-Null
+
+◆PowerShellのストリームと標準入出力、リダイレクトとパイプライン
+http://stknohg.hatenablog.jp/entry/2015/06/26/001944
+PowerShellのError output streamは標準エラー出力から何を受け取っているのか？
+http://stknohg.hatenablog.jp/entry/2015/06/28/170457
+
+ストリーム 	出力されるオブジェクトの型 	リダイレクト方法 	出力方法 	特記事項
+Standard output stream 	Objectおよびその派生型 (正確にはPSObjectらしい) 	>(>>) 1>(1>>) 	Write-Outputなど 	標準出力に相当
+Error output stream 	ErrorRecord 	2>(2>>) 	Write-Errorなど 	標準エラー出力に相当
+Warning output stream 	WarningRecord 	3>(3>>) 	Write-Warningのみ 	PowerShell 3.0以上
+Verbose output stream 	VerboseRecord 	4>(4>>) 	Write-Verboseのみ 	PowerShell 3.0以上
+Debug output stream 	DebugRecord 	5>(5>>) 	Write-Debugのみ 	PowerShell 3.0以上
+Progress stream 	ProgressRecord 	リダイレクト不可 	Write-Progressのみ 	
+Information stream 	InformationRecord 	6>(6>>) 	Write-Host、Write-Informationのみ 	PowerShell 5.0以上
+
+-------
+■tee
+Tee-Object (-FilePath) [ファイル名] -Append
+Tee-Object -Variable [変数名]
+
+-------
+■出力先
+Out-GridView
+Out-Null
+
+---------------
+■配列(リスト/List)
+
+$list = @()
+$list = ( 'One', 'Two', 'Three' )
+$list[0..1]
+$list += ('Four','Five')
+$list.Length			# 5
+$list[-1]			# 'Five'
+$list -contains 'Four'		# True
+$list -notcontains 'Four'	# False
+[Array]::IndexOf($list,'Five')
+[Array]::Sort($list)
+$list
+foreach($a in $list){$a}
+
+$l1=@()
+$l2=@()
+for($i= 0;$i-le3;$i++){$l1+=$i}
+for($i=10;$i-ge5;$i--){$l2+=$i}
+$l1
+$l2
+$l2=$l1
+$l2		# 配列の長さは代入元にあわされる
+
+$list2 = 'One Two Three'.Split(' ')
+$list2 += $list[3..4]
+$list2
+$list2[2] = $null
+$list2
+
+# 入れ子(多層配列)
+
+$list = @()
+$l += ('AA')
+$l += ('BB')
+$l		# ('AA','BB')
+
+$l = @()
+$l += ('AA','BB')	# ('AA','BB')
+$l[0]		# AA
+$l[1]		# BB
+
+$l = @()
+$l += ,('AA','BB')	# カンマ
+$l += ,('CC','DD')	# (('AA','BB'), ('CC','DD'))
+$l[0]		#  ('AA','BB')
+$l[1]		#  ('CC','DD')
+$l[0][0]	# 'AA'
+$l[1][1]	# 'DD'
+
+
+---------------
+■連想配列(ハッシュ/Hash)
+
+$hash = @{}
+$hash = @{'One' = 1; 'Two' = 2; 'Three' = 3}
+$hash['Two']
+$hash.Add('Four', 4)
+$hash.Length
+$hash
+$hash.Remove('Three')
+$hash['One'] = 10
+$hash.Contains('Two')
+$hash.ContainsKey('One')
+$hash.ContainsValue(2)
+$hash.Keys
+$hash.Values
+foreach($key in $hash.Keys){$key + ':' + $hash[$key]}
+$hash.Keys | Sort-Object | %{$_ + ':' + $hash[$_]}
+$hash.GetEnumerator() | sort value
+$hash.Keys | Measure-Object | %{ $_.Count }	# 3
+---------------
+■特殊変数
+$_
+$?	# 最後に実行したコマンドの実行状態を保持するブール変数
+$matches[]
+
+---------------
+■環境変数
+Get-Variable
+$HOME　　　　                # C:\Users\hoge
+$LASTEXITCODE                # 0
+$VerbosePreference           # SilentlyContinue
+$WarningPreference           # Continue
+
+Get-ChildItem env:
+Get-ChildItem env:HOMEPATH   # \Users\hoge
+Get-ChildItem env:TEMP       # C:\Users\hoge\AppData\Local\Temp
+
+---------------
+■ヒア文字列
+$s = @'
+AA
+BB
+CC
+'@
+$list = $s -split "`n"
+($s -split "`n") -join '|'
+
+---------------
+■Join 配列の結合
+
+('AA','BB') -join '/'	# AA/BB
+('AA','BB') -join '(/)'	# AA(/)BB
+
+---------------
+■Split 文字列の分割 => 配列
+# Method
+"AA BB`tCC`nDD,,EE  FF ".Split()    	# ('','AA','BB','CC','DD,,EE','','FF','')	# 空白、タブ、改行で分割
+"AA BB`tCC`nDD,,EE  FF ".Split(',/')	# ("AA BB`tCC`nDD",'','EE  FF ')	# 区切り文字を列挙
+
+' AA  BB '.split()	# ('','AA','','BB','')	# 重複を考慮しない
+" AA`tBB ".split(" `t")	# ('','AA','BB','')
+
+# Operator
+
+# 1項演算子 空白、タブ、改行で分割
+-split ' AA  BB '	# ('AA','BB')
+-split " AA`tBB`nCC "	# ('AA','BB','CC')
+
+# 2項演算子　2項目のオペランドは正規表現
+'AA BB.CC/DD' -split '[ \./]'	# ('AA','BB','CC','DD')
+'AA BB.CC/DD' -split 'BB'	# ('AA','.CC/DD')
+' AA BB..CC/DD' -split '[ \./]'	# ('','AA','BB','','CC','DD')
+
+
+---------------
+■Trim Method　最初と最後の空白を削除
+' AA   BB '.Trim()	# 'AA   BB'
+' AA   BB '.Trimend()	# ' AA   BB'	# 最後の空白を削除
+
+---------------
+■match	?:最短マッチ、グループ化構成体(subexpression)
+
+'ABCDEFGABCDeFG' -match 'B.*(C.+F).*(D.+G).*';$matches
+#$matches[0] => BCDEFGABCDeFG	# match全体
+#$matches[1] => CDEF
+#$matches[2] => DeFG
+
+'ABCDEFGABCDeFG' -match 'B.*?(C.+F).*'         ;$matches
+'ABCDEFGABCDeFG' -match 'B.*?(C.+?F).*'        ;$matches
+
+'<foo>AA<bar>' -match '<.*>'      ; $matches[0]	# '<foo>AA<bar>'
+'<foo>AA<bar>' -match '<.*?>'     ; $matches[0]	# '<hoge>'
+'<<foo>>'      -match '<.*?>'     ; $matches[0]	# '<<foo>'
+'<<foo>>'      -match '<[^<>]*?>' ; $matches[0]	# '<foo>'
+
+正規表現言語 - クイック リファレンス
+https://msdn.microsoft.com/ja-jp/library/az24scfc(v=vs.110).aspx
+
+
+■動的に変数名を指定して値を取得
+$var = 'VAR'
+$name = 'var'
+Get-Variable -ValueOnly $name   # VAR
+Get-Variable $name
+# Name Value
+# ---- -----
+# var  VAR
+
+$dir = (dir test*)
+$dir
+#
+#     ディレクトリ: C:\Users\ishi\Documents
+# Mode                LastWriteTime         Length Name
+# ----                -------------         ------ ----
+# -a----       2019/06/23     18:07         643850 TEST.html
+# -a----       2019/06/23     18:07            820 TEST.Rmd
+
+(Get-Variable -ValueOnly $name)[0].Name
+# TEST.html
+
+■動的にpropertyを指定して値を取得
+$dir[0].'Length'
+# 643850
+$name = 'Length'
+$dir[0].$name
+# 643850
+
+---------------
+■計算
+[math]::Round(123.45)		# 123
+[math]::Round(123.45,1)		# 123.4 !!最近偶数丸め ([MidpointRounding]::ToEven)
+[math]::Round(123.35,1)		# 123.4
+[math]::Round(123.46,1)		# 123.5
+[Math]::Round(123.45, 1, [MidpointRounding]::AwayFromZero)	# 123.5 四捨五入
+[math]::Round(123.45,-1)	# Error
+
+[math]::Floor(   123.45)	# 123
+[math]::Ceiling( 123.45)	# 124
+[math]::Floor(  -123.45)	# -124 小さい値へ丸め
+[math]::Ceiling(-123.45)	# -123 大きい値へ丸め
+
+
+---------------
+■Pause
+$dmy = read-host 'Hello, Hit Any Key to Continue.'
+Write-Host 'Hello, Hit Any Key to Continue.'; [Console]::ReadKey() | Out-Null
+
+---------------
+■フォーマット・パディング
+# ToString
+(0).ToString('0.0')	# "0.0"
+(2000).ToString('000000.0')	# "002000.0"
+(2000).ToString('#,##0.0')	# "2,000.0"
+(2000).ToString('#,##0.0').PadLeft(10,' ')	# "   2,000.0"
+(255).ToString('x4')	# 00ff
+(240).ToString('X4')	# 00F0
+(Get-Date).ToString('yyyy/MM/dd HH:mm:ss.fff')	# 2017/05/22 22:59:16.073
+
+# 右詰
+(10000.015).ToString("#,###.##").PadLeft(12)
+'12345'.PadLeft(10,' ')
+
+# f 演算子
+'{0,5} {1,10:#,#.#} {2:#,#.0}' -f 10 , 2000, 2000.45
+
+[math]::round(98.7654321, 2)
+
+$Str = 'ABCD'
+$Num = 12345.678
+'Sring:{0,-8} Number:{1,12:#,0.00}' -f $Str, $Num
+{変数の順番, 桁数(負は左詰)}
+
+---------------
+■日付・時刻
+http://d.hatena.ne.jp/newpops/20050926/p1
+
+(get-date).GetType()
+(get-date).GetType().FullName
+Get-Date -Date '0:0:0.0' -Format 'yyyyMMdd_HH:mm:ss.fff'
+
+日付・時刻の計算
+([DateTime]'1980/01/01 00:00:00').AddMinutes(18326860)
+
+-------
+■16進
+$s = 'AB'
+$s.ToCharArray() | %{　Write-Output( $_ + ':' + [System.Convert]::ToInt32([char]$_).ToString("x") ) }
+A:41
+B:42
+
+-------
+■分岐
+if(      論理式1 ){
+    式1
+}elseif( 論理式2 ){
+    式2
+}else{
+    式3
+}
+
+-------
+■ループ
+for( $i; $i=0; $i++ ){
+}
+
+foreach( $i in 1..10 ){
+}
+
+break		# 中断
+continue	# 次の繰り返し
+
+◆
+ForEach-Object{
+    ・・・・
+    if(){ return }	# 次の繰り返しへ
+    ・・・・
+}
+
+◆無限ループ
+$hosts = ('www.yahoo.co.jp','www.google.com')
+while(1){$hosts|%{$h=$_;ping -n 1 -w 1000 $h|Select-String '要求|応答'|%{Write-Output((Get-Date -F 'hh:mm:ss')+': '+$h+"`t"+$_.Line)}};sleep 10}
+
+-------
+■カスタムオブジェクト作成
+# ハッシュでプロパティを設定
+$Object = New-Object PSObject -Property @{
+    Day  = (Get-Date -F 'yyyy/MM/dd')
+    Time = (Get-Date -F 'hh:mm:ss')
+}
+
+#パイプに流す
+(New-Object PSObject -Property @{ 
+	Day =(Get-Date -F 'yyyy/MM/dd');
+	Time=(Get-Date -F 'hh:mm:ss')
+}) | ft
+
+#Add-Memberで拡張
+
+
+-------
+■プロパティによるグループ化
+Get-EventLog System -After (Get-Date).ADDdays(-1) | Group-Object Source
+Count Name                      Group
+----- ----                      -----
+    3 Microsoft-Windows-Powe... {System.Diagnostics.EventLogEntry, System.Diagnostics.EventLogEntry, S
+    8 e1kexpress                {System.Diagnostics.EventLogEntry, System.Diagnostics.EventLogEntry, S
+   30 Microsoft-Windows-Kern... {System.Diagnostics.EventLogEntry, System.Diagnostics.EventLogEntry, S
+   12 Microsoft-Windows-Kern... {System.Diagnostics.EventLogEntry, System.Diagnostics.EventLogEntry, S
+    1 EventLog                  {System.Diagnostics.EventLogEntry}
+
+-------
+■uptimeのようなもの
+$w=(gwmi Win32_OperatingSystem); $w.ConvertToDateTime($w.LocalDateTime)-$w.ConvertToDateTime($w.LastBootUpTime) | ft Days,Hours,Minutes,Seconds -auto
+
+-------
+■head/tail
+Get-Content *.txt -Head 2 -Encoding UTF8
+Get-Content *.txt -Tail 2
+Get-Content .\tmp.log -Tail 1 -Wait 
+
+-------
+■Sort/Uniq
+
+Sort-Object [-CaseSensitive] [-Descending] [-Unique]
+Get-ChildItem | Sort-Object -CaseSensitive	# 大文字小文字区別
+Get-ChildItem | Sort-Object LastWriteTime -Descending	# 降順
+
+Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ).adddays(-3) | Sort-Object -Unique Source
+
+Get-EventLog 'System' -After (Get-Date).ADDhours(-9) | Sort-Object EntryType,EventID,@{Expression='TimeGenerated';Decending=$true}
+
+(1,2,3,4,5,6,7,8) | Sort-Object -property {$_ % 3}
+('a','b','c','d','e','f','g') | Sort-Object -property {'efgabcd'.IndexOf($_)}
+
+-------
+■File,Directory
+Get-ChildItem -Path ('Documents','Desktop')
+Get-ChildItem -recurse
+(ls).count
+ls | Measure -Line
+
+Get-ChildItem -File | %{ $f=$_; Write-Output( $f.Name+"`t"+(Get-Content $f | Measure-Object -Line).Lines ) }
+
+-------
+■grep のようなもの
+Select-String -Path *.txt -Pattern 'AA'
+
+Get-Content *.txt | Select-String 'AA'
+
+Get-ChildItem '*.txt' -Path 'c:\' -File -Recurse |
+    %{ Write-Output ($_.FullName + '========' ); ( Get-Content $_ | Select-String 'AA' ) }
+
+Get-ChildItem *.txt -File -Recurse |
+    %{ Write-Output ('======' + $_.Name + '======' ); ( Get-Content $_ | Select-String 'AA' ) }
+
+Get-ChildItem '*.txt' -Path 'c:\tmp' -File |
+    %{ $fn=$_.FullName; ( Get-Content $fn | Select-String 'AA' ) | %{Write-Output ($fn + '===' + $_ ) } }
+
+## 'd'と'l'と'total 'で始まらない
+Get-Content file | Select-String '^[^dl].*' | Select-string '^(?!total .*)'
+
+## 含まない
+-NotMatch
+
+## 大小文字の区別をしない
+-CaseSensitive
+
+## 
+
+■正規表現
+
+「|」  ： OR
+「*」  ： 0回以上繰り返し
+「+」  ： 1回以上繰り返し
+「?」  ： 0回または1回繰り返し、*,+,{n,},{n,m}の後ろに続けて最短(かつ最左)マッチ
+「{n}」： n回繰り返し
+「{n,}」： n回以上繰り返し
+「{n,m}」： n回以上m回以下繰り返し
+「.」 ：任意の文字、空白なども含む
+「\d」：数字
+「\s」：空白、改行、タブなどの空白文字
+「\S」：空白、改行、タブなどの空白文字を除く文字
+「\w」：英数字および、アンダーバー
+「\」：\nや\t等のエスケープシーケンス
+「[]」：文字クラス
+「[a-z]」：aからzまでのアルファベット
+「[0-9]」：0から9までの数字
+
+("AAB","ABB","B B","ACB") | Select-String 'AA'
+("AAB","ABB","B B","ACB") | Select-String '^A'
+("AAB","ABB","B B","ACB") | Select-String 'B *B'
+("AAB","ABB","B B","ACB") | Select-String 'B +B'
+("AAB","ABB","B B","ACB") | Select-String 'AA|BB'
+("AAB","ABB","B B","ACB") | Select-String 'A.B'
+("AAB","ABB","B B","ACB") | Select-String 'A[AC]B'
+
+# ファイル名を検索
+Get-ChildItem *.mp3 -File -Recurse | %{ if($_.Name -like '*ZZZ*'){Write-Output $_.FullName } }
+
+-------
+■diff のようなもの
+Compare-Object (Get-Content file1) (Get-Content file2)
+
+# コマンドプロンプト経由でfcを実行
+cmd /c fc file1 file2
+
+-------
+■sed のようなもの - 置換演算子
+Get-Content .\tmp.txt | %{ $_ -replace 'AA','BB' } | Set-Content .\tmp.txt
+
+('ABCDEGF','ABBCCDDE')| %{ $_ -replace '^(.+?)CD(.+?)$','$2  $1' }
+
+-------
+■画面/ファイル入出力/操作
+
+Write-Host [-NoNewline]	# コンソールのみ出力
+Write-Output
+
+Read-Host <Prompt>
+
+Get-Content [-Delimiter <str>] [-Encoding <str>] [-Head n] [-Tail n] [-Wait]
+Set-Content [-PassThru]
+Add-Content
+
+Out-File [-Append] [-Width n] [-noClobber] [-Encoding <str>]	# widthオプションでは行末に空白がPaddingされる
+Out-GridView
+Out-Null
+
+◆ロック
+Out-File	# Readロックはかからない(出力中にReadできる)
+Set-Content	# Readロックがかかる 
+http://tech.guitarrapc.com/entry/2014/02/11/061627#f-5a149a29
+
+◆CSV
+Export-Csv [-Encoding <str>] [-NoTypeInformation]	# https://technet.microsoft.com/ja-jp/library/hh849932.aspx
+Import-Csv [-Header ...] [-Delimiter "`t"] [-Encoding <str>]	# 既定のEncodeはUTF
+Export-CliXml
+
+
+■XML
+$xmldoc = [xml]@'
+<?xml version="1.0" encoding="utf-8"?>
+<Elem1 prop1="prop1">Contents1
+  <Elem11 prop11="prop111">Contents_Text111</Elem11>
+  <Elem11 prop11="prop112">Contents_Text112</Elem11>
+  <Elem12 prop12="prop121">Contents_Text121</Elem12>
+</Elem1> 
+'@
+
+$xmldoc
+xml                            Elem1
+---                            -----
+version="1.0" encoding="utf-8" Elem1
+
+$xmldoc.Elem1
+prop1 #text        Elem11           Elem12
+----- -----        ------           ------
+prop1 Contents1... {Elem11, Elem11} Elem12
+
+$xmldoc.Elem1.Elem11
+prop11  #text
+------  -----
+prop111 Contents_Text111
+prop112 Contents_Text112
+
+$xmldoc.Elem1.Elem11 | fl *
+prop11          : prop111
+#text           : Contents_Text111
+Name            : Elem11
+LocalName       : Elem11
+...
+prop11          : prop112
+#text           : Contents_Text112
+Name            : Elem11
+LocalName       : Elem11...
+
+
+function ChildNodes{ Param($p)
+    $c = $p.ChildNodes
+    if($c.Count -le 0){return}
+    foreach($i in 0..($c.Count-1)){
+        Write-Output $c[$i]
+        ChildNodes($c[$i])
+    }
+}
+ChildNodes($xmldoc) | ft Name,LocalName,Value,prop11,prop12,NodeType,PreviousSibling,NextSibling,ChildNodes
+
+Name   LocalName Value                          prop11  prop12        NodeType PreviousSibling NextSibling ChildNodes
+----   --------- -----                          ------  ------        -------- --------------- ----------- ----------
+xml    xml       version="1.0" encoding="utf-8"                 XmlDeclaration                 Elem1       {}
+Elem1  Elem1                                                           Element xml                         {#text, Elem11, Elem11, Elem12}
+#text  #text     Contents1...                                             Text                 Elem11      {}
+Elem11 Elem11                                   prop111                Element #text           Elem11      {#text}
+#text  #text     Contents_Text111                                         Text                             {}
+Elem11 Elem11                                   prop112                Element Elem11          Elem12      {#text}
+#text  #text     Contents_Text112                                         Text                             {}
+Elem12 Elem12                                           prop121        Element Elem11                      {#text}
+#text  #text     Contents_Text121                                         Text                             {}
+
+
+■Encoding
+Get-Content -Encoding 'Default'
+https://technet.microsoft.com/ja-jp/library/hh847788.aspx
+Set-Content -Encoding 'Default'
+https://technet.microsoft.com/ja-jp/library/hh847827.aspx
+Out-File    -Encoding 'Default'
+https://technet.microsoft.com/ja-jp/library/hh849882.aspx
+-- Default:Shift-JIS
+-- ASCII:ASCII (7 ビット) 文字セット
+-- BigEndianUnicode:big-endian バイト オーダーUTF-16
+-- Byte: 文字セットをバイト列
+-- String:文字列のエンコード タイプを使用
+-- Unicode:little-endian バイト オーダーUTF-16
+-- UTF7: UTF-7
+-- UTF8:UTF-8
+-- Unknown:エンコード タイプが不明か無効です。データはバイナリとして処理
+
+
+-------
+Get-ChildItem [-File] [-Directory] [-Recurse]	# -Fileでファイルのみを処理
+get-location
+get-item
+copy-item
+move-item
+rename-item
+new-item [-type file|directory ]
+remove-item
+invoke-item	# fileを開く
+
+Tee-Object
+Get-Clipboard
+Clip
+
+Invoke-Expression
+
+-------
+■レジストリ操作
+# Officeでサインインを非表示
+# Office Version: 2013=15.0, 2016=16.0
+# キーの確認:16.0\Common下に、SignInキーがあるか確認
+Get-ChildItem -Path HKCU:\Software\Microsoft\Office\16.0\Common
+# キーを作成
+New-Item -Path HKCU:\Software\Microsoft\Office\16.0\Common -Name SignIn -ItemType Directory
+# DWORD値を作成
+New-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Common\SignIn -Name SignInOptions -Value 3 -PropertyType dword
+
+-------
+■pingのようなもの
+Test-Connection [-Quiet] [-Count n] [-Delay Sec] [-BufferSize n]
+Test-Connection ('10.10.10.10', '10.10.10.11')
+
+---
+$hosts = ('www.yahoo.co.jp')
+$nc  = 2
+$buf = 32
+$ni  = 12000 # Number of iteration
+$int = 10    # Interval time (Secs) of iteration
+$file = 'Ping-Result-'+(Get-Date -F 'yyyyMMdd_HHmmss')+'.txt' # File name to record
+Out-File $file -Inputobject "-------Date--------`t----------Host---------------`tBufsize`tResTime`tResTTL"
+foreach($i in 1..$ni){
+    foreach($h in $hosts){
+        Test-Connection -count $nc -Buffersize $buf $h |
+            %{ $s = (Get-Date -F 'yyyy/MM/dd HH:mm:ss') + "`t" + $_.Address + "`t" + $_.Buffersize + "`t" + $_.ResponseTime + "`t" + $_.ResponseTimeToLive
+               Out-File $file -Append -Inputobject $s; Write-Output($s) 
+            }
+    }
+    sleep $int
+}
+
+
+-------
+■１文字づつ分解
+"PowerShell".GetEnumerator()
+$Array=($z="Powershell")[0..$z.Length]
+$linq =[System.Linq.Enumerable]::ToArray("PowerShell")
+
+■文字ごとの出現数を計測
+$a = @{}; Get-Content PS-Memo.txt |
+	%{ $_.ToCharArray() | %{ if($a.Contains($_)){$a[$_]++}else{$a[$_]=1} } }; $a.GetEnumerator() | sort name
+
+-------
+■Object作成
+
+PS> ('AA','BB') | %{ New-Object PSobject -Property @{'Key'=$_;'v1'=($_+'V')}} | ft -auto
+
+Key v1
+--- --
+AA  AAV
+BB  BBV
+
+PS> ('AA','BB') | %{ New-Object PSobject -Property @{'Key'=$_;'v1'=($_+'V')}} | Get-Member
+
+   TypeName: System.Management.Automation.PSCustomObject
+
+Name        MemberType   Definition
+----        ----------   ----------
+Equals      Method       bool Equals(System.Object obj)
+GetHashCode Method       int GetHashCode()
+GetType     Method       type GetType()
+ToString    Method       string ToString()
+Key         NoteProperty System.String Key=AA
+v1          NoteProperty System.String v1=AAV
+
+-------
+■Property作成
+
+Select-Object
+
+-------
+■メッセージBOX
+Add-Type -Assembly System.Windows.Forms
+[Windows.Forms.MessageBox]::Show('Message', 'Title', 'OK', 'Warning')
+
+-------
+■Mailを送信
+Send-MailMessage -To   'foo<foo@bar.co.jp>' -From 'bar<bar@foo.co.jp>' -Cc 'MailAddress'
+                 -Subject 'Test mail'       -Body 'メール送信のテスト'
+                 -Attachments 'filename'
+                 -SmtpServer 'MailServer'   -Encoding  ([System.Text.Encoding]::Default)
+
+-------
+■Job制御
+
+$j1 = Start-Job -ScriptBlock { Start-Sleep -Seconds 30 }
+$j2 = Start-Job -ScriptBlock { Start-Sleep -Seconds 30 }
+Get-Job
+Wait-Job $j1,$j2
+Get-Job
+
+-------
+■loop
+
+foreach( $i in 0..7){ }
+
+-------
+■関数
+
+function Func{ Param($x)
+
+}
+
+-------
+■コマンラインから起動
+powershell -Command "get-date; hostname; Add-Type -Assembly System.Windows.Forms; [Windows.Forms.MessageBox]::Show('Message', 'Title', 'OK', 'Warning')"
+
+=====================
+=====================
+---------------
+PS> Get-Process | Sort-Object CPU -Descending
+
+Handles  NPM(K)    PM(K)      WS(K) VM(M)   CPU(s)     Id ProcessName
+-------  ------    -----      ----- -----   ------     -- -----------
+    715      45   286764     306252   673   499.42   4936 firefox
+    204       9    11620      21672   183    88.61   4168 plugin-container
+    236      14    32104      38868   190    63.80   3556 FlashPlayerPlugin_18_0_0_209
+・・・
+
+PS> (Get-Process -Name Powershell).PriorityClass
+Normal
+PS> (Get-Process -Name Powershell).PriorityClass = 'BelowNormal'
+PS> (Get-Process -Name Powershell).PriorityClass
+BelowNormal
+
+---------------
+Get-Counter '\Process(*)\% Processor Time'
+(Get-counter '\Process(*)\% Processor Time').CounterSamples
+
+-------
+■PC情報収集
+Get-WMIObject Win32_ComputerSystem  | fl SystemType,Name,Domain,Manufacturer,Model,PrimaryOwnerName,NumberOfProcessors
+Get-WmiObject Win32_BIOS            | fl SerialNumber
+Get-WmiObject Win32_OperatingSystem | fl Caption,CSDVersion,Version
+Get-WmiObject -List
+Get-WmiObject -List | ?{ $_.Name -like '*user*' }
+
+$NWAI =@()
+Get-WmiObject Win32_NetworkAdapterConfiguration | %{ if($_.IPEnabled){ $NWAI += $_.Index; $_ } } | fl MACAddress,IPAddress,IPEnabled,Index
+Get-WmiObject Win32_NetworkAdapter  | ?{ $NWAI -contains $_.Index } | fl AdapterType,NetConnectionID,Speed
+----
+Get-NetAdapter
+Get-NetAdapterBinding
+Get-NetAdapterStatistics
+
+---------------
+■CPU
+Get-WmiObject Win32_Processor | fl DeviceID,NumberOfCores,NumberOfLogicalProcessors,CurrentClockSpeed,Name,Description,L2CacheSize,L3CacheSize
+
+■Mem
+Get-WmiObject Win32_PhysicalMemory | ft BankLabel,DeviceLocator,Capacity,ConfiguredClockSpeed
+
+■Disk Resources
+Get-Volume
+Get-Disk
+Get-PhysicalDisk
+Get-VirtualDisk
+Get-StorageReliabilityCounter
+
+DriveLetter FriendlyName       FileSystemType DriveType HealthStatus OperationalStatus SizeRemaining      Size
+----------- ------------       -------------- --------- ------------ ----------------- -------------      ----
+D                              Unknown        CD-ROM    Healthy      Unknown                     0 B       0 B
+            システムで予約済み NTFS           Fixed     Healthy      OK                    516.52 MB    549 MB
+                               NTFS           Fixed     Healthy      OK                    322.83 MB    843 MB
+C                              NTFS           Fixed     Healthy      OK                     272.2 GB 475.58 GB
+
+Number Friendly Name                     Serial Number                    HealthStatus         OperationalStatus      Total Size Partition Style
+------ -------------                     -------------                    ------------         -----------------      ---------- ----------
+0      SAMSUNG MZ7TE512HMHP-000L1        S1GJNSAF302164                   Healthy              Online                  476.94 GB MBR
+
+DeviceId FriendlyName               SerialNumber   MediaType CanPool OperationalStatus HealthStatus Usage            Size
+-------- ------------               ------------   --------- ------- ----------------- ------------ -----            ----
+0        SAMSUNG MZ7TE512HMHP-000L1 S1GJNSAF302164 SSD       False   OK                Healthy      Auto-Select 476.94 GB
+
+-------
+■Network, netstat
+$pid_service=@{}; Get-WmiObject win32_service | ?{ $_.ProcessID -gt 0 } | Sort-Object ProcessID |
+    %{ if(-not $pid_service[$_.ProcessID]){ $pid_service.Add([UInt32]$_.ProcessID,       $_.Name) }
+       else{                                $pid_service[    [UInt32]$_.ProcessID]+=', '+$_.Name } }
+Write-Output("  Protocol    Local Address         Ext. Address            State           PID`tProcess`tServices");
+netstat -nao | %{$a=$_; $s=-split $a; $p=$s[$s.Length-1]; 
+                 if([int]::TryParse($p,[ref]$null)){Write-Output($a+"`t"+(Get-Process -Id $p).ProcessName+"`t"+$pid_service[[UInt32]$p])}}
+
+
+Get-NetTCPConnection	# https://technet.microsoft.com/ja-jp/library/hh826153.aspx
+Get-NetTCPConnection -State Established | ft -Auto
+Get-NetTCPConnection -LocalPort 80,443 -ErrorAction SilentlyContinue
+Get-NetTCPConnection -RemotePort 80,443 | group state -NoElement
+Get-NetUDPEndpoint
+Get-NetRoute
+
+-------
+■サービスの検索
+Get-Service -Name 'Win*'
+Get-Service -DisplayName '*Remote*'
+Status   Name               DisplayName
+------   ----               -----------
+Stopped  RasAuto            Remote Access Auto Connection Manager
+Stopped  RasMan             Remote Access Connection Manager
+
+Get-Service -DisplayName '*Remote*' | ft Status,Name,StartType,DisplayName -auto
+ Status Name           StartType DisplayName
+ ------ ----           --------- -----------
+Stopped RasAuto           Manual Remote Access Auto Connection Manager
+Stopped RemoteAccess    Disabled Routing and Remote Access
+Running RpcSs          Automatic Remote Procedure Call (RPC)
+Stopped SessionEnv        Manual Remote Desktop Configuration
+
+Get-WmiObject win32_service | ?{$_.Name -like 'Win*'} | ft Name,DisplayName,Startmode,State,Status,ProcessID,PathName -auto
+
+Name                DisplayName                               Startmode State   Status ProcessID PathName
+----                -----------                               --------- -----   ------ --------- --------
+WinDefend           Windows Defender Service                  Manual    Stopped OK             0 "C:\Program Files\Windows Defender\MsMpEng.exe"
+WinHttpAutoProxySvc WinHTTP Web Proxy Auto-Discovery Service  Manual    Running OK          1724 C:\WINDOWS\system32\svchost.exe -k LocalService
+winmgmt             Windows Management Instrumentation        Auto      Running OK          1672 C:\WINDOWS\system32\svchost.exe -k netsvcs
+WinRM               Windows Remote Management (WS-Management) Manual    Stopped OK             0 C:\WINDOWS\System32\svchost.exe -k NetworkService
+
+## PIDでハッシュ化
+$pid_service=@{}; Get-WmiObject win32_service | ?{ $_.ProcessID -gt 0 } | Sort-Object ProcessID |
+    %{ if(-not $pid_service[$_.ProcessID]){ $pid_service.Add($_.ProcessID,       $_.Name) }
+       else{                                $pid_service[    $_.ProcessID]+=', '+$_.Name } }
+
+
+
+-------
+■Windows機能情報収集
+($Env:PSModulePath -split ';')|Get-ChildItem
+
+#Windows Server
+Import-Module ServerManager
+Get-WindowsFeature
+
+#Windows10 管理者モードで実行
+Get-WindowsOptionalFeature -FeatureName 'W*' -Online
+Enable-WindowsOptionalFeature -Online -FeatureName [Name]
+Disable-WindowsOptionalFeature -Online -FeatureName [Name]
+
+-------
+■Windows Update
+http://www.yottun8.com/wiki/Tips_%E3%83%AC%E3%82%B8%E3%82%B9%E3%83%88%E3%83%AA_%E3%82%B3%E3%83%B3%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB%E3%83%91%E3%83%8D%E3%83%AB.html
+
+
+Get-Item         'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate'
+Get-ChildItem    'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate'
+Get-ChildItem    'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update'
+Get-ItemProperty 'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate'
+Get-ItemProperty 'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update'
+
+-------
+■Event Log
+Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ) | ?{ $_.EntryType -ne 'Information' } | ft -auto
+Index Time       EntryType Source                         InstanceID Message
+----- ----       --------- ------                         ---------- -------
+ 1809 9 18 07:52 Warning   e1kexpress                     2684616731 Intel(R) 82577LM Gigabit Network Connection...
+ 1807 9 18 02:23 Error     Microsoft-Windows-Kernel-Power        137 ソース 'Microsoft-Windows-Kernel-Power' のイベント
+
+Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ) |
+	?{ $_.EntryType -ne 'Information' } |
+		Sort-Object EntryType,EventID,@{Expression='TimeGenerated';Descending=$true } |
+			ft -auto TimeGenerated,EntryType,EventID,Source,Message
+
+Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ).ADDdays(-7)
+
+Get-EventLog 'Application' -Newest 3
+Get-EventLog -list	# 概略一覧表示
+  Max(K) Retain OverflowAction        Entries Log
+  ------ ------ --------------        ------- ---
+  20,480      0 OverwriteAsNeeded       2,327 Application
+  20,480      0 OverwriteAsNeeded           0 HardwareEvents
+                                              Security
+  20,480      0 OverwriteAsNeeded       1,811 System
+  15,360      0 OverwriteAsNeeded         126 Windows PowerShell
+
+-------
+■Logon User
+$server = @( 'ishi-T510' )
+
+While($true){
+	$act = 0
+	$dsc = 0
+	$server |
+		%{
+			$_
+			query user ('/SERVER:' + $_) |
+				%{
+					if($_ -match 'Active'){ $act++ }
+					if($_ -match 'Disc'  ){ $dsc++ }
+					$_
+				}
+		}
+	Write-Output((Get-date -Format 'yyyyMMdd_HH:mm:ss') + "`tActive:`t" + $act + "`tDisconnect:`t" + $dsc )
+
+	Sleep -Seconds 600
+}
+
+query user /SERVER:
+
+
+#-------
+# ■ExcelファイルをCSV化
+# PowerShell で Excel をどうのこうのする
+#   http://qiita.com/miyamiya/items/161372111b68bad0744a
+# PowerShellでExcelを操作する　- 基礎編 - 
+#   https://letspowershell.blogspot.jp/2015/06/powershellexcel.html
+
+---
+Param([String]$xls)
+
+$dir = [System.IO.Path]::GetDirectoryName($xls)
+if($dir -eq '' -or $dir -eq '.'){ $dir = [string](Get-Location) + '\' }else{ $dir += '\' }
+$fln = [System.IO.Path]::GetFileNameWithoutExtension($xls)
+$ext = [System.IO.Path]::GetExtension($xls)
+
+$file = $dir + $fln + $ext
+$file
+
+$xl = New-Object -ComObject Excel.Application
+
+$xCSV = 6
+
+$wb = $xl.Workbooks.Open($file)
+
+$i = 0
+foreach($sh in $wb.Sheets){
+	$sh.Select()
+	$wb.SaveAs($dir + $fln + '_' + $i + '.csv', $xCSV)
+	$i++
+}
+
+$wb.Close($false)
+$xl.Quit()
+
+---
+$xls ='xxxx.xlsx'
+
+$xls ='Book1.xlsx'
+
+$dir = [System.IO.Path]::GetDirectoryName($xls)
+if($dir -eq '' -or $dir -eq '.'){ $dir = [string](Get-Location) + '\' }else{ $dir += '\' }
+$fln = [System.IO.Path]::GetFileNameWithoutExtension($xls)
+$ext = [System.IO.Path]::GetExtension($xls)
+$file = $dir + $fln + $ext
+$file
+
+$xl = New-Object -ComObject Excel.Application
+$xl.Visible = $false
+$xCSV = 6
+$wb = $xl.Workbooks.Open($file)
+
+$sh = $wb.Worksheets.item(1)
+
+$r  = $sh.UsedRange.Rows.Count
+$sh.Range('A1:A'+$r).Numberformat='yyyy/mm/dd mm:hh:ss'
+
+$wb.SaveAs($dir + $fln + 'w.csv', $xCSV)
+
+$wb.Close($false)
+$xl.Quit()
+$xl = $null
+[GC]::Collect()
+
+---
+# open excel file
+$xl.Visible = $true
+$xl.DisplayAlerts = $true
+$wb = $xl.Workbooks.Open($file)
+# Open 1st Worksheet
+$sh = $xl.Worksheets.item(1)
+# Jump to worksheet (only GUI)
+$sh.Activate()
+# Format Cell Range
+$sh.Range("A1:B3").Numberformat="00,0"
+$sh.Cells.Item(2,1).NumberFormat="@"
+$sh.Cells.Item(2,1).NumberFormatLocal="@"
+
+-------
+■Disk Space Used
+$target_dir = 'C:\Users\ishi'
+
+Get-ChildItem $targrt_dir |
+	?{ $_.GetType().Name -eq 'DirectoryInfo' } |
+		%{
+			$dir = $_.FullName
+			cmd /c ('dir "' + $dir + '" /s /a-d') 2>$1|
+				Select-String '個のファイル|^ファイルが見つかりません$' |
+					Select-Object -Last 1 |
+						%{ Write-Output( $dir + "`t" + $_ ) }
+		}
+
+-------
+■powershellでSNMP
+$snmp = new-object -ComObject olePrn.OleSNMP 
+$snmp.open('localhost', 'public', 2, 1000) 
+Write-Output $snmp.Get('.1.3.6.1.2.1.1.1.0')	# sysDescr
+$d = $snmp.Get('.1.3.6.1.2.1.2.2.1.2.1')	# ifDescr.1
+$ms0 = (get-date).Millisecond
+while(1){
+	$o1 = $snmp.Get('.1.3.6.1.2.1.2.2.1.16.1')
+	Write-Output ($d + ': ' + (Get-Date -F 'HH:mm:ss.fff') + ': '+ (($o1-$o2)*8/1000).ToString("#,##0.0").PadLeft(8) + ' kbps')
+	$o2 = $o1
+	$ms = $ms0 - (get-date).Millisecond -12
+	if($ms -lt 0 ){$ms += 1000}
+	Start-Sleep -Milliseconds $ms
+}
+
+-------
+■powershellでWebページのソースを読み込む
+http://blog.livedoor.jp/morituri/archives/54091235.html
+
+WebClientクラスを作成
+
+PS> $wc = New-Object System.Net.WebClient
+
+WebClientのOpenReadメソッドでWebページを読み込み、Stream型の戻り値を取得。
+
+PS> $url = "http://www.yahoo.co.jp/"
+PS> $st = $wc.OpenRead($url)
+
+テキストファイルとして開くため、StreamReaderを作成。
+StreamReaderのコンストラクタの第一引数にStreamを指定し、第二引数にはEncodingオブジェクトで文字コードを指定。
+
+PS> $enc = [System.Text.Encoding]::GetEncoding("UTF-8")
+PS> $sr = New-Object System.IO.StreamReader($st, $enc)
+
+ReadToEndメソッドですべてのテキストを取得。
+$htmlにWebページのソースが文字列として保存される。
+
+PS> $html = $sr.ReadToEnd()
+
+読み終わったら、StreamReaderを閉じる。
+
+PS> $sr.Close()
+
+ローカルファイルに保存したい場合はWebClient.DownloadFileメソッドを使えばよい。
+
+PS> $url = "http://www.yahoo.co.jp/"
+PS> $fileName = "download.html"
+PS> $wc.DownloadFile($url, $fileName)
+
+
+
+■PowerShell を使って Facebook にログイン
+http://katsushikatech.net/2014/02/08/powershell-login-facebook/
+
+$req = Invoke-WebRequest 'https://www.facebook.com/login.php' -SessionVariable fb
+$form = $req.Forms[0]
+$form.Fields["email"] = 'user@example.com'
+$form.Fields["pass"] = 'password'
+Invoke-WebRequest -Uri ("https://www.facebook.com" + $form.Action) -WebSession $fb -Method POST -Body $form.Fields
+
+ウェブページの情報を取得するには「Invoke-WebRequest」というコマンドを使います。
+コマンドの後に URL を指定するとそのページの内容をダウンロードするコマンドです。
+
+1行目では「SessionVariable」というオプションを設定しています。これはウェブサイトにアクセスした時のセッション情報に名前をつけて保存するために使います。セッションについては下記のリンク先を参考にしてみてください。
+セッションとは 【 session 】 ? 意味/解説/説明/定義 ： IT用語辞典
+2行目は「Invoke-WebRequest」で取得した Facebook のログインページから ユーザー認証用のフォーム情報を取り出しています。
+3行目と4行目で取り出したフォームにユーザー名とパスワードを設定します。
+5行目では再度「Invoke-WebRequest」を使って、今度は Facebook のメインページにアクセスします。その際、先ほど設定したユーザー情報を Facebook に送信しています。さらに、先ほど保存したセッション情報も付加します。
+
+こうすることで Facebook にログインした状態でメインページにアクセスすることができるのです。
+
+
+■ウェブページの取得 - Invoke-WebRequest (wget)
+http://yanor.net/wiki/?PowerShell%2F%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%83%AC%E3%83%83%E3%83%88%2F%E3%82%A6%E3%82%A7%E3%83%96%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E5%8F%96%E5%BE%97%20-%20Invoke-WebRequest%20%28wget%29
+
+GET
+
+$res = Invoke-WebRequest http://www.yahoo.co.jp/
+$res.Content | Out-File index.html
+echo $res.Links.href
+
+POST
+
+$params = @{ name = "taro"; age = 10 } 
+$res = Invoke-WebRequest -Method Post -Uri http://example.com/ -Body $params
+
+参考
+http://technet.microsoft.com/library/3e3dac17-3373-4d22-a54a-9d56a4a556c3(v=wps.630).aspx
+
+-------
+■PowerShell でブラウザのスクリーンキャプチャをとる
+http://rainyday.blog.so-net.ne.jp/2007-04-21
+#[String]$url='http://www.yahoo.co.jp/';[String]$filename='C:\Users\ishi\Desktop\test.png';[String]$format='png'
+
+
+Param([String]$url='http://www.yahoo.co.jp/', [String]$filename='C:\Users\ishi\Desktop\test.png', [String]$format='png')
+if (!$url -or !$filename) { return }
+
+$ie = new-object -com InternetExplorer.Application
+
+# URL を開く
+$ie.Navigate($url)
+
+# ページをロードし終わるまで待つ
+while ($ie.Busy) {sleep -milliseconds 50}
+
+# バー関連はすべて消して IE を可視化
+$ie.StatusBar = $false
+$ie.ToolBar = $false
+$ie.MenuBar = $false
+$ie.AddressBar = $false
+$ie.Visible = $true
+
+while ($ie.Busy) {sleep -seconds 10}
+
+# IE のウィンドウを前面に持ってくる
+$wsh = new-object -com WScript.Shell
+
+#$wsh.AppActivate('Explorer')
+
+while (-not $wsh.AppActivate('Explorer')) {sleep -seconds 5}
+
+# スクリーンキャプチャ
+$bitmap = new-object Drawing.Bitmap($ie.Width, $ie.Height)
+$graphics = [Drawing.Graphics]::FromImage($bitmap)
+$graphics.CopyFromScreen($ie.Left, $ie.Top, 0, 0, $bitmap.Size)
+$bitmap.Save($filename, $format)
+
+$ie.Quit()
+
+
+
+-------
+■インストールされたソフト
+Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' |
+	Get-ItemProperty |
+		sort displayname |
+			select DisplayName,Publisher
+
+PS> Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' | %{$_.GetValueNames()}
+UninstallString
+DisplayName
+DisplayIcon
+DisplayVersion
+Publisher
+・・・
+
+Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' | %{ Write-Output( $_.GetValue('DisplayName') +"`t"+ $_.GetValue('Publisher') ) }
+
+Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' |
+	Add-Member -MemberType NoteProperty -Name DisplayName -Value ($_.GetValue('DisplayName')) |
+	Add-Member -Name Publisher -Value $_.GetValue('Publisher') |
+		 ft -auto
+
+-------
+■アプリケーションの追加と削除
+http://mtgpowershell.blogspot.jp/2010/06/blog-post_12.html
+$path = '\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
+Get-ChildItem -Path ( ('HKLM:'+$path), ('HKCU:'+$path) ) |
+	%{Get-ItemProperty $_.PsPath} |
+		?{$_.systemcomponent -ne 1 -and $_.parentkeyname -eq $null} |
+			sort displayname |
+				select DisplayName,Publisher
+
+
+-------
+■IPアドレス・サブネットの表示
+Param( [String]$indata1, [String]$indata2 )
+
+# Calc IP Address Range form Net-Mask Description
+#
+# cf
+#  iprng.ps1 192.168.200.100
+#  iprng.ps1 192.168.200.100/26
+#  iprng.ps1 192.168.200.100/255.255.240.0'
+#  iprng.ps1 192.168.200.100 26
+#  iprng.ps1 192.168.200.100 255.255.240.0
+#  iprng.ps1 '192.168.200.100 226'
+#  iprng.ps1 '192.168.200.100 255.255.240.0'
+
+$adr = @()	# Address 0ctet by Decimal
+$msk = @()
+$rgf = @()
+$rgt = @()
+
+$matches = @()
+
+$indata = $indata1
+if( $indata2 -ne '' ){ $indata += ' ' + $indata2 }
+if( -not( $indata -match '^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})($|(( |\/)((\d{1,2})$|(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$)))' ) ){
+	exit							# Format Error
+}
+
+$adr += $matches[1..4]
+
+Write-Output( "Input:`t" + $indata )
+Write-Output( "Addrs:`t" + ($adr -join '.' ) + "`t" + ( ( $adr[0..3] | %{ [Convert]::ToString($_,2).PadLeft(8,'0') } ) -join '.' ) )
+
+if( $matches[5] -eq '' ){ exit }	# Address Only
+
+if( $matches[9] -ne $null ){		# Mask Length
+
+	$msklen = $matches[9]
+	$wk = ('1'*$msklen).PadRight(32,'0')
+	foreach( $i in 0..3 ){
+		$msk += [String][Convert]::ToInt32($wk.SubString($i*8,8),2)
+	}
+
+}elseif($matches[13] -ne $null){	# Mask Pattern
+
+	$msk +=  $matches[10..13]
+
+}
+
+$msklen = 0
+foreach( $i in 0..3 ){
+	$adrwk = [Convert]::ToString($adr[$i],2).PadLeft(8,'0')
+	$mskwk = [Convert]::ToString($msk[$i],2).PadLeft(8,'0')
+	$rgfwk = ''
+	$rgtwk = ''
+
+	foreach( $j in 0..7 ){
+		$rgfwk[$j]
+		if ( $mskwk[$j] -eq '1' ){ 
+					$rgfwk += $adrwk[$j]
+					$rgtwk += $adrwk[$j]
+					$msklen++
+		}else{
+					$rgfwk += '0'
+					$rgtwk += '1'
+		}
+	}
+	$rgf += [Convert]::ToInt32($rgfwk,2)
+	$rgt += [Convert]::ToInt32($rgtwk,2)
+}
+
+Write-Output( "Mask :`t" + ($msk -join '.' ) + "`t" + (($msk[0..3] | %{ [Convert]::ToString($_,2).PadLeft(8,'0') }) -join '.') + "`t" + $msklen + ' Bits')
+Write-Output( "RngFr:`t" + ($rgf -join '.' ) + "`t" + (($rgf[0..3] | %{ [Convert]::ToString($_,2).PadLeft(8,'0') }) -join '.') )
+Write-Output( "RngTo:`t" + ($rgt -join '.' ) + "`t" + (($rgt[0..3] | %{ [Convert]::ToString($_,2).PadLeft(8,'0') }) -join '.') )
+
+exit
+
+
+
+======================================================================
+======================================================================
+■PowerShellでサーバで動いているプロセスを知りたい
+http://tech.guitarrapc.com/entry/2013/01/08/030100
+Paformance Counter
+======================================================================
+
+# Process ID
+$id_proc = @{}
+(Get-Counter '\Process(*)\ID Process').CounterSamples |
+	%{
+		if($_.Path -match '\\\\.+?\\process\((.+?)\)\\id process'){$id_proc[$matches[1]] = $_.CookedValue}
+	}
+$id_proc
+
+# Process Start Time
+$st_proc =@{}
+$time = (Get-Counter '\Process(*)\Elapsed Time')
+$time.CounterSamples |
+	%{
+		if($_.Path -match '\\\\.+?\\process\((.+?)\)\\elapsed time'){$st_proc[$matches[1]] = $time.Timestamp.AddSeconds(-[Math]::Round($_.CookedValue,3))}
+	}
+$st_proc
+
+
+(Get-Counter '\Process(*)\% Processor Time' -SampleInterval 5).CounterSamples |
+	Where{$_.Status -eq 0 } |
+		%{ if($_.Path -match '\\\\.+?\\process\((.+?)\)\\% Processor time'){$_.InstanceName = $matches[1]; $_ } } |
+			Select-Object InstanceName,
+			               @{label='PID';  expression={$id_proc[$_.InstanceName]}},
+			               @{label='Start';  expression={$st_proc[$_.InstanceName]}},
+			               @{label='CPU %';expression={[math]::Round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}} |
+						ForEach-Object{
+							if($_.InstanceName -eq 'idle'){
+								$idle  = ('idle',  $_.'CPU %')
+							}elseif($_.InstanceName -eq '_total'){
+								$total = ('total', $_.'CPU %')
+							}else{
+								$_
+							}
+						} |
+							Sort-Object 'CPU %' -Descending |
+								Select-Object -First 10
+(('------------', '-----'), $idle, $total) |
+	%{
+		New-Object PSObject -Property @{
+			'InstanceName' = $_[0]
+			'CPU %'        = $_[1]
+		}
+	}
+
+---------------------------------------------
+Get-Counter
+
+(Get-Counter "\Process(*)\% Processor Time").CounterSamples | select InstanceName, @{label="CPU %";expression={$_.CookedValue / $Env:NUMBER_OF_PROCESSORS -as [int]}}
+
+(Get-Counter "\Process(*)\% Processor Time").CounterSamples | select InstanceName, @{label="CPU %";expression={[math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}
+
+
+PS> (Get-Counter "\Process(*)\% Processor Time").CounterSamples | Get-Member
+
+   TypeName: Microsoft.PowerShell.Commands.GetCounter.PerformanceCounterSample
+
+Name             MemberType Definition
+----             ---------- ----------
+Equals           Method     bool Equals(System.Object obj)
+GetHashCode      Method     int GetHashCode()
+GetType          Method     type GetType()
+ToString         Method     string ToString()
+CookedValue      Property   System.Double CookedValue {get;set;}
+CounterType      Property   System.Diagnostics.PerformanceCounterType CounterType {get;set;}
+DefaultScale     Property   System.UInt32 DefaultScale {get;set;}
+InstanceName     Property   System.String InstanceName {get;set;}
+MultipleCount    Property   System.UInt32 MultipleCount {get;set;}
+Path             Property   System.String Path {get;set;}
+RawValue         Property   System.UInt64 RawValue {get;set;}
+SecondValue      Property   System.UInt64 SecondValue {get;set;}
+Status           Property   System.UInt32 Status {get;set;}
+TimeBase         Property   System.UInt64 TimeBase {get;set;}
+Timestamp        Property   System.DateTime Timestamp {get;set;}
+Timestamp100NSec Property   System.UInt64 Timestamp100NSec {get;set;}
+
+PS> (Get-Counter "\Process(*)\% Processor Time").CounterSamples | fl *
+
+Path             : \\ishi-t510\process(system)\% processor time
+InstanceName     : system
+CookedValue      : 0
+RawValue         : 236809518
+SecondValue      : 130829134848331276
+MultipleCount    : 1
+CounterType      : Timer100Ns
+Timestamp        : 2015/08/01 23:38:04
+Timestamp100NSec : 130829458848330000
+Status           : 0
+DefaultScale     : 0
+TimeBase         : 10000000
+
+$PerfCounter = (Get-Counter "\Process(*)\% Processor Time").CounterSamples | select InstanceName, @{label="CPU %";expression={[Math]:Round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}
+
+(Get-Counter "\Process(*)\% Processor Time").CounterSamples | select InstanceName, @{label="CPU";expression={[Math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 10
+
+InstanceName                                                                                                                                      CPU
+------------                                                                                                                                      ---
+_total                                                                                                                                          99.54
+idle                                                                                                                                            94.28
+coreserviceshell                                                                                                                                 4.68
+soundengine                                                                                                                                      0.19
+svchost                                                                                                                                          0.19
+eac                                                                                                                                              0.19
+mdnsresponder                                                                                                                                       0
+sppsvc                                                                                                                                              0
+gwx                                                                                                                                                 0
+seaport                                                                                                                                             0
+
+
+PS> while($true){ (Get-Counter "\Process(*)\% Processor Time").CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 15 | ft -auto; Start-Sleep -Seconds30 }
+
+InstanceName     Status   CPU
+------------     ------   ---
+_total                0 99.54
+idle                  0 96.62
+soundengine           0  1.95
+coreserviceshell      0  0.39
+plugin-container      0  0.19
+ptsvchost             0  0.19
+firefox               0  0.19
+searchindexer         0     0
+lms                   0     0
+armsvc                0     0
+gwx                   0     0
+wmpnetwk              0     0
+svchost               0     0
+seaport               0     0
+mediago               0     0
+
+
+Get-Counter : パフォーマンス カウンターのサンプルのいずれかに含まれるデータが無効です。各 PerformanceCounterSample オブジェクトの Status プロパティを
+表示して、有効なデータが含まれていることを確認してください。
+発生場所 行:1 文字:27
++ while($true){ (Get-Counter <<<<  "\Process(*)\% Processor Time").CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::ro
+und($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 30 | ft -auto; Start-Sleep -Seconds 30 }
+    + CategoryInfo          : InvalidResult: (:) [Get-Counter]、Exception
+    + FullyQualifiedErrorId : CounterApiError,Microsoft.PowerShell.Commands.GetCounterCommand
+
+
+InstanceName            Status   CPU
+------------            ------   ---
+idle                         0 72.54
+mediago                      0 12.48
+coreserviceshell             0  0.97
+soundengine                  0  0.78
+audiodg                      0  0.39
+firefox                      0  0.39
+dwm                          0  0.39
+searchindexer                0     0
+seaport                      0     0
+gwx                          0     0
+lms                          0     0
+wmpnetwk                     0     0
+errorreportlauncher          0     0
+uns                          0     0
+svchost                      0     0
+mediago             2147485649     0
+mdnsresponder                0     0
+nusb3mon                     0     0
+clmlsvc                      0     0
+uiseagnt                     0     0
+nvtray                       0     0
+_total                       0     0
+acrotray                     0     0
+armsvc                       0     0
+csptl-canonmj                0     0
+jusched                      0     0
+searchfilterhost    2147485649     0
+taskmgr                      0     0
+cmd                          0     0
+svchost                      0     0
+
+
+PS C:\> Get-Counter -ListSet Process
+
+CounterSetName     : Process
+MachineName        : .
+CounterSetType     : MultiInstance
+Description        : Process パフォーマンス オブジェクトには、実行中のプログラムとシステム処理を監視するカウンターがあります。
+                     プロセス内のすべてのスレッドは同じアドレス領域を共有し、同じデータへアクセスします。
+Paths              : {\Process(*)\% Processor Time, \Process(*)\% User Time, \Process(*)\% Privileged Time, \Process(*)
+                     \Virtual Bytes Peak...}
+PathsWithInstances : {\Process(Idle)\% Processor Time, \Process(System)\% Processor Time, \Process(smss)\% Processor Ti
+                     me, \Process(csrss)\% Processor Time...}
+Counter            : {\Process(*)\% Processor Time, \Process(*)\% User Time, \Process(*)\% Privileged Time, \Process(*)
+                     \Virtual Bytes Peak...}
+
+PS> Get-Counter -ListSet Process | %{$_.Paths}
+\Process(*)\% Processor Time
+\Process(*)\% User Time
+\Process(*)\% Privileged Time
+\Process(*)\Virtual Bytes Peak
+\Process(*)\Virtual Bytes
+\Process(*)\Page Faults/sec
+\Process(*)\Working Set Peak
+\Process(*)\Working Set
+\Process(*)\Page File Bytes Peak
+\Process(*)\Page File Bytes
+\Process(*)\Private Bytes
+\Process(*)\Thread Count
+\Process(*)\Priority Base
+\Process(*)\Elapsed Time
+\Process(*)\ID Process
+\Process(*)\Creating Process ID
+\Process(*)\Pool Paged Bytes
+\Process(*)\Pool Nonpaged Bytes
+\Process(*)\Handle Count
+\Process(*)\IO Read Operations/sec
+\Process(*)\IO Write Operations/sec
+\Process(*)\IO Data Operations/sec
+\Process(*)\IO Other Operations/sec
+\Process(*)\IO Read Bytes/sec
+\Process(*)\IO Write Bytes/sec
+\Process(*)\IO Data Bytes/sec
+\Process(*)\IO Other Bytes/sec
+\Process(*)\Working Set - Private
+
+PS> Get-Counter -ListSet * | Select-Object CounterSetName, Description | ft -auto
+
+CounterSetName                                Description
+--------------                                -----------
+TBS counters                                  TPM ベース サービス コンポーネントのパフォーマンス カウンターです。
+WSMan Quota Statistics                        WS-Management プロセスのクォータ使用状況と違反に関する情報を表示します。
+BranchCache                                   Counters for measuring bandwidth and latency for BranchCache.
+Synchronization                               カーネル同期のためのカウンターで構成されます。同期オブジェクトは、各プ...
+Event Tracing for Windows                     このコレクションのカウンターは、Windows イベント トレーシング サブシス...
+Processor Information                         プロセッサ情報パフォーマンス カウンター セットには、プロセッサの処理状...
+Event Tracing for Windows Session             このコレクションのカウンターは、個々の Windows イベント トレーシング ...
+Per Processor Network Activity Cycles         Per Processor Network Activity Cycles カウンター セットは、各プロセッ...
+Per Processor Network Interface Card Activity Per Processor Network Interface Card Activity カウンター セットは、プ...
+Distributed Routing Table                     分散ルーティング テーブル (DRT) パフォーマンス オブジェクトは、ローカ...
+Netlogon                                      Netlogon ログオンのパフォーマンスを測定するためのカウンターです。
+RemoteFX Network                              セッションあたりの RemoteFX ネットワーク カウンターのカウンター セット...
+RemoteFX Graphics                             RemoteFX エンコーディング パフォーマンス オブジェクトは、RemoteFX グラ...
+Windows Media Player Metadata                 Windows Media Player Metadata
+HTTP Service                                  HTTP サービス カウンターのセット
+HTTP Service Url Groups                       URL グループ固有カウンターのセット
+HTTP Service Request Queues                   要求キュー カウンターのセット
+Power Meter                                   このカウンター セットは、電力の計測と割り当てに関する情報を示します。
+ServiceModelEndpoint 4.0.0.0                  ServiceModel performance counters for endpoint
+ServiceModelOperation 4.0.0.0                 ServiceModelOperation 4.0.0.0 performance counters
+ServiceModelService 4.0.0.0                   ServiceModel performance counters for service
+Teredo Client                                 Teredo クライアントの統計です。
+Teredo Server                                 このコンピューターでホストされている Teredo サーバーの統計です。
+IPHTTPS Global                                このコンピューターでの IPHTTPS サーバーの統計です。
+IPHTTPS Session                               この IPHTTPS サーバーでのセッション単位の統計です。
+Teredo Relay                                  このコンピューター上でホストされている Teredo リレーの統計です。
+IPsec IKEv1 IPv6                              IPsec IKEv1 IPv6 は、インターネット プロトコル バージョン 6 を介したト...
+IPsec IKEv1 IPv4                              IPsec IKEv1 IPv4 は、インターネット プロトコル バージョン 4 を介したト...
+IPsec IKEv2 IPv6                              IPsec IKEv2 IPv6 は、インターネット プロトコル バージョン 6 を介したト...
+IPsec AuthIP IPv6                             IPsec AuthIP IPv6 は、インターネット プロトコル バージョン 6 を介した...
+IPsec AuthIP IPv4                             IPsec AuthIP IPv4 は、インターネット プロトコル バージョン 4 を介した...
+IPsec IKEv2 IPv4                              IPsec IKEv2 IPv4 は、インターネット プロトコル バージョン 4 を介したト...
+Generic IKEv1, AuthIP, and IKEv2              Generic IKEv1, AuthIP, and IKEv2 is the set of Internet Protocol secur...
+Client Side Caching                           帯域幅消費を削減する SMB BranchCache のパフォーマンス カウンター
+Offline Files                                 オフライン ファイルのパフォーマンス カウンター
+Fax Service                                   FAX サービス カウンター セット
+Authorization Manager Applications            承認マネージャー アプリケーション オブジェクトの一連のカウンター
+Peer Name Resolution Protocol                 ピア名解決プロトコル (PNRP) パフォーマンス オブジェクトは、使用可能な...
+WFPv6                                         WFPv6 は、インターネット プロトコル バージョン 6 を介したトラフィック...
+WFP                                           WFP は、特定のインターネット プロトコル バージョンに適用しない Windows...
+IPsec Driver                                  IPsec Driver は、インターネット プロトコル バージョン 4 とインターネッ...
+WFPv4                                         WFPv4 は、インターネット プロトコル バージョン 4 を介したトラフィック...
+Pacer Pipe                                    Pacer Pipe のパフォーマンス カウンター セットは、パケット スケジューラ...
+Pacer Flow                                    Pacer Flow のパフォーマンス カウンター セットは、パケット スケジューラ...
+Terminal Services                             ターミナル サービス要約情報
+WorkflowServiceHost 4.0.0.0                   WorkflowServiceHost performance counters for workflow service
+MSDTC Bridge 4.0.0.0                          MSDTC Bridge 4.0.0.0 パフォーマンス カウンター
+ServiceModelEndpoint 3.0.0.0                  ServiceModelEndpoint 3.0.0.0 パフォーマンス カウンタ
+ServiceModelOperation 3.0.0.0                 ServiceModelOperation 3.0.0.0 パフォーマンス カウンタ
+ServiceModelService 3.0.0.0                   ServiceModelService 3.0.0.0 パフォーマンス カウンタ
+SMSvcHost 3.0.0.0                             SMSvcHost 3.0.0.0 パフォーマンス カウンタ
+SMSvcHost 4.0.0.0                             SMSvcHost 4.0.0.0 パフォーマンス カウンター
+.NET CLR Memory                               CLR ガベージ コレクション ヒープのカウンタです。
+.NET CLR Interop                              CLR 相互運用機能の統計です。
+.NET CLR Exceptions                           CLR 例外処理のランタイム統計です。
+.NET CLR Loading                              CLR クラス ローダーの統計
+.NET CLR LocksAndThreads                      CLR ロックおよびスレッドの統計です。
+.NET CLR Jit                                  CLR Jit の統計です。
+.NET CLR Remoting                             CLR リモート処理の統計です。
+.NET CLR Security                             CLR セキュリティの統計です。
+ASP.NET                                       ASP.NET グローバル パーフォーマンス カウンター
+ASP.NET Applications                          ASP.NET アプリケーション パーフォーマンス カウンター
+ASP.NET v4.0.30319                            ASP.NET グローバル パーフォーマンス カウンター
+ASP.NET Apps v4.0.30319                       ASP.NET アプリケーション パーフォーマンス カウンター
+ASP.NET State Service                         ASP.NET 状態サービス
+Windows Workflow Foundation                   Windows Workflow Foundation パフォーマンス カウンタ
+WF (System.Workflow) 4.0.0.0                  Windows Workflow Foundation パフォーマンス カウンター
+LogicalDisk                                   Logical Disk パフォーマンス オブジェクトには、ハード ディスクまたは固...
+PhysicalDisk                                  Physical Disk パフォーマンス オブジェクトには、ハード ディスクまたは固...
+Server                                        Server パフォーマンス オブジェクトには、ローカル コンピューターとネッ...
+Server Work Queues                            Server Work Queues パフォーマンス オブジェクトには、キューの長さおよび...
+Redirector                                    Redirector パフォーマンス オブジェクトには、ローカル コンピューターか...
+Browser                                       Browser パフォーマンス オブジェクトには、通知、列挙および Browser 伝送...
+Cache                                         Cache パフォーマンス オブジェクトには、ディスクから読み取る必要なしに...
+Processor                                     Processor パフォーマンス オブジェクトには、プロセッサの処理状況のアス...
+Memory                                        Memory パフォーマンス オブジェクトには、物理メモリおよび仮想メモリの動...
+Objects                                       Object パフォーマンス オブジェクトには、プロセス、スレッド、ミューテッ...
+Paging File                                   Paging File パフォーマンス オブジェクトには、ページング ファイルを監視...
+System                                        System パフォーマンス オブジェクトには、コンポーネント プロセッサの複...
+Process                                       Process パフォーマンス オブジェクトには、実行中のプログラムとシステム...
+Thread                                        Thread パフォーマンス オブジェクトには、スレッド動作のアスペクトを計測...
+Job Object                                    アクティブに名前を付けられたジョブ オブジェクトによって収集されたアカ...
+Job Object Details                            ジョブ オブジェクトを作成するアクティブなプロセスについての詳細なパフ...
+ReadyBoost Cache                              ReadyBoost キャッシュに関するパフォーマンス統計情報を表示します。
+RAS Port                                      RAS オブジェクトの種類は、お使いのシステムの RAS デバイスの各ポートを...
+RAS Total                                     RAS オブジェクトの種類は、お使いのシステムの RAS デバイスのすべてを統...
+.NET CLR Data                                 .Net CLR データです。
+.NET CLR Networking                           ヘルプは使用できません。
+.NET CLR Networking 4.0.0.0                   System.Net 名前空間のクラスのカウンタです。
+.NET Data Provider for Oracle                 System.Data.OracleClient のカウンタです。
+.NET Data Provider for SqlServer              System.Data.SqlClient のカウンタです。
+Print Queue                                   印刷キューに関するパフォーマンス統計情報を表示します。
+Telephony                                     テレフォニー システムです。
+NBT Connection                                NBT 接続パフォーマンス オブジェクトには、ローカル コンピューターとリモ...
+Network Interface                             Network Interface パフォーマンス オブジェクトには、TCP/IP ネットワーク...
+IPv4                                          IP パフォーマンス オブジェクトには、IP プロトコルを使用して送受信され...
+ICMP                                          ICMP オブジェクト タイプには、ICMP プロトコルを使用しているシステムに...
+TCPv4                                         TCP パフォーマンス オブジェクトでは、TCP プロトコルを使用して送受信さ...
+UDPv4                                         UDP パフォーマンス オブジェクトには、UDP プロトコルを使用して送受信さ...
+IPv6                                          IP パフォーマンス オブジェクトには、IP プロトコルを使用して送受信され...
+ICMPv6                                        ICMP オブジェクト タイプには、ICMP プロトコルを使用しているシステムに...
+TCPv6                                         TCP パフォーマンス オブジェクトでは、TCP プロトコルを使用して送受信さ...
+UDPv6                                         UDP パフォーマンス オブジェクトには、UDP プロトコルを使用して送受信さ...
+Terminal Services Session                     ターミナル サービス各セッションのリソース モニターです。
+USB                                           USB I/O カウンター
+.NET Memory Cache 4.0                         System.Runtime.Caching.MemoryCache Performance Counters
+MSDTC Bridge 3.0.0.0                          MSDTC Bridge 3.0.0.0 パフォーマンス カウンタ
+Search Indexer                                インデクサー PlugIn 統計です
+
+
+PS> (Get-Counter '\Process(*)\% Processor Time' -SampleInterval 10).CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 15 | ft -auto
+PS> while($true){ Write-Output("`n"+(Get-Date -Format 'yyyyMMdd_HHmmss'));(Get-Counter '\Process(*)\% Processor Time' -SampleInterval 10).CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 20 | ft -auto; Start-Sleep -Seconds 20 }
+PS> while($true){ Write-Output("`n"+(hostname)+' '+(Get-Date -Format 'yyyyMMdd_HHmmss'));(Get-Counter '\Process(*)\% Processor Time' -SampleInterval 10).CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 30 | ft -auto; Start-Sleep -Seconds 20 }
+
+(Get-Counter '\Process(*)\ID Process').CounterSamples | Select-Object Path, InstanceName, Status, CookedValue | %{ if($_.Path -match '\\\\.+?\\process\((.+?)\)\\id process'){$_.InstanceName = $matches[1]}; $_ } | Sort-Object CookedValue
+
+
+---------------------------------------------
+WmiObject
+
+PS> Get-WmiObject -List | Where-Object { $_.name -match 'Win32_PerfFormattedData' } | select Name
+
+Name
+----
+Win32_PerfFormattedData
+Win32_PerfFormattedData_ASPNET4030319_ASPNETAppsv4030319
+Win32_PerfFormattedData_ASPNET4030319_ASPNETv4030319
+Win32_PerfFormattedData_ASPNET_ASPNET
+Win32_PerfFormattedData_ASPNET_ASPNETApplications
+Win32_PerfFormattedData_aspnetstate_ASPNETStateService
+Win32_PerfFormattedData_AuthorizationManager_AuthorizationManagerApplications
+Win32_PerfFormattedData_BITS_BITSNetUtilization
+Win32_PerfFormattedData_Counters_EventTracingforWindows
+Win32_PerfFormattedData_Counters_EventTracingforWindowsSession
+Win32_PerfFormattedData_Counters_GenericIKEv1AuthIPandIKEv2
+Win32_PerfFormattedData_Counters_HTTPService
+Win32_PerfFormattedData_Counters_HTTPServiceRequestQueues
+Win32_PerfFormattedData_Counters_HTTPServiceUrlGroups
+Win32_PerfFormattedData_Counters_IPHTTPSGlobal
+Win32_PerfFormattedData_Counters_IPHTTPSSession
+Win32_PerfFormattedData_Counters_IPsecAuthIPIPv4
+Win32_PerfFormattedData_Counters_IPsecAuthIPIPv6
+Win32_PerfFormattedData_Counters_IPsecDriver
+Win32_PerfFormattedData_Counters_IPsecIKEv1IPv4
+Win32_PerfFormattedData_Counters_IPsecIKEv1IPv6
+Win32_PerfFormattedData_Counters_IPsecIKEv2IPv4
+Win32_PerfFormattedData_Counters_IPsecIKEv2IPv6
+Win32_PerfFormattedData_Counters_Netlogon
+Win32_PerfFormattedData_Counters_PacerFlow
+Win32_PerfFormattedData_Counters_PacerPipe
+Win32_PerfFormattedData_Counters_PerProcessorNetworkActivityCycles
+Win32_PerfFormattedData_Counters_PerProcessorNetworkInterfaceCardActivity
+Win32_PerfFormattedData_Counters_ProcessorInformation
+Win32_PerfFormattedData_Counters_RemoteFXGraphics
+Win32_PerfFormattedData_Counters_RemoteFXNetwork
+Win32_PerfFormattedData_Counters_Synchronization
+Win32_PerfFormattedData_Counters_TeredoClient
+Win32_PerfFormattedData_Counters_TeredoRelay
+Win32_PerfFormattedData_Counters_TeredoServer
+Win32_PerfFormattedData_Counters_WFP
+Win32_PerfFormattedData_Counters_WFPv4
+Win32_PerfFormattedData_Counters_WFPv6
+Win32_PerfFormattedData_Counters_WSManQuotaStatistics
+Win32_PerfFormattedData_DistributedRoutingTable_DistributedRoutingTable
+Win32_PerfFormattedData_ESENT_Database
+Win32_PerfFormattedData_ESENT_DatabaseInstances
+Win32_PerfFormattedData_ESENT_DatabaseTableClasses
+Win32_PerfFormattedData_FaxService_FaxService
+Win32_PerfFormattedData_LocalSessionManager_TerminalServices
+Win32_PerfFormattedData_Lsa_SecurityPerProcessStatistics
+Win32_PerfFormattedData_Lsa_SecuritySystemWideStatistics
+Win32_PerfFormattedData_MSDTC_DistributedTransactionCoordinator
+Win32_PerfFormattedData_MSDTCBridge3000_MSDTCBridge3000
+Win32_PerfFormattedData_MSDTCBridge4000_MSDTCBridge4000
+Win32_PerfFormattedData_NETCLRData_NETCLRData
+Win32_PerfFormattedData_NETCLRNetworking4000_NETCLRNetworking4000
+Win32_PerfFormattedData_NETCLRNetworking_NETCLRNetworking
+Win32_PerfFormattedData_NETDataProviderforOracle_NETDataProviderforOracle
+Win32_PerfFormattedData_NETDataProviderforSqlServer_NETDataProviderforSqlServer
+Win32_PerfFormattedData_NETFramework_NETCLRExceptions
+Win32_PerfFormattedData_NETFramework_NETCLRInterop
+Win32_PerfFormattedData_NETFramework_NETCLRJit
+Win32_PerfFormattedData_NETFramework_NETCLRLoading
+Win32_PerfFormattedData_NETFramework_NETCLRLocksAndThreads
+Win32_PerfFormattedData_NETFramework_NETCLRMemory
+Win32_PerfFormattedData_NETFramework_NETCLRRemoting
+Win32_PerfFormattedData_NETFramework_NETCLRSecurity
+Win32_PerfFormattedData_NETMemoryCache40_NETMemoryCache40
+Win32_PerfFormattedData_OfflineFiles_ClientSideCaching
+Win32_PerfFormattedData_OfflineFiles_OfflineFiles
+Win32_PerfFormattedData_PeerDistSvc_BranchCache
+Win32_PerfFormattedData_PeerNameResolutionProtocol_PeerNameResolutionProtocol
+Win32_PerfFormattedData_PerfDisk_LogicalDisk
+Win32_PerfFormattedData_PerfDisk_PhysicalDisk
+Win32_PerfFormattedData_PerfNet_Browser
+Win32_PerfFormattedData_PerfNet_Redirector
+Win32_PerfFormattedData_PerfNet_Server
+Win32_PerfFormattedData_PerfNet_ServerWorkQueues
+Win32_PerfFormattedData_PerfOS_Cache
+Win32_PerfFormattedData_PerfOS_Memory
+Win32_PerfFormattedData_PerfOS_Objects
+Win32_PerfFormattedData_PerfOS_PagingFile
+Win32_PerfFormattedData_PerfOS_Processor
+Win32_PerfFormattedData_PerfOS_System
+Win32_PerfFormattedData_PerfProc_FullImage_Costly
+Win32_PerfFormattedData_PerfProc_Image_Costly
+Win32_PerfFormattedData_PerfProc_JobObject
+Win32_PerfFormattedData_PerfProc_JobObjectDetails
+Win32_PerfFormattedData_PerfProc_Process
+Win32_PerfFormattedData_PerfProc_ProcessAddressSpace_Costly
+Win32_PerfFormattedData_PerfProc_Thread
+Win32_PerfFormattedData_PerfProc_ThreadDetails_Costly
+Win32_PerfFormattedData_PowerMeterCounter_PowerMeter
+Win32_PerfFormattedData_rdyboost_ReadyBoostCache
+Win32_PerfFormattedData_RemoteAccess_RASPort
+Win32_PerfFormattedData_RemoteAccess_RASTotal
+Win32_PerfFormattedData_ServiceModel4000_ServiceModelEndpoint4000
+Win32_PerfFormattedData_ServiceModel4000_ServiceModelOperation4000
+Win32_PerfFormattedData_ServiceModel4000_ServiceModelService4000
+Win32_PerfFormattedData_ServiceModelEndpoint3000_ServiceModelEndpoint3000
+Win32_PerfFormattedData_ServiceModelOperation3000_ServiceModelOperation3000
+Win32_PerfFormattedData_ServiceModelService3000_ServiceModelService3000
+Win32_PerfFormattedData_SMSvcHost3000_SMSvcHost3000
+Win32_PerfFormattedData_SMSvcHost4000_SMSvcHost4000
+Win32_PerfFormattedData_Spooler_PrintQueue
+Win32_PerfFormattedData_TapiSrv_Telephony
+Win32_PerfFormattedData_TBS_TBScounters
+Win32_PerfFormattedData_Tcpip_ICMP
+Win32_PerfFormattedData_Tcpip_ICMPv6
+Win32_PerfFormattedData_Tcpip_IPv4
+Win32_PerfFormattedData_Tcpip_IPv6
+Win32_PerfFormattedData_Tcpip_NBTConnection
+Win32_PerfFormattedData_Tcpip_NetworkInterface
+Win32_PerfFormattedData_Tcpip_TCPv4
+Win32_PerfFormattedData_Tcpip_TCPv6
+Win32_PerfFormattedData_Tcpip_UDPv4
+Win32_PerfFormattedData_Tcpip_UDPv6
+Win32_PerfFormattedData_TermService_TerminalServicesSession
+Win32_PerfFormattedData_UGatherer_SearchGathererProjects
+Win32_PerfFormattedData_UGTHRSVC_SearchGatherer
+Win32_PerfFormattedData_usbhub_USB
+Win32_PerfFormattedData_WindowsMediaPlayer_WindowsMediaPlayerMetadata
+Win32_PerfFormattedData_WindowsWorkflowFoundation3000_WindowsWorkflowFoundation
+Win32_PerfFormattedData_WindowsWorkflowFoundation4000_WFSystemWorkflow4000
+Win32_PerfFormattedData_WorkflowServiceHost4000_WorkflowServiceHost4000
+Win32_PerfFormattedData_WSearchIdxPi_SearchIndexer
