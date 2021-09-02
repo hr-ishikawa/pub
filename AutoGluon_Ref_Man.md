@@ -32,7 +32,7 @@ dic_results['model_best']                                   # 最良モデル名
 dic_results['model_performance'][dic_results['model_best']] # 最良モデルのmtric値 (float)
 dic_results['leaderboard']                                  # 試行した全モデルの結果 (df)
 
-# 他のデータセットで各モデルに対し検証 (次項の内容を含む)
+# 他のラベル付きデータセットを各モデルに対し適用 (次項の内容を含む)
 predictor.leaderboard(df_valid, silent=True)
 #   検証予測、検証結果の確認
 y_pred = predictor.predict(df_valid.drop(columns=[target_colname]))   # 目的変数列を除いておく
