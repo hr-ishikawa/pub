@@ -1,6 +1,6 @@
 # **AutoGluon Tabular Prediction**
 
-【公式】
+【公式】  
 https://auto.gluon.ai/stable/tutorials/tabular_prediction/index.html  
 https://auto.gluon.ai/stable/api/autogluon.predictor.html  
 ```
