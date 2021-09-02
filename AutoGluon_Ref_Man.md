@@ -1,5 +1,8 @@
-# **AutoGluon Predictors**
-https://auto.gluon.ai/stable/api/autogluon.predictor.html
+# **AutoGluon Tabular Prediction**
+
+【公式】
+https://auto.gluon.ai/stable/tutorials/tabular_prediction/index.html  
+https://auto.gluon.ai/stable/api/autogluon.predictor.html  
 ```
 # データセット
 #   df_test   学習に使用
@@ -22,13 +25,22 @@ predictor = TabularPredictor(label=target_colname, eval_metric=metric, path=save
                         .fit(df_train, presets=presets)
 
 # 学習結果
-results = predictor.fit_summary()
+dic_results = predictor.fit_summary()
+#   dict_keys(['model_types', 'model_performance', 'model_best', 'model_paths', 'model_fit_times', 
+#              'model_pred_times', 'num_bag_folds', 'max_stack_level', 'model_hyperparams', 'leaderboard'])
+dic_results['model_best']                                   # 最良モデル名 (str)
+dic_results['model_performance'][dic_results['model_best']] # 最良モデルのmtric値 (float)
+dic_results['leaderboard']                                  # 試行した全モデルの結果 (df)
 
-# 検証予測
+# 他のデータセットで各モデルに対し検証 (次項の内容を含む)
+predictor.leaderboard(df_valid, silent=True)
+#   検証予測、検証結果の確認
 y_pred = predictor.predict(df_valid.drop(columns=[target_colname]))   # 目的変数列を除いておく
-
-# 検証結果の確認
 perf = predictor.evaluate_predictions(y_true=df_valid[target_colname], y_pred=y_pred, auxiliary_metrics=True)
+
+# 説明変数の重要度
+df_feat_imp = predictor.feature_importance(df_train)
+
 
 # 予測
 y_pred = predictor.predict(df_test))
