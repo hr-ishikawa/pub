@@ -1,6 +1,14 @@
 # **AutoGluon Predictors**
 https://auto.gluon.ai/stable/api/autogluon.predictor.html
 ```
+# データセット
+#   df_test   学習に使用
+#   df_valid  検証に使用(Label付)
+#   df_test   予測に使用(Labelなし)
+# 目的変数: target_colname
+# 評価関数: metric
+# 試行方法(モデルセット)のプリセット: presets
+
 # インストール
 !pip install -U "mxnet_cu101<2.0.0"   # for GPU: CUDA 10.1 for goolge colaboratory (Aug. 2021)
 !pip install autogluon
@@ -16,11 +24,15 @@ predictor = TabularPredictor(label=target_colname, eval_metric=metric, path=save
 # 学習結果
 results = predictor.fit_summary()
 
-# 予測
-y_pred = predictor.predict(df_test.drop(columns=[target_colname]))   # 目的変数列を除いておく
+# 検証予測
+y_pred = predictor.predict(df_valid.drop(columns=[target_colname]))   # 目的変数列を除いておく
 
-# 評価
-perf = predictor.evaluate_predictions(y_true=df_test[target_colname], y_pred=y_pred, auxiliary_metrics=True)
+# 検証結果の確認
+perf = predictor.evaluate_predictions(y_true=df_valid[target_colname], y_pred=y_pred, auxiliary_metrics=True)
+
+# 予測
+y_pred = predictor.predict(df_test))
+
 
 # 保存モデルの読込
 predictor = TabularPredictor.load(save_path)
