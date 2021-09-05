@@ -1,6 +1,6 @@
 ## Hiroo Ishikawa's Repository
 
-||ファイル名|説明|
+|ディレクトリ|ファイル(抜粋)|説明|
 |-----|-----|-----|
 |LightGBM|||
 |PyCaret|PyCaret_Regression_tune.ipynb<br>PyCaret_Regression_Feature_Eng.ipynb|PyCaretサンプルコード(回帰版)|
