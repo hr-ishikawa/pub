@@ -1,23 +1,19 @@
-# *Table of Contents**
+## **Table of Contents**
 
-## **Parameters Tuning**
-### **Tune Parameters for the Leaf-wise (Best-first) Tree**
-
-## **Data Structure API**
-### **lightgbm.Dataset**
-
-## **Training API**
-### **lightgbm.cv**
-
-## **ploting**
-### **lightgbm.plot_importance**
+- **Parameters Tuning**
+  - **Tune Parameters for the Leaf-wise (Best-first) Tree**
+- **Data Structure API**
+  - **lightgbm.Dataset**
+- **Training API**
+  - **lightgbm.cv**
+- **ploting**
+  - **lightgbm.plot_importance**
 
 - - - 
 
 ## **Parameters Tuning**
 
 https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html
-
 
 ### **Tune Parameters for the Leaf-wise (Best-first) Tree**
 
@@ -191,7 +187,6 @@ max_cat_thresholdを小さくすると、トレーニング時間が短縮され
 - **path_smooth**を増やしてみる
 
 <br>
-- - - 
 
 ## **Data Structure API**
 
@@ -217,7 +212,6 @@ lightgbm.Dataset (data, label=None, reference=None, weight=None, group=None, ini
 |free_raw_data<br> (bool, optional (default=True))|If True, raw data is freed after constructing inner Dataset.|Trueの場合、内部のDatasetを構築した後に生データを解放します。|
 
 <br>
-- - - 
 
 ## **Training API**
 
@@ -268,7 +262,7 @@ lightgbm.cv (params, train_set, num_boost_round=100, folds=None, nfold=5, strati
 |Return type|dict|戻り値のタイプ: dict|
 
 <br>
-- - - 
+
 ## **ploting**
 
 ### **lightgbm.plot_importance**
