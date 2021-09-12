@@ -2,6 +2,6 @@
 
 |ファイル名|説明|
 |-----|-----|
-|AutoGluon_Ref_Man.md|ドキュメント抜粋|
-|AutoGluon_Regression_boston.ipynb<br>AutoGluon_Regression_diamonds.ipynb|AutoGluonサンプルコード(回帰版)|
+|LightGBM.md|ドキュメント抜粋|
+|LightGBM_Regression_tune_boston.ipynb|LightGBMのハイパーパラメータチューニングサンプル|
 |README.md|This File|
