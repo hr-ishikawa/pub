@@ -6,7 +6,7 @@
   - **lightgbm.Dataset**
 - **Training API**
   - **lightgbm.cv**
-- **ploting**
+- **Ploting**
   - **lightgbm.plot_importance**
 
 - - - 
@@ -263,7 +263,7 @@ lightgbm.cv (params, train_set, num_boost_round=100, folds=None, nfold=5, strati
 
 <br>
 
-## **ploting**
+## **Ploting**
 
 ### **lightgbm.plot_importance**
 
@@ -275,7 +275,7 @@ lightgbm.plot_importance (booster, ax=None, height=0.2, xlim=None, ylim=None, ti
 |---|---|
 |booster<br>(Booster or LGBMModel)|各特徴重要性をプロットする対象のBooster または LGBMModel インスタンス|
 |ax=None<br>(matplotlib.axes.Axes or None, optional (default=None))|対象となる軸のインスタンス。Noneの場合、新しい図と軸が作成される|
-|height<br>(float, optional (default=0.2))|ax.barh() に渡される棒の高さ(幅|
+|height<br>(float, optional (default=0.2))|ax.barh() に渡される棒の高さ(棒の太さ)|
 |xlim, ylim<br>tuple of 2 elements or None, optional (default=None))|ax.xlim(), ax.ylim()に渡されるタプル|
 |title<br>(str or None, optional (default="Feature importance")) |軸のタイトル．Noneの場合，タイトルは無効になる|
 |xlabel, ylabel<br>(str or None, optional (default: x="Feature importance", y=Features")))| X 軸、Y 軸のタイトルラベル。Noneの場合、タイトルは無効になる|
