@@ -1,3 +1,19 @@
+# *Table of Contents**
+
+## **Parameters Tuning**
+### **Tune Parameters for the Leaf-wise (Best-first) Tree**
+
+## **Data Structure API**
+### **lightgbm.Dataset**
+
+## **Training API**
+### **lightgbm.cv**
+
+## **ploting**
+### **lightgbm.plot_importance**
+
+- - - 
+
 ## **Parameters Tuning**
 
 https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html
@@ -174,8 +190,12 @@ max_cat_thresholdを小さくすると、トレーニング時間が短縮され
 - **extra_trees**を試す
 - **path_smooth**を増やしてみる
 
+<br>
+- - - 
 
-## **lightgbm.Dataset**
+## **Data Structure API**
+
+### **lightgbm.Dataset**
 
 https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.Dataset.html#lightgbm.Dataset
 
@@ -196,11 +216,16 @@ lightgbm.Dataset (data, label=None, reference=None, weight=None, group=None, ini
 |params<br> (dict or None, optional (default=None))|Other parameters for Dataset.)|Datasetのその他のパラメータ。|
 |free_raw_data<br> (bool, optional (default=True))|If True, raw data is freed after constructing inner Dataset.|Trueの場合、内部のDatasetを構築した後に生データを解放します。|
 
-## **lightgbm.train**
+<br>
+- - - 
+
+## **Training API**
+
+### **lightgbm.train**
 
 https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.train.html
 
-## **lightgbm.cv**
+### **lightgbm.cv**
 
 https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.cv.html
 
@@ -242,7 +267,11 @@ lightgbm.cv (params, train_set, num_boost_round=100, folds=None, nfold=5, strati
 |Returns|eval_hist|Evaluation history. The dictionary has the following format: {‘metric1-mean’: [values], ‘metric1-stdv’: [values], ‘metric2-mean’: [values], ‘metric2-stdv’: [values], …}. If return_cvbooster=True, also returns trained boosters via cvbooster key.評価履歴. 辞書の形式は以下のとおりです．{'metric1-mean': [値], 'metric1-stdv': [値], 'metric2-mean': [値], 'metric2-stdv': [値], ...}. return_cvbooster=True の場合，cvbooster キーによって学習されたブースターも返されます．|
 |Return type|dict|戻り値のタイプ: dict|
 
-#### **lightgbm.plot_importance**
+<br>
+- - - 
+## **ploting**
+
+### **lightgbm.plot_importance**
 
 https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.plot_importance.html#lightgbm.plot_importance
 
