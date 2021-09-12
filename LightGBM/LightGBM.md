@@ -1,5 +1,8 @@
 ## **Parameters Tuning**
 
+https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html
+
+
 ### **Tune Parameters for the Leaf-wise (Best-first) Tree**
 
 LightGBM は、リーフワイズ木成長アルゴリズムを使用していますが、他の多くの一般的なツールは、深度ワイズ木成長を使用しています。深さ方向の木の成長に比べて、葉の方向のアルゴリズムははるかに速く収束することができます。しかし、適切なパラメータを使用しないと、葉の成長はオーバーフィッティングになる可能性があります。
@@ -173,6 +176,9 @@ max_cat_thresholdを小さくすると、トレーニング時間が短縮され
 
 
 ## **lightgbm.Dataset**
+
+https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.Dataset.html#lightgbm.Dataset
+
 lightgbm.Dataset (data, label=None, reference=None, weight=None, group=None, init_score=None, silent='warn', feature_name='auto', categorical_feature='auto', params=None, free_raw_data=True)
 
 
@@ -192,7 +198,11 @@ lightgbm.Dataset (data, label=None, reference=None, weight=None, group=None, ini
 
 ## **lightgbm.train**
 
+https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.train.html
+
 ## **lightgbm.cv**
+
+https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.cv.html
 
 lightgbm.cv (params, train_set, num_boost_round=100, folds=None, nfold=5, stratified=True, shuffle=True, metrics=None, fobj=None, feval=None, init_model=None, feature_name='auto', categorical_feature='auto', early_stopping_rounds=None, fpreproc=None, verbose_eval=None, show_stdv=True, seed=0, callbacks=None, eval_train_metric=False, return_cvbooster=False)
 
@@ -232,6 +242,28 @@ lightgbm.cv (params, train_set, num_boost_round=100, folds=None, nfold=5, strati
 |Returns|eval_hist|Evaluation history. The dictionary has the following format: {‘metric1-mean’: [values], ‘metric1-stdv’: [values], ‘metric2-mean’: [values], ‘metric2-stdv’: [values], …}. If return_cvbooster=True, also returns trained boosters via cvbooster key.評価履歴. 辞書の形式は以下のとおりです．{'metric1-mean': [値], 'metric1-stdv': [値], 'metric2-mean': [値], 'metric2-stdv': [値], ...}. return_cvbooster=True の場合，cvbooster キーによって学習されたブースターも返されます．|
 |Return type|dict|戻り値のタイプ: dict|
 
+#### **lightgbm.plot_importance**
+
+https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.plot_importance.html#lightgbm.plot_importance
+
+lightgbm.plot_importance (booster, ax=None, height=0.2, xlim=None, ylim=None, title='Feature importance', xlabel='Feature importance', ylabel='Features', importance_type='auto', max_num_features=None, ignore_zero=True, figsize=None, dpi=None, grid=True, precision=3, **kwargs)
+
+|項目|説明|
+|---|---|
+|booster<br>(Booster or LGBMModel)|各特徴重要性をプロットする対象のBooster または LGBMModel インスタンス|
+|ax=None<br>(matplotlib.axes.Axes or None, optional (default=None))|対象となる軸のインスタンス。Noneの場合、新しい図と軸が作成される|
+|height<br>(float, optional (default=0.2))|ax.barh() に渡される棒の高さ(幅|
+|xlim, ylim<br>tuple of 2 elements or None, optional (default=None))|ax.xlim(), ax.ylim()に渡されるタプル|
+|title<br>(str or None, optional (default="Feature importance")) |軸のタイトル．Noneの場合，タイトルは無効になる|
+|xlabel, ylabel<br>(str or None, optional (default: x="Feature importance", y=Features")))| X 軸、Y 軸のタイトルラベル。Noneの場合、タイトルは無効になる|
+|importance_type<br>(str, optional (default="auto"))|重要度の計算方法。"auto"の場合、boosterパラメータがLGBMModelであれば、booster.importance_type属性が使用され、そうでなければ "split" となる。"split" の場合、結果にはその特徴がモデル内で使用された回数が含まれる。"gain" の場合、その特徴を使用した分割の合計ゲインが結果に含まれる。|
+|max_num_features<br>(int or None, optional (default=None))|プロットに表示される上位フィーチャーの最大数。None または <1 の場合、すべてのフィーチャーが表示さる|
+|ignore_zero<br>(bool, optional (default=True))|重要度ゼロの特徴を無視するかどうか|
+|figsize<br>(tuple of 2 elements or None, optional (default=None)|プロット領域サイズ|
+|dpi<br>(bool, optional (default=True))|図形の解像度|
+|grid<br>(bool, optional (default=True))|軸のグリッドを追加するかどうか|
+|precision<br>(int or None, optional (default=3))|浮動小数点値の表示を特定の精度に制限するために使用する|
+|\*\*kwargs|ax.barh()に渡されるその他のパラメータ|
 
 
 www.DeepL.com/Translator（無料版）で翻訳しました。
