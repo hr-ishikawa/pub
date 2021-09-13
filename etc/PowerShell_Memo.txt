@@ -441,6 +441,11 @@ $hosts = ('www.yahoo.co.jp','www.google.com')
 while(1){$hosts|%{$h=$_;ping -n 1 -w 1000 $h|Select-String '要求|応答'|%{Write-Output((Get-Date -F 'hh:mm:ss')+': '+$h+"`t"+$_.Line)}};sleep 10}
 
 -------
+■関数
+function Func{ Param($x)
+}
+
+-------
 ■カスタムオブジェクト作成
 # ハッシュでプロパティを設定
 $Object = New-Object PSObject -Property @{
@@ -455,7 +460,6 @@ $Object = New-Object PSObject -Property @{
 }) | ft
 
 #Add-Memberで拡張
-
 
 -------
 ■プロパティによるグループ化
@@ -634,7 +638,6 @@ prop11          : prop112
 Name            : Elem11
 LocalName       : Elem11...
 
-
 function ChildNodes{ Param($p)
     $c = $p.ChildNodes
     if($c.Count -le 0){return}
@@ -786,18 +789,6 @@ $j2 = Start-Job -ScriptBlock { Start-Sleep -Seconds 30 }
 Get-Job
 Wait-Job $j1,$j2
 Get-Job
-
--------
-■loop
-
-foreach( $i in 0..7){ }
-
--------
-■関数
-
-function Func{ Param($x)
-
-}
 
 -------
 ■コマンラインから起動
