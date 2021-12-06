@@ -1,39 +1,63 @@
 ===================
 http://qiita.com/jca02266/items/a0c71ae90d055ab3893c
-powershell ãƒãƒ¼ãƒˆã‚·ãƒ¼ãƒˆ
+powershell ƒ`[ƒgƒV[ƒg
 
 https://technet.microsoft.com/ja-jp/magazine/hh551144.aspx
-Windows PowerShell: ã‚¹ã‚¯ãƒªãƒ—ãƒˆä½œæˆã®çŸ­æœŸé›†ä¸­è¬›åº§
+Windows PowerShell: ƒXƒNƒŠƒvƒgì¬‚Ì’ZŠúW’†uÀ
 
 https://technet.microsoft.com/ja-jp/scriptcenter/dd772285.aspx
-Windows PowerShell ã‚³ãƒãƒ³ãƒ‰ãƒ¬ãƒƒãƒˆã®ã‚¿ã‚¹ã‚¯åˆ¥ã‚¬ã‚¤ãƒ‰
+Windows PowerShell ƒRƒ}ƒ“ƒhƒŒƒbƒg‚Ìƒ^ƒXƒN•ÊƒKƒCƒh
 
 ===================
 ---------------
-â– PowerShellãƒãƒ¼ã‚¸ãƒ§ãƒ³
-> $PSVersionTable
+¡PowerShellƒo[ƒWƒ‡ƒ“
+$PSVersionTable
+[Windows 10 Ver.1607]
 Name                           Value
 ----                           -----
-PSVersion                      5.1.19041.1151
-PSEdition                      Desktop
+PSVersion                      5.1.14393.187
+BuildVersion                   10.0.14393.187
+
+[Windows 10]
+Name                           Value
+----                           -----
+PSVersion                      5.0.10586.122
 PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0...}
-BuildVersion                   10.0.19041.1151
+BuildVersion                   10.0.10586.122
 CLRVersion                     4.0.30319.42000
 WSManStackVersion              3.0
 PSRemotingProtocolVersion      2.3
 SerializationVersion           1.1.0.1
 
-> winver
-Windows 10; 21H1, (OS Build. 19043.1165)
+[Windows 10 1709]
+PSVersion                      5.1.16299.64
+BuildVersion                   10.0.16299.64
+
+[Windows 10 1709?]
+Name                           Value
+----                           -----
+PSVersion                      5.1.16299.251
+BuildVersion                   10.0.16299.251
+
+[Windows 10 1803 OS Build:17134.1]
+Name                           Value
+----                           -----
+PSVersion                      5.1.17134.1
+BuildVersion                   10.0.17134.1
 
 
-â– ã‚¹ã‚¯ãƒªãƒ—ãƒˆå®Ÿè¡Œæ¨©é™ãƒãƒªã‚·ãƒ¼
+Windows 7SP1,8.1,2008R2SP1,2012R2	PSVersion 4.0
+Windows 8,2008  	PSVersion 3.0
+
+¡ƒXƒNƒŠƒvƒgÀsŒ ŒÀƒ|ƒŠƒV[
 Get-ExecutionPolicy
 RemoteSigned
 
-powershell -ExecutionPolicy RemoteSigned -file script.ps1  # æ¨©é™ãƒãƒªã‚·ãƒ¼ã‚’æŒ‡å®šã—ã¦å®Ÿè¡Œ
+Set-ExecutionPolicy RemoteSigned # ŠÇ—ÒŒ ŒÀ‚ÅÀs
 
-â– Objectã®Methodã€Propertyã‚’èª¿ã¹ã‚‹
+powershell -ExecutionPolicy RemoteSigned -file script.ps1  # Œ ŒÀƒ|ƒŠƒV[‚ğw’è‚µ‚ÄÀs
+
+¡Object‚ÌMethodAProperty‚ğ’²‚×‚é
 Get-Member
 
 Get-Date | Get-Member
@@ -44,52 +68,52 @@ Name                 MemberType     Definition
 ----                 ----------     ----------
 Add                  Method         datetime Add(timespan value)
 AddDays              Method         datetime AddDays(double value)
-<<ç•¥>>
+<<—ª>>
 DisplayHint          NoteProperty   DisplayHintType DisplayHint=DateTime
 Date                 Property       datetime Date {get;}
 Day                  Property       int Day {get;}
-<<ç•¥>>
+<<—ª>>
 Year                 Property       int Year {get;}
 DateTime             ScriptProperty System.Object DateTime {get=if ((& { Set-StrictMode -Version 1; $this.DisplayHin...
 
-â– PowerShellå¤‰æ•°ã‚’èª¿ã¹ã‚‹
+¡PowerShell•Ï”‚ğ’²‚×‚é
 $a='AAA'
 $a.GetType().FullName   # System.String
 
 ---------------
-â– promptã‚’å¤‰æ›´
+¡prompt‚ğ•ÏX
 function prompt {
   'PS '+((get-location).ProviderPath.substring(0,(Get-Location).ProviderPath.IndexOf('\',2)))+'\..\'+(Split-Path (Get-Location) -Leaf) + '> '
 }
 
 
 ---------------
-â– Option CommonParameters
-(ã‹ã£ã“å†…ã¯ã‚¨ã‚¤ãƒªã‚¢ã‚¹)
+¡Option CommonParameters
+(‚©‚Á‚±“à‚ÍƒGƒCƒŠƒAƒX)
 -Debug (db)
 -ErrorAction (ea)
-	Continueã€‚	# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã€ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã‚’ç¶šè¡Œã—ã¾ã™ã€‚æ—¢å®šå€¤ã¯ "Continue" ã§ã™ã€‚
-	Inquireã€‚	# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã€å®Ÿè¡Œã‚’ç¶šã‘ã‚‹å‰ã«ç¢ºèªãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚ã“ã®å€¤ã¯ã»ã¨ã‚“ã©ä½¿ç”¨ã—ã¾ã›ã‚“ã€‚
-	SilentlyContinueã€‚# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã›ãšã€ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã‚’ç¶šã‘ã¾ã™ã€‚
-	Stopã€‚  	# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã€ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã‚’åœæ­¢ã—ã¾ã™ã€‚
--ErrorVariable (ev)	# å¤‰æ•°ã«æ ¼ç´
--OutVariable (ov)	# ã‚³ãƒãƒ³ãƒ‰ã‹ã‚‰ã®å‡ºåŠ›ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æŒ‡å®šã•ã‚ŒãŸå¤‰æ•°ã«æ ¼ç´
+	ContinueB	# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚µAƒRƒ}ƒ“ƒh‚ÌÀs‚ğ‘±s‚µ‚Ü‚·BŠù’è’l‚Í "Continue" ‚Å‚·B
+	InquireB	# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚µAÀs‚ğ‘±‚¯‚é‘O‚ÉŠm”FƒƒbƒZ[ƒW‚ğ•\¦‚µ‚Ü‚·B‚±‚Ì’l‚Í‚Ù‚Æ‚ñ‚Çg—p‚µ‚Ü‚¹‚ñB
+	SilentlyContinueB# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚¹‚¸AƒRƒ}ƒ“ƒh‚ÌÀs‚ğ‘±‚¯‚Ü‚·B
+	StopB  	# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚µAƒRƒ}ƒ“ƒh‚ÌÀs‚ğ’â~‚µ‚Ü‚·B
+-ErrorVariable (ev)	# •Ï”‚ÉŠi”[
+-OutVariable (ov)	# ƒRƒ}ƒ“ƒh‚©‚ç‚Ìo—ÍƒIƒuƒWƒFƒNƒg‚ğw’è‚³‚ê‚½•Ï”‚ÉŠi”[
 -OutBuffer (ob)
--PipelineVariable (pv)	# ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚’é€šéã™ã‚‹åå‰ä»˜ãã‚³ãƒãƒ³ãƒ‰ã®ãŸã‚ã«ã€ç¾åœ¨ã®ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³è¦ç´ ã®å€¤ã‚’å¤‰æ•°ã¨ã—ã¦æ ¼ç´
--Verbose (vb)		# ã‚³ãƒãƒ³ãƒ‰ã«ã‚ˆã£ã¦å®Ÿè¡Œã•ã‚ŒãŸæ“ä½œã®è©³ç´°æƒ…å ±ã‚’è¡¨ç¤º
+-PipelineVariable (pv)	# ƒpƒCƒvƒ‰ƒCƒ“‚ğ’Ê‰ß‚·‚é–¼‘O•t‚«ƒRƒ}ƒ“ƒh‚Ì‚½‚ß‚ÉAŒ»İ‚ÌƒpƒCƒvƒ‰ƒCƒ“—v‘f‚Ì’l‚ğ•Ï”‚Æ‚µ‚ÄŠi”[
+-Verbose (vb)		# ƒRƒ}ƒ“ƒh‚É‚æ‚Á‚ÄÀs‚³‚ê‚½‘€ì‚ÌÚ×î•ñ‚ğ•\¦
 -WarningAction (wa)
-	Continueã€‚	# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã€ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã‚’ç¶šè¡Œã—ã¾ã™ã€‚æ—¢å®šå€¤ã¯ "Continue" ã§ã™ã€‚
-	Inquireã€‚	# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã€å®Ÿè¡Œã‚’ç¶šã‘ã‚‹å‰ã«ç¢ºèªãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚ã“ã®å€¤ã¯ã»ã¨ã‚“ã©ä½¿ç”¨ã—ã¾ã›ã‚“ã€‚
-	SilentlyContinueã€‚# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã›ãšã€ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã‚’ç¶šã‘ã¾ã™ã€‚
-	Stopã€‚  	# è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã€ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã‚’åœæ­¢ã—ã¾ã™ã€‚
--WarningVariable (wv)	# å¤‰æ•°ã«æ ¼ç´
+	ContinueB	# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚µAƒRƒ}ƒ“ƒh‚ÌÀs‚ğ‘±s‚µ‚Ü‚·BŠù’è’l‚Í "Continue" ‚Å‚·B
+	InquireB	# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚µAÀs‚ğ‘±‚¯‚é‘O‚ÉŠm”FƒƒbƒZ[ƒW‚ğ•\¦‚µ‚Ü‚·B‚±‚Ì’l‚Í‚Ù‚Æ‚ñ‚Çg—p‚µ‚Ü‚¹‚ñB
+	SilentlyContinueB# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚¹‚¸AƒRƒ}ƒ“ƒh‚ÌÀs‚ğ‘±‚¯‚Ü‚·B
+	StopB  	# ŒxƒƒbƒZ[ƒW‚ğ•\¦‚µAƒRƒ}ƒ“ƒh‚ÌÀs‚ğ’â~‚µ‚Ü‚·B
+-WarningVariable (wv)	# •Ï”‚ÉŠi”[
 
 -CONFIRM[:{$TRUE | $FALSE}]
 -WhatIf (wi)
 	   -Confirm (cf)
 
 ---------------
-â– ã‚¨ãƒ©ãƒ¼å‡¦ç†
+¡ƒGƒ‰[ˆ—
 $erroractionpreference = 
  -Continue
  -SilentlyContinue
@@ -97,76 +121,85 @@ $erroractionpreference =
  -Stop
 
 ---------------
-â– Powershell ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œã«ã‚¨ãƒ©ãƒ¼åˆ¤æ–­
+¡Powershell ƒRƒ}ƒ“ƒhÀs‚ÉƒGƒ‰[”»’f
 
-â—†$?
+Ÿ$?
 
-æˆåŠŸã®å ´åˆã€$?ã¯$trueã€å¤±æ•—ã®å ´åˆã¯$false
+¬Œ÷‚Ìê‡A$?‚Í$trueA¸”s‚Ìê‡‚Í$false
 
-â—†Trap{}
+ŸTrap{}
 trap{
 	Write-Output 'Exception Occured.'
 	Write-Output $Error[0]
 	Write-Output $Error[0].InvocationInfo.PositionMessage
 }
  
-â—†Try{}Catch{}ã§å‡¦ç†
+ŸTry{}Catch{}‚Åˆ—
 Try{
-	#ErrorãŒç™ºç”Ÿã™ã‚‹æã‚Œã®ã‚ã‚‹ã‚³ãƒ¼ãƒ‰
+	#Error‚ª”­¶‚·‚é‹°‚ê‚Ì‚ ‚éƒR[ƒh
 }Catch{
-	#ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸå ´åˆã®å‡¦ç†ã‚’è¨˜è¿°
+	#ƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚Ìˆ—‚ğ‹Lq
+    Write-Host $_ # ”­¶‚µ‚½ƒGƒ‰[‚ğŠÜ‚ŞƒGƒ‰[ƒŒƒR[ƒh‚Í catchƒuƒƒbƒN“à‚ÉŒÀ‚è$_©“®•Ï”‚ÉŠi”[
 }
 
 ---------------
-â– æ–‡å­—åˆ—ã‚’ã‚³ãƒãƒ³ãƒ‰ã¨ã—ã¦å®Ÿè¡Œ
+¡•¶š—ñ‚ğƒRƒ}ƒ“ƒh‚Æ‚µ‚ÄÀs
 Invoke-Expression "command"
 
-â– å¤–éƒ¨ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œ
-fc.exe file1 file2	# ãƒ•ã‚¡ã‚¤ãƒ«åã§æŒ‡å®š
+¡ŠO•”ƒRƒ}ƒ“ƒhÀs
+fc.exe file1 file2	# ƒtƒ@ƒCƒ‹–¼‚Åw’è
 
-$r = &'dir'	# &: fork(çµ‚äº†ã¯å¾…ãŸãªã„)
+$r = &'dir'	# &: fork(I—¹‚Í‘Ò‚½‚È‚¢)
 Write-Output $r
 
 $r = &$pg_flag -d -f $wk_flac 2>&1
 Write-Output $r
 
-â—†åˆ¥ãƒ—ãƒ­ã‚»ã‚¹ã§å®Ÿè¡Œ(forkã®ã‚ˆã†ãªã‚‚ã®)ã€€-Waitã§çµ‚äº†ã‚’å¾…ã¤ -NoNewWindowã§ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‹ã‹ãªã„
+Ÿ•ÊƒvƒƒZƒX‚ÅÀs(fork‚Ì‚æ‚¤‚È‚à‚Ì)@-Wait‚ÅI—¹‚ğ‘Ò‚Â(exec‚Ì‚æ‚¤‚È‚à‚Ì) -NoNewWindow‚ÅƒEƒBƒ“ƒhƒE‚ğŠJ‚©‚È‚¢
 Start-Process 'notepad.exe' -Wait -NoNewWindow -ArgumentList 'test.txt'
 $proc = Start-Process -FilePath 'robocopy.exe' -ArgumentList '.\dir1  .\dir2 /S /E /COPY:DATSOU /PURGE /R:5 /W:30 /MT:1' -Wait -PassThru -WorkingDirectory $PSScriptRoot -RedirectStandardOutput '.\robocopy.log' -RedirectStandardError '.\robocopy_err.log'
-# -ArgumentList ã®å€¤ã¯ãƒªã‚¹ãƒˆ
+# -ArgumentList ‚Ì’l‚ÍƒŠƒXƒg
+
+$proc = Start-Process -FilePath commmand -ArgumentList arguments -Wait -PassThru
+$proc.ExitCode # I—¹ƒR[ƒh‚ğæ“¾(-PassThru‚ª•K—v)
 
 -------
-â– pipe/redirect(ãƒªãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆ)
+¡pipe/redirect(ƒŠƒ_ƒCƒŒƒNƒg)
 Get-ChildItem ABCD.txt 2>   errmsg.txt
 Get-ChildItem ABCD.txt 2>&1 mixedmsg.txt
 Get-ChildItem ABCD.txt > Out-Null
 
-â—†PowerShellã®ã‚¹ãƒˆãƒªãƒ¼ãƒ ã¨æ¨™æº–å…¥å‡ºåŠ›ã€ãƒªãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆã¨ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
+ŸPowerShell‚ÌƒXƒgƒŠ[ƒ€‚Æ•W€“üo—ÍAƒŠƒ_ƒCƒŒƒNƒg‚ÆƒpƒCƒvƒ‰ƒCƒ“
 http://stknohg.hatenablog.jp/entry/2015/06/26/001944
-PowerShellã®Error output streamã¯æ¨™æº–ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ã‹ã‚‰ä½•ã‚’å—ã‘å–ã£ã¦ã„ã‚‹ã®ã‹ï¼Ÿ
+PowerShell‚ÌError output stream‚Í•W€ƒGƒ‰[o—Í‚©‚ç‰½‚ğó‚¯æ‚Á‚Ä‚¢‚é‚Ì‚©H
 http://stknohg.hatenablog.jp/entry/2015/06/28/170457
 
-ã‚¹ãƒˆãƒªãƒ¼ãƒ  	å‡ºåŠ›ã•ã‚Œã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‹ 	ãƒªãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆæ–¹æ³• 	å‡ºåŠ›æ–¹æ³• 	ç‰¹è¨˜äº‹é …
-Standard output stream 	ObjectãŠã‚ˆã³ãã®æ´¾ç”Ÿå‹ (æ­£ç¢ºã«ã¯PSObjectã‚‰ã—ã„) 	>(>>) 1>(1>>) 	Write-Outputãªã© 	æ¨™æº–å‡ºåŠ›ã«ç›¸å½“
-Error output stream 	ErrorRecord 	2>(2>>) 	Write-Errorãªã© 	æ¨™æº–ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ã«ç›¸å½“
-Warning output stream 	WarningRecord 	3>(3>>) 	Write-Warningã®ã¿ 	PowerShell 3.0ä»¥ä¸Š
-Verbose output stream 	VerboseRecord 	4>(4>>) 	Write-Verboseã®ã¿ 	PowerShell 3.0ä»¥ä¸Š
-Debug output stream 	DebugRecord 	5>(5>>) 	Write-Debugã®ã¿ 	PowerShell 3.0ä»¥ä¸Š
-Progress stream 	ProgressRecord 	ãƒªãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆä¸å¯ 	Write-Progressã®ã¿ 	
-Information stream 	InformationRecord 	6>(6>>) 	Write-Hostã€Write-Informationã®ã¿ 	PowerShell 5.0ä»¥ä¸Š
+ƒXƒgƒŠ[ƒ€ 	o—Í‚³‚ê‚éƒIƒuƒWƒFƒNƒg‚ÌŒ^ 	ƒŠƒ_ƒCƒŒƒNƒg•û–@ 	o—Í•û–@ 	“Á‹L–€
+Standard output stream 	Object‚¨‚æ‚Ñ‚»‚Ì”h¶Œ^ (³Šm‚É‚ÍPSObject‚ç‚µ‚¢) 	>(>>) 1>(1>>) 	Write-Output‚È‚Ç 	•W€o—Í‚É‘Š“–
+Error output stream 	ErrorRecord 	2>(2>>) 	Write-Error‚È‚Ç 	•W€ƒGƒ‰[o—Í‚É‘Š“–
+Warning output stream 	WarningRecord 	3>(3>>) 	Write-Warning‚Ì‚İ 	PowerShell 3.0ˆÈã
+Verbose output stream 	VerboseRecord 	4>(4>>) 	Write-Verbose‚Ì‚İ 	PowerShell 3.0ˆÈã
+Debug output stream 	DebugRecord 	5>(5>>) 	Write-Debug‚Ì‚İ 	PowerShell 3.0ˆÈã
+Progress stream 	ProgressRecord 	ƒŠƒ_ƒCƒŒƒNƒg•s‰Â 	Write-Progress‚Ì‚İ 	
+Information stream 	InformationRecord 	6>(6>>) 	Write-HostAWrite-Information‚Ì‚İ 	PowerShell 5.0ˆÈã
+
+•W€/ƒGƒ‰[o—Í‚ğ•Ï”‚ÉŠi”[
+
+$x = ren aaaa bbbb 2>&1
+Write-Output ($x)
 
 -------
-â– tee
-Tee-Object (-FilePath) [ãƒ•ã‚¡ã‚¤ãƒ«å] -Append
-Tee-Object -Variable [å¤‰æ•°å]
+¡tee
+Tee-Object (-FilePath) [ƒtƒ@ƒCƒ‹–¼] -Append
+Tee-Object -Variable [•Ï”–¼]
 
 -------
-â– å‡ºåŠ›å…ˆ
+¡o—Íæ
 Out-GridView
 Out-Null
 
 ---------------
-â– é…åˆ—(ãƒªã‚¹ãƒˆ/List)
+¡”z—ñ(ƒŠƒXƒg/List/ƒRƒŒƒNƒVƒ‡ƒ“)
 
 $list = @()
 $list = ( 'One', 'Two', 'Three' )
@@ -188,7 +221,7 @@ for($i=10;$i-ge5;$i--){$l2+=$i}
 $l1
 $l2
 $l2=$l1
-$l2		# é…åˆ—ã®é•·ã•ã¯ä»£å…¥å…ƒã«ã‚ã‚ã•ã‚Œã‚‹
+$l2		# ”z—ñ‚Ì’·‚³‚Í‘ã“üŒ³‚É‚ ‚í‚³‚ê‚é
 
 $list2 = 'One Two Three'.Split(' ')
 $list2 += $list[3..4]
@@ -196,7 +229,7 @@ $list2
 $list2[2] = $null
 $list2
 
-# å…¥ã‚Œå­(å¤šå±¤é…åˆ—)
+# “ü‚êq(‘½‘w”z—ñ)
 
 $list = @()
 $l += ('AA')
@@ -209,7 +242,7 @@ $l[0]		# AA
 $l[1]		# BB
 
 $l = @()
-$l += ,('AA','BB')	# ã‚«ãƒ³ãƒ
+$l += ,('AA','BB')	# ƒJƒ“ƒ}
 $l += ,('CC','DD')	# (('AA','BB'), ('CC','DD'))
 $l[0]		#  ('AA','BB')
 $l[1]		#  ('CC','DD')
@@ -218,7 +251,7 @@ $l[1][1]	# 'DD'
 
 
 ---------------
-â– é€£æƒ³é…åˆ—(ãƒãƒƒã‚·ãƒ¥/Hash)
+¡˜A‘z”z—ñ(ƒnƒbƒVƒ…/Hash)
 
 $hash = @{}
 $hash = @{'One' = 1; 'Two' = 2; 'Three' = 3}
@@ -238,15 +271,15 @@ $hash.Keys | Sort-Object | %{$_ + ':' + $hash[$_]}
 $hash.GetEnumerator() | sort value
 $hash.Keys | Measure-Object | %{ $_.Count }	# 3
 ---------------
-â– ç‰¹æ®Šå¤‰æ•°
+¡“Áê•Ï”
 $_
-$?	# æœ€å¾Œã«å®Ÿè¡Œã—ãŸã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡ŒçŠ¶æ…‹ã‚’ä¿æŒã™ã‚‹ãƒ–ãƒ¼ãƒ«å¤‰æ•°
+$?	# ÅŒã‚ÉÀs‚µ‚½ƒRƒ}ƒ“ƒh‚ÌÀsó‘Ô‚ğ•Û‚·‚éƒu[ƒ‹•Ï”
 $matches[]
 
 ---------------
-â– ç’°å¢ƒå¤‰æ•°
+¡ŠÂ‹«•Ï”
 Get-Variable
-$HOMEã€€ã€€ã€€ã€€                # C:\Users\hoge
+$HOME@@@@                # C:\Users\hoge
 $LASTEXITCODE                # 0
 $VerbosePreference           # SilentlyContinue
 $WarningPreference           # Continue
@@ -256,7 +289,7 @@ Get-ChildItem env:HOMEPATH   # \Users\hoge
 Get-ChildItem env:TEMP       # C:\Users\hoge\AppData\Local\Temp
 
 ---------------
-â– ãƒ’ã‚¢æ–‡å­—åˆ—
+¡ƒqƒA•¶š—ñ
 $s = @'
 AA
 BB
@@ -266,42 +299,43 @@ $list = $s -split "`n"
 ($s -split "`n") -join '|'
 
 ---------------
-â– Join é…åˆ—ã®çµåˆ
+¡Join ”z—ñ‚ÌŒ‹‡
 
 ('AA','BB') -join '/'	# AA/BB
 ('AA','BB') -join '(/)'	# AA(/)BB
 
 ---------------
-â– Split æ–‡å­—åˆ—ã®åˆ†å‰² => é…åˆ—
+¡Split •¶š—ñ‚Ì•ªŠ„ => ”z—ñ
 # Method
-"AA BB`tCC`nDD,,EE  FF ".Split()    	# ('','AA','BB','CC','DD,,EE','','FF','')	# ç©ºç™½ã€ã‚¿ãƒ–ã€æ”¹è¡Œã§åˆ†å‰²
-"AA BB`tCC`nDD,,EE  FF ".Split(',/')	# ("AA BB`tCC`nDD",'','EE  FF ')	# åŒºåˆ‡ã‚Šæ–‡å­—ã‚’åˆ—æŒ™
+"AA BB`tCC`nDD,,EE  FF ".Split()    	# ('','AA','BB','CC','DD,,EE','','FF','')	# ‹ó”’Aƒ^ƒuA‰üs‚Å•ªŠ„
+"AA BB`tCC`nDD,,EE  FF ".Split(',/')	# ("AA BB`tCC`nDD",'','EE  FF ')	# ‹æØ‚è•¶š‚ğ—ñ‹“
 
-' AA  BB '.split()	# ('','AA','','BB','')	# é‡è¤‡ã‚’è€ƒæ…®ã—ãªã„
+' AA  BB '.split()	# ('','AA','','BB','')	# d•¡‚ğl—¶‚µ‚È‚¢
 " AA`tBB ".split(" `t")	# ('','AA','BB','')
 
 # Operator
 
-# 1é …æ¼”ç®—å­ ç©ºç™½ã€ã‚¿ãƒ–ã€æ”¹è¡Œã§åˆ†å‰²
+# 1€‰‰Zq ‹ó”’Aƒ^ƒuA‰üs‚Å•ªŠ„
 -split ' AA  BB '	# ('AA','BB')
 -split " AA`tBB`nCC "	# ('AA','BB','CC')
 
-# 2é …æ¼”ç®—å­ã€€2é …ç›®ã®ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã¯æ­£è¦è¡¨ç¾
+# 2€‰‰Zq@2€–Ú‚ÌƒIƒyƒ‰ƒ“ƒh‚Í³‹K•\Œ»
 'AA BB.CC/DD' -split '[ \./]'	# ('AA','BB','CC','DD')
 'AA BB.CC/DD' -split 'BB'	# ('AA','.CC/DD')
 ' AA BB..CC/DD' -split '[ \./]'	# ('','AA','BB','','CC','DD')
 
 
 ---------------
-â– Trim Methodã€€æœ€åˆã¨æœ€å¾Œã®ç©ºç™½ã‚’å‰Šé™¤
+¡Trim Method@Å‰‚ÆÅŒã‚Ì‹ó”’‚ğíœ
 ' AA   BB '.Trim()	# 'AA   BB'
-' AA   BB '.Trimend()	# ' AA   BB'	# æœ€å¾Œã®ç©ºç™½ã‚’å‰Šé™¤
+
+' AA   BB '.Trimend()	# ' AA   BB'	# ÅŒã‚Ì‹ó”’‚ğíœ
 
 ---------------
-â– match	?:æœ€çŸ­ãƒãƒƒãƒã€ã‚°ãƒ«ãƒ¼ãƒ—åŒ–æ§‹æˆä½“(subexpression)
+¡match	?:Å’Zƒ}ƒbƒ`AƒOƒ‹[ƒv‰»\¬‘Ì(subexpression)
 
 'ABCDEFGABCDeFG' -match 'B.*(C.+F).*(D.+G).*';$matches
-#$matches[0] => BCDEFGABCDeFG	# matchå…¨ä½“
+#$matches[0] => BCDEFGABCDeFG	# match‘S‘Ì
 #$matches[1] => CDEF
 #$matches[2] => DeFG
 
@@ -313,11 +347,11 @@ $list = $s -split "`n"
 '<<foo>>'      -match '<.*?>'     ; $matches[0]	# '<<foo>'
 '<<foo>>'      -match '<[^<>]*?>' ; $matches[0]	# '<foo>'
 
-æ­£è¦è¡¨ç¾è¨€èª - ã‚¯ã‚¤ãƒƒã‚¯ ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹
+³‹K•\Œ»Œ¾Œê - ƒNƒCƒbƒN ƒŠƒtƒ@ƒŒƒ“ƒX
 https://msdn.microsoft.com/ja-jp/library/az24scfc(v=vs.110).aspx
 
 
-â– å‹•çš„ã«å¤‰æ•°åã‚’æŒ‡å®šã—ã¦å€¤ã‚’å–å¾—
+¡“®“I‚É•Ï”–¼‚ğw’è‚µ‚Ä’l‚ğæ“¾
 $var = 'VAR'
 $name = 'var'
 Get-Variable -ValueOnly $name   # VAR
@@ -329,7 +363,7 @@ Get-Variable $name
 $dir = (dir test*)
 $dir
 #
-#     ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª: C:\Users\ishi\Documents
+#     ƒfƒBƒŒƒNƒgƒŠ: C:\Users\ishi\Documents
 # Mode                LastWriteTime         Length Name
 # ----                -------------         ------ ----
 # -a----       2019/06/23     18:07         643850 TEST.html
@@ -338,35 +372,46 @@ $dir
 (Get-Variable -ValueOnly $name)[0].Name
 # TEST.html
 
-â– å‹•çš„ã«propertyã‚’æŒ‡å®šã—ã¦å€¤ã‚’å–å¾—
+¡“®“I‚Éproperty‚ğw’è‚µ‚Ä’l‚ğæ“¾
 $dir[0].'Length'
 # 643850
 $name = 'Length'
 $dir[0].$name
 # 643850
 
+
+¡Scope
+
+Get-Variable -Scope global # ƒOƒ[ƒoƒ‹•Ï”
+Get-Variable -Scope local  # ‚»‚Ìƒ[ƒJƒ‹ƒXƒR[ƒv‚Å—˜—p‰Â”\‚È•Ï”
+
+function ck_scope1{ Write-Host ('In Fnc: '+$a) }
+$a = 'one'; ck_scope1
+function ck_scope1{ $a = 'two'; Write-Host ('In Fnc: '+$a) }
+$a = 'one'; ck_scope1; Write-Host $a
+
 ---------------
-â– è¨ˆç®—
+¡ŒvZ
 [math]::Round(123.45)		# 123
-[math]::Round(123.45,1)		# 123.4 !!æœ€è¿‘å¶æ•°ä¸¸ã‚ ([MidpointRounding]::ToEven)
+[math]::Round(123.45,1)		# 123.4 !!Å‹ß‹ô”ŠÛ‚ß ([MidpointRounding]::ToEven)
 [math]::Round(123.35,1)		# 123.4
 [math]::Round(123.46,1)		# 123.5
-[Math]::Round(123.45, 1, [MidpointRounding]::AwayFromZero)	# 123.5 å››æ¨äº”å…¥
+[Math]::Round(123.45, 1, [MidpointRounding]::AwayFromZero)	# 123.5 lÌŒÜ“ü
 [math]::Round(123.45,-1)	# Error
 
 [math]::Floor(   123.45)	# 123
 [math]::Ceiling( 123.45)	# 124
-[math]::Floor(  -123.45)	# -124 å°ã•ã„å€¤ã¸ä¸¸ã‚
-[math]::Ceiling(-123.45)	# -123 å¤§ãã„å€¤ã¸ä¸¸ã‚
+[math]::Floor(  -123.45)	# -124 ¬‚³‚¢’l‚ÖŠÛ‚ß
+[math]::Ceiling(-123.45)	# -123 ‘å‚«‚¢’l‚ÖŠÛ‚ß
 
 
 ---------------
-â– Pause
+¡Pause
 $dmy = read-host 'Hello, Hit Any Key to Continue.'
 Write-Host 'Hello, Hit Any Key to Continue.'; [Console]::ReadKey() | Out-Null
 
 ---------------
-â– ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆãƒ»ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+¡ƒtƒH[ƒ}ƒbƒgEƒpƒfƒBƒ“ƒO
 # ToString
 (0).ToString('0.0')	# "0.0"
 (2000).ToString('000000.0')	# "002000.0"
@@ -376,11 +421,11 @@ Write-Host 'Hello, Hit Any Key to Continue.'; [Console]::ReadKey() | Out-Null
 (240).ToString('X4')	# 00F0
 (Get-Date).ToString('yyyy/MM/dd HH:mm:ss.fff')	# 2017/05/22 22:59:16.073
 
-# å³è©°
+# ‰E‹l
 (10000.015).ToString("#,###.##").PadLeft(12)
 '12345'.PadLeft(10,' ')
 
-# f æ¼”ç®—å­
+# f ‰‰Zq
 '{0,5} {1,10:#,#.#} {2:#,#.0}' -f 10 , 2000, 2000.45
 
 [math]::round(98.7654321, 2)
@@ -388,81 +433,139 @@ Write-Host 'Hello, Hit Any Key to Continue.'; [Console]::ReadKey() | Out-Null
 $Str = 'ABCD'
 $Num = 12345.678
 'Sring:{0,-8} Number:{1,12:#,0.00}' -f $Str, $Num
-{å¤‰æ•°ã®é †ç•ª, æ¡æ•°(è² ã¯å·¦è©°)}
+{•Ï”‚Ì‡”Ô, Œ…”(•‰‚Í¶‹l)}
 
 ---------------
-â– æ—¥ä»˜ãƒ»æ™‚åˆ»
+¡“ú•tE
 http://d.hatena.ne.jp/newpops/20050926/p1
 
 (get-date).GetType()
 (get-date).GetType().FullName
 Get-Date -Date '0:0:0.0' -Format 'yyyyMMdd_HH:mm:ss.fff'
 
-æ—¥ä»˜ãƒ»æ™‚åˆ»ã®è¨ˆç®—
+“ú•tE‚ÌŒvZ
 ([DateTime]'1980/01/01 00:00:00').AddMinutes(18326860)
 
+•¶š—ñ‚ğ“ú‚É•ÏŠ·
+[DateTime]::ParseExact("20171231","yyyyMMdd", $null);
+
 -------
-â– 16é€²
+¡ƒwƒLƒT/16i
 $s = 'AB'
-$s.ToCharArray() | %{ã€€Write-Output( $_ + ':' + [System.Convert]::ToInt32([char]$_).ToString("x") ) }
+$s.ToCharArray() | %{@Write-Output( $_ + ':' + [System.Convert]::ToInt32([char]$_).ToString("x") ) }
 A:41
 B:42
 
 -------
-â– åˆ†å²
-if(      è«–ç†å¼1 ){
-    å¼1
-}elseif( è«–ç†å¼2 ){
-    å¼2
+¡ZpŠÖ”; .NET‚ÌMathƒNƒ‰ƒXŠÖ”‚ğ—˜—p‰Â(https://docs.microsoft.com/ja-jp/dotnet/api/system.math?view=net-6.0)
+
+[Math]::Max(1.5,1)   # 1.5
+[Math]::Round(1.5)   # 2 (’†ŠÔ’l‚ÍÅ‚à‹ß‚¢‹ô”’l‚ÉŠÛ‚ß‚ç‚ê‚é [Math]::Round(2.5) => 2)
+[Math]::Ceiling(1.5) # 2
+[Math]::Floor(1.5)   # 1
+[Math]::Pow(2, 3)    # 8
+
+-------
+¡•ªŠò, if
+if(      ˜_—®1 ){
+    ®1
+}elseif( ˜_—®2 ){
+    ®2
 }else{
-    å¼3
+    ®3
 }
 
 -------
-â– ãƒ«ãƒ¼ãƒ—
+¡•ªŠò, switchy”z—ñ‚É‘Î‚µ‚Ä“K—p‚·‚é‚ÆAForEach-Object + if•¶‚Æ“¯‚¶Œø‰Êz
+switch [-Regex|-Wildcard|-Exact][-CaseSensitive] ( <variable> | <literal> | <expression> )
+{
+    <string>|<number>|<variable>|{ <expression> } {<statement list>}
+          ...
+    default {<statement list>}
+}
+
+switch (2,3,4,5) {
+    1 {Write-Host 'One'}
+    2 {Write-Host 'Two'}
+    3 {Write-Host 'Three'}
+    4 {Write-Host 'Four'}
+    default {"Not matched"}
+}
+#Two
+#Three
+#Four
+#Not matched
+
+switch (2,3,4) {
+    1 {Write-Host 'One'}
+    2 {Write-Host 'Two'}
+    3 {Write-Host 'Three'; break;}  # seitch•ª‚©‚ç”²‚¯‚é
+    4 {Write-Host 'Four'}
+    default {"Not matched."}
+}
+#Two
+#Three
+
+switch (2,3,4) {
+    1 {Write-Host 'One'}
+    2 {Write-Host 'Two'}
+    3 {                   continue} # Ÿ‚Ì—v‘f‚Ö, ‚±‚ÌƒP[ƒX‚Å‚Í‰½‚à‚µ‚È‚¢
+    4 {Write-Host 'Four'}
+    default {"Not matched."}
+}
+#Two
+#Four
+
+-------
+¡ƒ‹[ƒv
 for( $i; $i=0; $i++ ){
 }
 
 foreach( $i in 1..10 ){
 }
 
-break		# ä¸­æ–­
-continue	# æ¬¡ã®ç¹°ã‚Šè¿”ã—
+break		# ’†’f
+continue	# Ÿ‚ÌŒJ‚è•Ô‚µ
 
-â—†
+Ÿ
 ForEach-Object{
-    ãƒ»ãƒ»ãƒ»ãƒ»
-    if(){ return }	# æ¬¡ã®ç¹°ã‚Šè¿”ã—ã¸
-    ãƒ»ãƒ»ãƒ»ãƒ»
+    EEEE
+    if(){ return }	# Ÿ‚ÌŒJ‚è•Ô‚µ‚Ö
+    EEEE
 }
 
-â—†ç„¡é™ãƒ«ãƒ¼ãƒ—
+Ÿ–³ŒÀƒ‹[ƒv
 $hosts = ('www.yahoo.co.jp','www.google.com')
-while(1){$hosts|%{$h=$_;ping -n 1 -w 1000 $h|Select-String 'è¦æ±‚|å¿œç­”'|%{Write-Output((Get-Date -F 'hh:mm:ss')+': '+$h+"`t"+$_.Line)}};sleep 10}
+while(1){$hosts|%{$h=$_;ping -n 1 -w 1000 $h|Select-String '—v‹|‰“š'|%{Write-Output((Get-Date -F 'hh:mm:ss')+': '+$h+"`t"+$_.Line)}};sleep 10}
 
--------
-â– é–¢æ•°
-function Func{ Param($x)
+Ÿƒ‰ƒxƒ‹
+:Label foreach( $i in 0..9 ){
+    foreach( $j in 0..9 ){
+	if($i*10+$j -ge 15){break Label}
+    }
 }
+$i*10+$j  # 15
+
 
 -------
-â– ã‚«ã‚¹ã‚¿ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
-# ãƒãƒƒã‚·ãƒ¥ã§ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’è¨­å®š
+¡ƒJƒXƒ^ƒ€ƒIƒuƒWƒFƒNƒgì¬
+# ƒnƒbƒVƒ…‚ÅƒvƒƒpƒeƒB‚ğİ’è
 $Object = New-Object PSObject -Property @{
     Day  = (Get-Date -F 'yyyy/MM/dd')
     Time = (Get-Date -F 'hh:mm:ss')
 }
 
-#ãƒ‘ã‚¤ãƒ—ã«æµã™
+#ƒpƒCƒv‚É—¬‚·
 (New-Object PSObject -Property @{ 
 	Day =(Get-Date -F 'yyyy/MM/dd');
 	Time=(Get-Date -F 'hh:mm:ss')
 }) | ft
 
-#Add-Memberã§æ‹¡å¼µ
+#Add-Member‚ÅŠg’£
+
 
 -------
-â– ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã«ã‚ˆã‚‹ã‚°ãƒ«ãƒ¼ãƒ—åŒ–
+¡ƒvƒƒpƒeƒB‚É‚æ‚éƒOƒ‹[ƒv‰»
 Get-EventLog System -After (Get-Date).ADDdays(-1) | Group-Object Source
 Count Name                      Group
 ----- ----                      -----
@@ -473,21 +576,30 @@ Count Name                      Group
     1 EventLog                  {System.Diagnostics.EventLogEntry}
 
 -------
-â– uptimeã®ã‚ˆã†ãªã‚‚ã®
+¡uptime‚Ì‚æ‚¤‚È‚à‚Ì
 $w=(gwmi Win32_OperatingSystem); $w.ConvertToDateTime($w.LocalDateTime)-$w.ConvertToDateTime($w.LastBootUpTime) | ft Days,Hours,Minutes,Seconds -auto
 
 -------
-â– head/tail
+¡head/tail‚Ì‚æ‚¤‚È‚à‚Ì
 Get-Content *.txt -Head 2 -Encoding UTF8
 Get-Content *.txt -Tail 2
 Get-Content .\tmp.log -Tail 1 -Wait 
 
+Get-ChildItem | Select-Object -First 2
+Get-ChildItem | Select-Object -Last 2
+
+Ew’ès”‚Å•ªŠ„
+$filename
+$basename =
+$ext      = Šg’£q
+$i=0; Get-Content $filename -ReadCount 500 | %{$_ | Out-File ($basename+'_'+$i+'.'+$ext)  -Append; $i++}
+
 -------
-â– Sort/Uniq
+¡Sort/Uniq
 
 Sort-Object [-CaseSensitive] [-Descending] [-Unique]
-Get-ChildItem | Sort-Object -CaseSensitive	# å¤§æ–‡å­—å°æ–‡å­—åŒºåˆ¥
-Get-ChildItem | Sort-Object LastWriteTime -Descending	# é™é †
+Get-ChildItem | Sort-Object -CaseSensitive	# ‘å•¶š¬•¶š‹æ•Ê
+Get-ChildItem | Sort-Object LastWriteTime -Descending	# ~‡
 
 Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ).adddays(-3) | Sort-Object -Unique Source
 
@@ -497,7 +609,7 @@ Get-EventLog 'System' -After (Get-Date).ADDhours(-9) | Sort-Object EntryType,Eve
 ('a','b','c','d','e','f','g') | Sort-Object -property {'efgabcd'.IndexOf($_)}
 
 -------
-â– File,Directory
+¡File, Directory
 Get-ChildItem -Path ('Documents','Desktop')
 Get-ChildItem -recurse
 (ls).count
@@ -505,8 +617,13 @@ ls | Measure -Line
 
 Get-ChildItem -File | %{ $f=$_; Write-Output( $f.Name+"`t"+(Get-Content $f | Measure-Object -Line).Lines ) }
 
+Convert-Path # ‘Š‘ÎƒpƒX‚©‚çâ‘ÎƒpƒX‚Ö‚Ì•ÏŠ·
+
+-pwd‚Ì‚æ‚¤‚È‚à‚Ì
+Convert-Path './'
+
 -------
-â– grep ã®ã‚ˆã†ãªã‚‚ã®
+¡grep ‚Ì‚æ‚¤‚È‚à‚Ì
 Select-String -Path *.txt -Pattern 'AA'
 
 Get-Content *.txt | Select-String 'AA'
@@ -520,35 +637,35 @@ Get-ChildItem *.txt -File -Recurse |
 Get-ChildItem '*.txt' -Path 'c:\tmp' -File |
     %{ $fn=$_.FullName; ( Get-Content $fn | Select-String 'AA' ) | %{Write-Output ($fn + '===' + $_ ) } }
 
-## 'd'ã¨'l'ã¨'total 'ã§å§‹ã¾ã‚‰ãªã„
+## 'd'‚Æ'l'‚Æ'total '‚Ån‚Ü‚ç‚È‚¢
 Get-Content file | Select-String '^[^dl].*' | Select-string '^(?!total .*)'
 
-## å«ã¾ãªã„
+## ŠÜ‚Ü‚È‚¢
 -NotMatch
 
-## å¤§å°æ–‡å­—ã®åŒºåˆ¥ã‚’ã—ãªã„
+## ‘å¬•¶š‚Ì‹æ•Ê‚ğ‚µ‚È‚¢
 -CaseSensitive
 
 ## 
 
-â– æ­£è¦è¡¨ç¾
+¡³‹K•\Œ»
 
-ã€Œ|ã€  ï¼š OR
-ã€Œ*ã€  ï¼š 0å›ä»¥ä¸Šç¹°ã‚Šè¿”ã—
-ã€Œ+ã€  ï¼š 1å›ä»¥ä¸Šç¹°ã‚Šè¿”ã—
-ã€Œ?ã€  ï¼š 0å›ã¾ãŸã¯1å›ç¹°ã‚Šè¿”ã—ã€*,+,{n,},{n,m}ã®å¾Œã‚ã«ç¶šã‘ã¦æœ€çŸ­(ã‹ã¤æœ€å·¦)ãƒãƒƒãƒ
-ã€Œ{n}ã€ï¼š nå›ç¹°ã‚Šè¿”ã—
-ã€Œ{n,}ã€ï¼š nå›ä»¥ä¸Šç¹°ã‚Šè¿”ã—
-ã€Œ{n,m}ã€ï¼š nå›ä»¥ä¸Šmå›ä»¥ä¸‹ç¹°ã‚Šè¿”ã—
-ã€Œ.ã€ ï¼šä»»æ„ã®æ–‡å­—ã€ç©ºç™½ãªã©ã‚‚å«ã‚€
-ã€Œ\dã€ï¼šæ•°å­—
-ã€Œ\sã€ï¼šç©ºç™½ã€æ”¹è¡Œã€ã‚¿ãƒ–ãªã©ã®ç©ºç™½æ–‡å­—
-ã€Œ\Sã€ï¼šç©ºç™½ã€æ”¹è¡Œã€ã‚¿ãƒ–ãªã©ã®ç©ºç™½æ–‡å­—ã‚’é™¤ãæ–‡å­—
-ã€Œ\wã€ï¼šè‹±æ•°å­—ãŠã‚ˆã³ã€ã‚¢ãƒ³ãƒ€ãƒ¼ãƒãƒ¼
-ã€Œ\ã€ï¼š\nã‚„\tç­‰ã®ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—ã‚·ãƒ¼ã‚±ãƒ³ã‚¹
-ã€Œ[]ã€ï¼šæ–‡å­—ã‚¯ãƒ©ã‚¹
-ã€Œ[a-z]ã€ï¼šaã‹ã‚‰zã¾ã§ã®ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆ
-ã€Œ[0-9]ã€ï¼š0ã‹ã‚‰9ã¾ã§ã®æ•°å­—
+u|v  F OR
+u*v  F 0‰ñˆÈãŒJ‚è•Ô‚µ
+u+v  F 1‰ñˆÈãŒJ‚è•Ô‚µ
+u?v  F 0‰ñ‚Ü‚½‚Í1‰ñŒJ‚è•Ô‚µA*,+,{n,},{n,m}‚ÌŒã‚ë‚É‘±‚¯‚ÄÅ’Z(‚©‚ÂÅ¶)ƒ}ƒbƒ`
+u{n}vF n‰ñŒJ‚è•Ô‚µ
+u{n,}vF n‰ñˆÈãŒJ‚è•Ô‚µ
+u{n,m}vF n‰ñˆÈãm‰ñˆÈ‰ºŒJ‚è•Ô‚µ
+u.v F”CˆÓ‚Ì•¶šA‹ó”’‚È‚Ç‚àŠÜ‚Ş
+u\dvF”š
+u\svF‹ó”’A‰üsAƒ^ƒu‚È‚Ç‚Ì‹ó”’•¶š
+u\SvF‹ó”’A‰üsAƒ^ƒu‚È‚Ç‚Ì‹ó”’•¶š‚ğœ‚­•¶š
+u\wvF‰p”š‚¨‚æ‚ÑAƒAƒ“ƒ_[ƒo[
+u\vF\n‚â\t“™‚ÌƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX
+u[]vF•¶šƒNƒ‰ƒX
+u[a-z]vFa‚©‚çz‚Ü‚Å‚ÌƒAƒ‹ƒtƒ@ƒxƒbƒg
+u[0-9]vF0‚©‚ç9‚Ü‚Å‚Ì”š
 
 ("AAB","ABB","B B","ACB") | Select-String 'AA'
 ("AAB","ABB","B B","ACB") | Select-String '^A'
@@ -558,26 +675,38 @@ Get-Content file | Select-String '^[^dl].*' | Select-string '^(?!total .*)'
 ("AAB","ABB","B B","ACB") | Select-String 'A.B'
 ("AAB","ABB","B B","ACB") | Select-String 'A[AC]B'
 
-# ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ¤œç´¢
+# ƒtƒ@ƒCƒ‹–¼‚ğŒŸõ
 Get-ChildItem *.mp3 -File -Recurse | %{ if($_.Name -like '*ZZZ*'){Write-Output $_.FullName } }
 
 -------
-â– diff ã®ã‚ˆã†ãªã‚‚ã®
+¡diff ‚Ì‚æ‚¤‚È‚à‚Ì
 Compare-Object (Get-Content file1) (Get-Content file2)
 
-# ã‚³ãƒãƒ³ãƒ‰ãƒ—ãƒ­ãƒ³ãƒ—ãƒˆçµŒç”±ã§fcã‚’å®Ÿè¡Œ
+# ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒgŒo—R‚Åfc‚ğÀs
 cmd /c fc file1 file2
 
 -------
-â– sed ã®ã‚ˆã†ãªã‚‚ã® - ç½®æ›æ¼”ç®—å­
+¡sed ‚Ì‚æ‚¤‚È‚à‚Ì - ’uŠ·‰‰Zq ³‹K•\Œ»—˜—p‰ÂAignore case
 Get-Content .\tmp.txt | %{ $_ -replace 'AA','BB' } | Set-Content .\tmp.txt
 
 ('ABCDEGF','ABBCCDDE')| %{ $_ -replace '^(.+?)CD(.+?)$','$2  $1' }
 
--------
-â– ç”»é¢/ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›/æ“ä½œ
+-replace  : case-insensitive, = ignore case
+-ireplace : case-insensitive, = ignore case
+-creplace : case sensitve
 
-Write-Host [-NoNewline]	# ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã®ã¿å‡ºåŠ›
+-------
+¡which (whereis) ‚Ì‚æ‚¤‚È‚à‚Ì
+Get-Command notepad
+
+$r = Get-Command notepad  2>&1; $r
+$r = Get-Command notepadx 2>&1; $r
+
+
+-------
+¡‰æ–Ê/ƒtƒ@ƒCƒ‹“üo—Í/‘€ì
+
+Write-Host [-NoNewline]	# ƒRƒ“ƒ\[ƒ‹‚Ì‚İo—Í
 Write-Output
 
 Read-Host <Prompt>
@@ -586,22 +715,22 @@ Get-Content [-Delimiter <str>] [-Encoding <str>] [-Head n] [-Tail n] [-Wait]
 Set-Content [-PassThru]
 Add-Content
 
-Out-File [-Append] [-Width n] [-noClobber] [-Encoding <str>]	# widthã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ã¯è¡Œæœ«ã«ç©ºç™½ãŒPaddingã•ã‚Œã‚‹
+Out-File [-InputObject $obj]@[-Append] [-Width n] [-noClobber] [-Encoding <str>]	# widthƒIƒvƒVƒ‡ƒ“‚Å‚Ís––‚É‹ó”’‚ªPadding‚³‚ê‚é
 Out-GridView
 Out-Null
 
-â—†ãƒ­ãƒƒã‚¯
-Out-File	# Readãƒ­ãƒƒã‚¯ã¯ã‹ã‹ã‚‰ãªã„(å‡ºåŠ›ä¸­ã«Readã§ãã‚‹)
-Set-Content	# Readãƒ­ãƒƒã‚¯ãŒã‹ã‹ã‚‹ 
+ŸƒƒbƒN
+Out-File	# ReadƒƒbƒN‚Í‚©‚©‚ç‚È‚¢(o—Í’†‚ÉRead‚Å‚«‚é)
+Set-Content	# ReadƒƒbƒN‚ª‚©‚©‚é 
 http://tech.guitarrapc.com/entry/2014/02/11/061627#f-5a149a29
 
-â—†CSV
+ŸCSV
 Export-Csv [-Encoding <str>] [-NoTypeInformation]	# https://technet.microsoft.com/ja-jp/library/hh849932.aspx
-Import-Csv [-Header ...] [-Delimiter "`t"] [-Encoding <str>]	# æ—¢å®šã®Encodeã¯UTF
+Import-Csv [-Header ...] [-Delimiter "`t"] [-Encoding <str>]	# Šù’è‚ÌEncode‚ÍUTF
 Export-CliXml
 
 
-â– XML
+¡XML
 $xmldoc = [xml]@'
 <?xml version="1.0" encoding="utf-8"?>
 <Elem1 prop1="prop1">Contents1
@@ -638,6 +767,7 @@ prop11          : prop112
 Name            : Elem11
 LocalName       : Elem11...
 
+
 function ChildNodes{ Param($p)
     $c = $p.ChildNodes
     if($c.Count -le 0){return}
@@ -661,7 +791,7 @@ Elem12 Elem12                                           prop121        Element E
 #text  #text     Contents_Text121                                         Text                             {}
 
 
-â– Encoding
+¡Encoding
 Get-Content -Encoding 'Default'
 https://technet.microsoft.com/ja-jp/library/hh847788.aspx
 Set-Content -Encoding 'Default'
@@ -669,18 +799,21 @@ https://technet.microsoft.com/ja-jp/library/hh847827.aspx
 Out-File    -Encoding 'Default'
 https://technet.microsoft.com/ja-jp/library/hh849882.aspx
 -- Default:Shift-JIS
--- ASCII:ASCII (7 ãƒ“ãƒƒãƒˆ) æ–‡å­—ã‚»ãƒƒãƒˆ
--- BigEndianUnicode:big-endian ãƒã‚¤ãƒˆ ã‚ªãƒ¼ãƒ€ãƒ¼UTF-16
--- Byte: æ–‡å­—ã‚»ãƒƒãƒˆã‚’ãƒã‚¤ãƒˆåˆ—
--- String:æ–‡å­—åˆ—ã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ ã‚¿ã‚¤ãƒ—ã‚’ä½¿ç”¨
--- Unicode:little-endian ãƒã‚¤ãƒˆ ã‚ªãƒ¼ãƒ€ãƒ¼UTF-16
+-- ASCII:ASCII (7 ƒrƒbƒg) •¶šƒZƒbƒg
+-- BigEndianUnicode:big-endian ƒoƒCƒg ƒI[ƒ_[UTF-16
+-- Byte: •¶šƒZƒbƒg‚ğƒoƒCƒg—ñ
+-- String:•¶š—ñ‚ÌƒGƒ“ƒR[ƒh ƒ^ƒCƒv‚ğg—p
+-- Unicode:little-endian ƒoƒCƒg ƒI[ƒ_[UTF-16 [BOM•t] Windows‚Ì“à•”ƒfƒtƒHƒ‹ƒg
 -- UTF7: UTF-7
--- UTF8:UTF-8
--- Unknown:ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ ã‚¿ã‚¤ãƒ—ãŒä¸æ˜ã‹ç„¡åŠ¹ã§ã™ã€‚ãƒ‡ãƒ¼ã‚¿ã¯ãƒã‚¤ãƒŠãƒªã¨ã—ã¦å‡¦ç†
+-- UTF8:UTF-8 [BOM•t]
+-- Unknown:ƒGƒ“ƒR[ƒh ƒ^ƒCƒv‚ª•s–¾‚©–³Œø‚Å‚·Bƒf[ƒ^‚ÍƒoƒCƒiƒŠ‚Æ‚µ‚Äˆ—
+
+Ÿnkf‚Ì‚æ‚¤‚È‚à‚Ì
+Get-Content -Path '.\UTF16.txt' -Encoding 'Unicode' | Out-File -Filepath '.\UTF08.txt' -Encoding 'UTF8'
 
 
 -------
-Get-ChildItem [-File] [-Directory] [-Recurse]	# -Fileã§ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã‚’å‡¦ç†
+Get-ChildItem [-File] [-Directory] [-Recurse]	# -File‚Åƒtƒ@ƒCƒ‹‚Ì‚İ‚ğˆ—
 get-location
 get-item
 copy-item
@@ -688,7 +821,7 @@ move-item
 rename-item
 new-item [-type file|directory ]
 remove-item
-invoke-item	# fileã‚’é–‹ã
+invoke-item	# file‚ğŠJ‚­
 
 Tee-Object
 Get-Clipboard
@@ -697,18 +830,18 @@ Clip
 Invoke-Expression
 
 -------
-â– ãƒ¬ã‚¸ã‚¹ãƒˆãƒªæ“ä½œ
-# Officeã§ã‚µã‚¤ãƒ³ã‚¤ãƒ³ã‚’éè¡¨ç¤º
+¡ƒŒƒWƒXƒgƒŠ‘€ì
+# Office‚ÅƒTƒCƒ“ƒCƒ“‚ğ”ñ•\¦
 # Office Version: 2013=15.0, 2016=16.0
-# ã‚­ãƒ¼ã®ç¢ºèª:16.0\Commonä¸‹ã«ã€SignInã‚­ãƒ¼ãŒã‚ã‚‹ã‹ç¢ºèª
+# ƒL[‚ÌŠm”F:16.0\Common‰º‚ÉASignInƒL[‚ª‚ ‚é‚©Šm”F
 Get-ChildItem -Path HKCU:\Software\Microsoft\Office\16.0\Common
-# ã‚­ãƒ¼ã‚’ä½œæˆ
+# ƒL[‚ğì¬
 New-Item -Path HKCU:\Software\Microsoft\Office\16.0\Common -Name SignIn -ItemType Directory
-# DWORDå€¤ã‚’ä½œæˆ
+# DWORD’l‚ğì¬
 New-ItemProperty -Path HKCU:\Software\Microsoft\Office\16.0\Common\SignIn -Name SignInOptions -Value 3 -PropertyType dword
 
 -------
-â– pingã®ã‚ˆã†ãªã‚‚ã®
+¡ping‚Ì‚æ‚¤‚È‚à‚Ì
 Test-Connection [-Quiet] [-Count n] [-Delay Sec] [-BufferSize n]
 Test-Connection ('10.10.10.10', '10.10.10.11')
 
@@ -732,17 +865,17 @@ foreach($i in 1..$ni){
 
 
 -------
-â– ï¼‘æ–‡å­—ã¥ã¤åˆ†è§£
+¡‚P•¶š‚Ã‚Â•ª‰ğ
 "PowerShell".GetEnumerator()
 $Array=($z="Powershell")[0..$z.Length]
 $linq =[System.Linq.Enumerable]::ToArray("PowerShell")
 
-â– æ–‡å­—ã”ã¨ã®å‡ºç¾æ•°ã‚’è¨ˆæ¸¬
+¡•¶š‚²‚Æ‚ÌoŒ»”‚ğŒv‘ª
 $a = @{}; Get-Content PS-Memo.txt |
 	%{ $_.ToCharArray() | %{ if($a.Contains($_)){$a[$_]++}else{$a[$_]=1} } }; $a.GetEnumerator() | sort name
 
 -------
-â– Objectä½œæˆ
+¡Objectì¬
 
 PS> ('AA','BB') | %{ New-Object PSobject -Property @{'Key'=$_;'v1'=($_+'V')}} | ft -auto
 
@@ -765,24 +898,24 @@ Key         NoteProperty System.String Key=AA
 v1          NoteProperty System.String v1=AAV
 
 -------
-â– Propertyä½œæˆ
+¡Propertyì¬
 
 Select-Object
 
 -------
-â– ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸BOX
+¡ƒƒbƒZ[ƒWBOX
 Add-Type -Assembly System.Windows.Forms
 [Windows.Forms.MessageBox]::Show('Message', 'Title', 'OK', 'Warning')
 
 -------
-â– Mailã‚’é€ä¿¡
+¡Mail‚ğ‘—M
 Send-MailMessage -To   'foo<foo@bar.co.jp>' -From 'bar<bar@foo.co.jp>' -Cc 'MailAddress'
-                 -Subject 'Test mail'       -Body 'ãƒ¡ãƒ¼ãƒ«é€ä¿¡ã®ãƒ†ã‚¹ãƒˆ'
+                 -Subject 'Test mail'       -Body 'ƒ[ƒ‹‘—M‚ÌƒeƒXƒg'
                  -Attachments 'filename'
                  -SmtpServer 'MailServer'   -Encoding  ([System.Text.Encoding]::Default)
 
 -------
-â– Jobåˆ¶å¾¡
+¡Job§Œä
 
 $j1 = Start-Job -ScriptBlock { Start-Sleep -Seconds 30 }
 $j2 = Start-Job -ScriptBlock { Start-Sleep -Seconds 30 }
@@ -791,8 +924,98 @@ Wait-Job $j1,$j2
 Get-Job
 
 -------
-â– ã‚³ãƒãƒ³ãƒ©ã‚¤ãƒ³ã‹ã‚‰èµ·å‹•
+¡loop
+
+foreach( $i in 0..7){ }
+
+-------
+¡ŠÖ”
+
+function Func{ Param($x)
+
+}
+
+-------
+¡ƒRƒ}ƒ“ƒ‰ƒCƒ“‚©‚ç‹N“®
 powershell -Command "get-date; hostname; Add-Type -Assembly System.Windows.Forms; [Windows.Forms.MessageBox]::Show('Message', 'Title', 'OK', 'Warning')"
+
+
+-------
+¡FTP
+$user = 'username'
+$pass = 'password'
+
+$user = 'f1026845'
+$pass = '8J21bEtE'
+$url  = 'ftp://ftp01.itscom.net'
+
+# FTP ‚Åw’è‚µ‚½ƒfƒBƒŒƒNƒgƒŠ‚Ìƒtƒ@ƒCƒ‹‚Ìˆê——‚ğæ“¾‚·‚é•û–@
+# https://bayashita.com/p/entry/show/230
+try{
+
+    # ƒT[ƒo‚ÉÚ‘±
+    $webRequest = [System.Net.WebRequest]::Create($url)
+    $webRequest.Credentials = New-Object System.Net.NetworkCredential($user, $pass)
+
+    # ƒƒ\ƒbƒh‚ğw’è
+    $webRequest.Method = [System.Net.WebRequestMethods+Ftp]::ListDirectoryDetails
+
+    # ƒŠƒNƒGƒXƒg‚ğ‘—M
+    $response = $webRequest.GetResponse()
+
+    $streamReader  = New-Object System.IO.StreamReader($response.GetResponseStream())
+    $list = $streamReader.ReadToEnd()
+    Write-Host = $list[]
+
+    $list.split("`n") |
+        %{ 
+            if($_.length -ge 1){
+                $token = $_.trim("`r")  -split ' +';
+                New-Object PSobject -Property @{
+                    'attr' = $token[0]; 'name' = $token[8]
+                }
+            }
+        } | ft -auto
+
+    $streamReader.Close()
+    $response.Close()
+
+}
+catch{
+    Write-Host $_
+}
+
+
+# PowerShell‚ÅFTPƒT[ƒo‚Ìƒtƒ@ƒCƒ‹‚ğˆê——‚·‚é - 2015”N02Œ04“ú
+# https://qiita.com/sengoku/items/d214e7a8d1e399b42b18
+
+$wr = [System.Net.WebRequest]::Create($url)
+$wr.Credentials = New-Object System.Net.NetworkCredential($user, $pass)
+$wr.Method = [System.Net.WebRequestMethods+Ftp]::ListDirectoryDetails
+$res = $wr.GetResponse()
+$rs  = New-Object System.IO.StreamReader($res.GetResponseStream())
+$list = $rs.ReadToEnd()
+$rs.Close()
+$res.Close()
+$list
+
+
+#Powershell‚ğg‚Á‚ÄFTP‚Åƒf[ƒ^æ“¾ - 2015”N10Œ21“ú
+#https://qiita.com/arachan@github/items/896921ac232c1de97021
+# FTP”FØ Nework.Credential‚Å‚Í‚È‚­PSCredential‚ğg—p
+$str=ConvertTo-SecureString $password -AsPlainText -Force
+$cred=New-Object System.Management.Automation.PSCredential($user,$str)
+Invoke-WebRequest -Uri $url -Credential $cred
+
+
+Invoke-WebRequest -Uri $url"$2f/tmp/filename.txt" -OutFile $mypath"\filename.txt" -Credential $cred
+
+
+
+Invoke-WebRequest ftp://ftp01.itscom.net
+
+Invoke-WebRequest https://www.google.com
+
 
 =====================
 =====================
@@ -804,7 +1027,7 @@ Handles  NPM(K)    PM(K)      WS(K) VM(M)   CPU(s)     Id ProcessName
     715      45   286764     306252   673   499.42   4936 firefox
     204       9    11620      21672   183    88.61   4168 plugin-container
     236      14    32104      38868   190    63.80   3556 FlashPlayerPlugin_18_0_0_209
-ãƒ»ãƒ»ãƒ»
+EEE
 
 PS> (Get-Process -Name Powershell).PriorityClass
 Normal
@@ -817,7 +1040,7 @@ Get-Counter '\Process(*)\% Processor Time'
 (Get-counter '\Process(*)\% Processor Time').CounterSamples
 
 -------
-â– PCæƒ…å ±åé›†
+¡PCî•ñûW
 Get-WMIObject Win32_ComputerSystem  | fl SystemType,Name,Domain,Manufacturer,Model,PrimaryOwnerName,NumberOfProcessors
 Get-WmiObject Win32_BIOS            | fl SerialNumber
 Get-WmiObject Win32_OperatingSystem | fl Caption,CSDVersion,Version
@@ -833,13 +1056,13 @@ Get-NetAdapterBinding
 Get-NetAdapterStatistics
 
 ---------------
-â– CPU
+¡CPU
 Get-WmiObject Win32_Processor | fl DeviceID,NumberOfCores,NumberOfLogicalProcessors,CurrentClockSpeed,Name,Description,L2CacheSize,L3CacheSize
 
-â– Mem
+¡Mem
 Get-WmiObject Win32_PhysicalMemory | ft BankLabel,DeviceLocator,Capacity,ConfiguredClockSpeed
 
-â– Disk Resources
+¡Disk Resources
 Get-Volume
 Get-Disk
 Get-PhysicalDisk
@@ -849,7 +1072,7 @@ Get-StorageReliabilityCounter
 DriveLetter FriendlyName       FileSystemType DriveType HealthStatus OperationalStatus SizeRemaining      Size
 ----------- ------------       -------------- --------- ------------ ----------------- -------------      ----
 D                              Unknown        CD-ROM    Healthy      Unknown                     0 B       0 B
-            ã‚·ã‚¹ãƒ†ãƒ ã§äºˆç´„æ¸ˆã¿ NTFS           Fixed     Healthy      OK                    516.52 MB    549 MB
+            ƒVƒXƒeƒ€‚Å—\–ñÏ‚İ NTFS           Fixed     Healthy      OK                    516.52 MB    549 MB
                                NTFS           Fixed     Healthy      OK                    322.83 MB    843 MB
 C                              NTFS           Fixed     Healthy      OK                     272.2 GB 475.58 GB
 
@@ -862,7 +1085,7 @@ DeviceId FriendlyName               SerialNumber   MediaType CanPool Operational
 0        SAMSUNG MZ7TE512HMHP-000L1 S1GJNSAF302164 SSD       False   OK                Healthy      Auto-Select 476.94 GB
 
 -------
-â– Network, netstat
+¡Network, netstat
 $pid_service=@{}; Get-WmiObject win32_service | ?{ $_.ProcessID -gt 0 } | Sort-Object ProcessID |
     %{ if(-not $pid_service[$_.ProcessID]){ $pid_service.Add([UInt32]$_.ProcessID,       $_.Name) }
        else{                                $pid_service[    [UInt32]$_.ProcessID]+=', '+$_.Name } }
@@ -879,7 +1102,7 @@ Get-NetUDPEndpoint
 Get-NetRoute
 
 -------
-â– ã‚µãƒ¼ãƒ“ã‚¹ã®æ¤œç´¢
+¡ƒT[ƒrƒX‚ÌŒŸõ
 Get-Service -Name 'Win*'
 Get-Service -DisplayName '*Remote*'
 Status   Name               DisplayName
@@ -904,7 +1127,7 @@ WinHttpAutoProxySvc WinHTTP Web Proxy Auto-Discovery Service  Manual    Running 
 winmgmt             Windows Management Instrumentation        Auto      Running OK          1672 C:\WINDOWS\system32\svchost.exe -k netsvcs
 WinRM               Windows Remote Management (WS-Management) Manual    Stopped OK             0 C:\WINDOWS\System32\svchost.exe -k NetworkService
 
-## PIDã§ãƒãƒƒã‚·ãƒ¥åŒ–
+## PID‚ÅƒnƒbƒVƒ…‰»
 $pid_service=@{}; Get-WmiObject win32_service | ?{ $_.ProcessID -gt 0 } | Sort-Object ProcessID |
     %{ if(-not $pid_service[$_.ProcessID]){ $pid_service.Add($_.ProcessID,       $_.Name) }
        else{                                $pid_service[    $_.ProcessID]+=', '+$_.Name } }
@@ -912,20 +1135,20 @@ $pid_service=@{}; Get-WmiObject win32_service | ?{ $_.ProcessID -gt 0 } | Sort-O
 
 
 -------
-â– Windowsæ©Ÿèƒ½æƒ…å ±åé›†
+¡Windows‹@”\î•ñûW
 ($Env:PSModulePath -split ';')|Get-ChildItem
 
 #Windows Server
 Import-Module ServerManager
 Get-WindowsFeature
 
-#Windows10 ç®¡ç†è€…ãƒ¢ãƒ¼ãƒ‰ã§å®Ÿè¡Œ
+#Windows10 ŠÇ—Òƒ‚[ƒh‚ÅÀs
 Get-WindowsOptionalFeature -FeatureName 'W*' -Online
 Enable-WindowsOptionalFeature -Online -FeatureName [Name]
 Disable-WindowsOptionalFeature -Online -FeatureName [Name]
 
 -------
-â– Windows Update
+¡Windows Update
 http://www.yottun8.com/wiki/Tips_%E3%83%AC%E3%82%B8%E3%82%B9%E3%83%88%E3%83%AA_%E3%82%B3%E3%83%B3%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB%E3%83%91%E3%83%8D%E3%83%AB.html
 
 
@@ -936,12 +1159,12 @@ Get-ItemProperty 'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate'
 Get-ItemProperty 'HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update'
 
 -------
-â– Event Log
+¡Event Log
 Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ) | ?{ $_.EntryType -ne 'Information' } | ft -auto
 Index Time       EntryType Source                         InstanceID Message
 ----- ----       --------- ------                         ---------- -------
  1809 9 18 07:52 Warning   e1kexpress                     2684616731 Intel(R) 82577LM Gigabit Network Connection...
- 1807 9 18 02:23 Error     Microsoft-Windows-Kernel-Power        137 ã‚½ãƒ¼ã‚¹ 'Microsoft-Windows-Kernel-Power' ã®ã‚¤ãƒ™ãƒ³ãƒˆ
+ 1807 9 18 02:23 Error     Microsoft-Windows-Kernel-Power        137 ƒ\[ƒX 'Microsoft-Windows-Kernel-Power' ‚ÌƒCƒxƒ“ƒg
 
 Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ) |
 	?{ $_.EntryType -ne 'Information' } |
@@ -951,7 +1174,7 @@ Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ) |
 Get-EventLog 'System' -After (Get-Date -hour 0 -minute 0 -second 0 ).ADDdays(-7)
 
 Get-EventLog 'Application' -Newest 3
-Get-EventLog -list	# æ¦‚ç•¥ä¸€è¦§è¡¨ç¤º
+Get-EventLog -list	# ŠT—ªˆê——•\¦
   Max(K) Retain OverflowAction        Entries Log
   ------ ------ --------------        ------- ---
   20,480      0 OverwriteAsNeeded       2,327 Application
@@ -961,7 +1184,7 @@ Get-EventLog -list	# æ¦‚ç•¥ä¸€è¦§è¡¨ç¤º
   15,360      0 OverwriteAsNeeded         126 Windows PowerShell
 
 -------
-â– Logon User
+¡Logon User
 $server = @( 'ishi-T510' )
 
 While($true){
@@ -986,10 +1209,10 @@ query user /SERVER:
 
 
 #-------
-# â– Excelãƒ•ã‚¡ã‚¤ãƒ«ã‚’CSVåŒ–
-# PowerShell ã§ Excel ã‚’ã©ã†ã®ã“ã†ã®ã™ã‚‹
+# ¡Excelƒtƒ@ƒCƒ‹‚ğCSV‰»
+# PowerShell ‚Å Excel ‚ğ‚Ç‚¤‚Ì‚±‚¤‚Ì‚·‚é
 #   http://qiita.com/miyamiya/items/161372111b68bad0744a
-# PowerShellã§Excelã‚’æ“ä½œã™ã‚‹ã€€- åŸºç¤ç·¨ - 
+# PowerShell‚ÅExcel‚ğ‘€ì‚·‚é@- Šî‘b•Ò - 
 #   https://letspowershell.blogspot.jp/2015/06/powershellexcel.html
 
 ---
@@ -1063,7 +1286,7 @@ $sh.Cells.Item(2,1).NumberFormat="@"
 $sh.Cells.Item(2,1).NumberFormatLocal="@"
 
 -------
-â– Disk Space Used
+¡Disk Space Used
 $target_dir = 'C:\Users\ishi'
 
 Get-ChildItem $targrt_dir |
@@ -1071,13 +1294,13 @@ Get-ChildItem $targrt_dir |
 		%{
 			$dir = $_.FullName
 			cmd /c ('dir "' + $dir + '" /s /a-d') 2>$1|
-				Select-String 'å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ«|^ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“$' |
+				Select-String 'ŒÂ‚Ìƒtƒ@ƒCƒ‹|^ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ$' |
 					Select-Object -Last 1 |
 						%{ Write-Output( $dir + "`t" + $_ ) }
 		}
 
 -------
-â– powershellã§SNMP
+¡powershell‚ÅSNMP
 $snmp = new-object -ComObject olePrn.OleSNMP 
 $snmp.open('localhost', 'public', 2, 1000) 
 Write-Output $snmp.Get('.1.3.6.1.2.1.1.1.0')	# sysDescr
@@ -1093,34 +1316,34 @@ while(1){
 }
 
 -------
-â– powershellã§Webãƒšãƒ¼ã‚¸ã®ã‚½ãƒ¼ã‚¹ã‚’èª­ã¿è¾¼ã‚€
+¡powershell‚ÅWebƒy[ƒW‚Ìƒ\[ƒX‚ğ“Ç‚İ‚Ş
 http://blog.livedoor.jp/morituri/archives/54091235.html
 
-WebClientã‚¯ãƒ©ã‚¹ã‚’ä½œæˆ
+WebClientƒNƒ‰ƒX‚ğì¬
 
 PS> $wc = New-Object System.Net.WebClient
 
-WebClientã®OpenReadãƒ¡ã‚½ãƒƒãƒ‰ã§Webãƒšãƒ¼ã‚¸ã‚’èª­ã¿è¾¼ã¿ã€Streamå‹ã®æˆ»ã‚Šå€¤ã‚’å–å¾—ã€‚
+WebClient‚ÌOpenReadƒƒ\ƒbƒh‚ÅWebƒy[ƒW‚ğ“Ç‚İ‚İAStreamŒ^‚Ì–ß‚è’l‚ğæ“¾B
 
 PS> $url = "http://www.yahoo.co.jp/"
 PS> $st = $wc.OpenRead($url)
 
-ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã¨ã—ã¦é–‹ããŸã‚ã€StreamReaderã‚’ä½œæˆã€‚
-StreamReaderã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®ç¬¬ä¸€å¼•æ•°ã«Streamã‚’æŒ‡å®šã—ã€ç¬¬äºŒå¼•æ•°ã«ã¯Encodingã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§æ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’æŒ‡å®šã€‚
+ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Æ‚µ‚ÄŠJ‚­‚½‚ßAStreamReader‚ğì¬B
+StreamReader‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ì‘æˆêˆø”‚ÉStream‚ğw’è‚µA‘æ“ñˆø”‚É‚ÍEncodingƒIƒuƒWƒFƒNƒg‚Å•¶šƒR[ƒh‚ğw’èB
 
 PS> $enc = [System.Text.Encoding]::GetEncoding("UTF-8")
 PS> $sr = New-Object System.IO.StreamReader($st, $enc)
 
-ReadToEndãƒ¡ã‚½ãƒƒãƒ‰ã§ã™ã¹ã¦ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’å–å¾—ã€‚
-$htmlã«Webãƒšãƒ¼ã‚¸ã®ã‚½ãƒ¼ã‚¹ãŒæ–‡å­—åˆ—ã¨ã—ã¦ä¿å­˜ã•ã‚Œã‚‹ã€‚
+ReadToEndƒƒ\ƒbƒh‚Å‚·‚×‚Ä‚ÌƒeƒLƒXƒg‚ğæ“¾B
+$html‚ÉWebƒy[ƒW‚Ìƒ\[ƒX‚ª•¶š—ñ‚Æ‚µ‚Ä•Û‘¶‚³‚ê‚éB
 
 PS> $html = $sr.ReadToEnd()
 
-èª­ã¿çµ‚ã‚ã£ãŸã‚‰ã€StreamReaderã‚’é–‰ã˜ã‚‹ã€‚
+“Ç‚İI‚í‚Á‚½‚çAStreamReader‚ğ•Â‚¶‚éB
 
 PS> $sr.Close()
 
-ãƒ­ãƒ¼ã‚«ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã—ãŸã„å ´åˆã¯WebClient.DownloadFileãƒ¡ã‚½ãƒƒãƒ‰ã‚’ä½¿ãˆã°ã‚ˆã„ã€‚
+ƒ[ƒJƒ‹ƒtƒ@ƒCƒ‹‚É•Û‘¶‚µ‚½‚¢ê‡‚ÍWebClient.DownloadFileƒƒ\ƒbƒh‚ğg‚¦‚Î‚æ‚¢B
 
 PS> $url = "http://www.yahoo.co.jp/"
 PS> $fileName = "download.html"
@@ -1128,7 +1351,7 @@ PS> $wc.DownloadFile($url, $fileName)
 
 
 
-â– PowerShell ã‚’ä½¿ã£ã¦ Facebook ã«ãƒ­ã‚°ã‚¤ãƒ³
+¡PowerShell ‚ğg‚Á‚Ä Facebook ‚ÉƒƒOƒCƒ“
 http://katsushikatech.net/2014/02/08/powershell-login-facebook/
 
 $req = Invoke-WebRequest 'https://www.facebook.com/login.php' -SessionVariable fb
@@ -1137,19 +1360,19 @@ $form.Fields["email"] = 'user@example.com'
 $form.Fields["pass"] = 'password'
 Invoke-WebRequest -Uri ("https://www.facebook.com" + $form.Action) -WebSession $fb -Method POST -Body $form.Fields
 
-ã‚¦ã‚§ãƒ–ãƒšãƒ¼ã‚¸ã®æƒ…å ±ã‚’å–å¾—ã™ã‚‹ã«ã¯ã€ŒInvoke-WebRequestã€ã¨ã„ã†ã‚³ãƒãƒ³ãƒ‰ã‚’ä½¿ã„ã¾ã™ã€‚
-ã‚³ãƒãƒ³ãƒ‰ã®å¾Œã« URL ã‚’æŒ‡å®šã™ã‚‹ã¨ãã®ãƒšãƒ¼ã‚¸ã®å†…å®¹ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã§ã™ã€‚
+ƒEƒFƒuƒy[ƒW‚Ìî•ñ‚ğæ“¾‚·‚é‚É‚ÍuInvoke-WebRequestv‚Æ‚¢‚¤ƒRƒ}ƒ“ƒh‚ğg‚¢‚Ü‚·B
+ƒRƒ}ƒ“ƒh‚ÌŒã‚É URL ‚ğw’è‚·‚é‚Æ‚»‚Ìƒy[ƒW‚Ì“à—e‚ğƒ_ƒEƒ“ƒ[ƒh‚·‚éƒRƒ}ƒ“ƒh‚Å‚·B
 
-1è¡Œç›®ã§ã¯ã€ŒSessionVariableã€ã¨ã„ã†ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’è¨­å®šã—ã¦ã„ã¾ã™ã€‚ã“ã‚Œã¯ã‚¦ã‚§ãƒ–ã‚µã‚¤ãƒˆã«ã‚¢ã‚¯ã‚»ã‚¹ã—ãŸæ™‚ã®ã‚»ãƒƒã‚·ãƒ§ãƒ³æƒ…å ±ã«åå‰ã‚’ã¤ã‘ã¦ä¿å­˜ã™ã‚‹ãŸã‚ã«ä½¿ã„ã¾ã™ã€‚ã‚»ãƒƒã‚·ãƒ§ãƒ³ã«ã¤ã„ã¦ã¯ä¸‹è¨˜ã®ãƒªãƒ³ã‚¯å…ˆã‚’å‚è€ƒã«ã—ã¦ã¿ã¦ãã ã•ã„ã€‚
-ã‚»ãƒƒã‚·ãƒ§ãƒ³ã¨ã¯ ã€ session ã€‘ ? æ„å‘³/è§£èª¬/èª¬æ˜/å®šç¾© ï¼š ITç”¨èªè¾å…¸
-2è¡Œç›®ã¯ã€ŒInvoke-WebRequestã€ã§å–å¾—ã—ãŸ Facebook ã®ãƒ­ã‚°ã‚¤ãƒ³ãƒšãƒ¼ã‚¸ã‹ã‚‰ ãƒ¦ãƒ¼ã‚¶ãƒ¼èªè¨¼ç”¨ã®ãƒ•ã‚©ãƒ¼ãƒ æƒ…å ±ã‚’å–ã‚Šå‡ºã—ã¦ã„ã¾ã™ã€‚
-3è¡Œç›®ã¨4è¡Œç›®ã§å–ã‚Šå‡ºã—ãŸãƒ•ã‚©ãƒ¼ãƒ ã«ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’è¨­å®šã—ã¾ã™ã€‚
-5è¡Œç›®ã§ã¯å†åº¦ã€ŒInvoke-WebRequestã€ã‚’ä½¿ã£ã¦ã€ä»Šåº¦ã¯ Facebook ã®ãƒ¡ã‚¤ãƒ³ãƒšãƒ¼ã‚¸ã«ã‚¢ã‚¯ã‚»ã‚¹ã—ã¾ã™ã€‚ãã®éš›ã€å…ˆã»ã©è¨­å®šã—ãŸãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’ Facebook ã«é€ä¿¡ã—ã¦ã„ã¾ã™ã€‚ã•ã‚‰ã«ã€å…ˆã»ã©ä¿å­˜ã—ãŸã‚»ãƒƒã‚·ãƒ§ãƒ³æƒ…å ±ã‚‚ä»˜åŠ ã—ã¾ã™ã€‚
+1s–Ú‚Å‚ÍuSessionVariablev‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚ğİ’è‚µ‚Ä‚¢‚Ü‚·B‚±‚ê‚ÍƒEƒFƒuƒTƒCƒg‚ÉƒAƒNƒZƒX‚µ‚½‚ÌƒZƒbƒVƒ‡ƒ“î•ñ‚É–¼‘O‚ğ‚Â‚¯‚Ä•Û‘¶‚·‚é‚½‚ß‚Ég‚¢‚Ü‚·BƒZƒbƒVƒ‡ƒ“‚É‚Â‚¢‚Ä‚Í‰º‹L‚ÌƒŠƒ“ƒNæ‚ğQl‚É‚µ‚Ä‚İ‚Ä‚­‚¾‚³‚¢B
+ƒZƒbƒVƒ‡ƒ“‚Æ‚Í y session z ? ˆÓ–¡/‰ğà/à–¾/’è‹` F IT—pŒê«“T
+2s–Ú‚ÍuInvoke-WebRequestv‚Åæ“¾‚µ‚½ Facebook ‚ÌƒƒOƒCƒ“ƒy[ƒW‚©‚ç ƒ†[ƒU[”FØ—p‚ÌƒtƒH[ƒ€î•ñ‚ğæ‚èo‚µ‚Ä‚¢‚Ü‚·B
+3s–Ú‚Æ4s–Ú‚Åæ‚èo‚µ‚½ƒtƒH[ƒ€‚Éƒ†[ƒU[–¼‚ÆƒpƒXƒ[ƒh‚ğİ’è‚µ‚Ü‚·B
+5s–Ú‚Å‚ÍÄ“xuInvoke-WebRequestv‚ğg‚Á‚ÄA¡“x‚Í Facebook ‚ÌƒƒCƒ“ƒy[ƒW‚ÉƒAƒNƒZƒX‚µ‚Ü‚·B‚»‚ÌÛAæ‚Ù‚Çİ’è‚µ‚½ƒ†[ƒU[î•ñ‚ğ Facebook ‚É‘—M‚µ‚Ä‚¢‚Ü‚·B‚³‚ç‚ÉAæ‚Ù‚Ç•Û‘¶‚µ‚½ƒZƒbƒVƒ‡ƒ“î•ñ‚à•t‰Á‚µ‚Ü‚·B
 
-ã“ã†ã™ã‚‹ã“ã¨ã§ Facebook ã«ãƒ­ã‚°ã‚¤ãƒ³ã—ãŸçŠ¶æ…‹ã§ãƒ¡ã‚¤ãƒ³ãƒšãƒ¼ã‚¸ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã“ã¨ãŒã§ãã‚‹ã®ã§ã™ã€‚
+‚±‚¤‚·‚é‚±‚Æ‚Å Facebook ‚ÉƒƒOƒCƒ“‚µ‚½ó‘Ô‚ÅƒƒCƒ“ƒy[ƒW‚ÉƒAƒNƒZƒX‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚Ì‚Å‚·B
 
 
-â– ã‚¦ã‚§ãƒ–ãƒšãƒ¼ã‚¸ã®å–å¾— - Invoke-WebRequest (wget)
+¡ƒEƒFƒuƒy[ƒW‚Ìæ“¾ - Invoke-WebRequest (wget)
 http://yanor.net/wiki/?PowerShell%2F%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%83%AC%E3%83%83%E3%83%88%2F%E3%82%A6%E3%82%A7%E3%83%96%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E5%8F%96%E5%BE%97%20-%20Invoke-WebRequest%20%28wget%29
 
 GET
@@ -1163,11 +1386,11 @@ POST
 $params = @{ name = "taro"; age = 10 } 
 $res = Invoke-WebRequest -Method Post -Uri http://example.com/ -Body $params
 
-å‚è€ƒ
+Ql
 http://technet.microsoft.com/library/3e3dac17-3373-4d22-a54a-9d56a4a556c3(v=wps.630).aspx
 
 -------
-â– PowerShell ã§ãƒ–ãƒ©ã‚¦ã‚¶ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚­ãƒ£ãƒ—ãƒãƒ£ã‚’ã¨ã‚‹
+¡PowerShell ‚Åƒuƒ‰ƒEƒU‚ÌƒXƒNƒŠ[ƒ“ƒLƒƒƒvƒ`ƒƒ‚ğ‚Æ‚é
 http://rainyday.blog.so-net.ne.jp/2007-04-21
 #[String]$url='http://www.yahoo.co.jp/';[String]$filename='C:\Users\ishi\Desktop\test.png';[String]$format='png'
 
@@ -1177,13 +1400,13 @@ if (!$url -or !$filename) { return }
 
 $ie = new-object -com InternetExplorer.Application
 
-# URL ã‚’é–‹ã
+# URL ‚ğŠJ‚­
 $ie.Navigate($url)
 
-# ãƒšãƒ¼ã‚¸ã‚’ãƒ­ãƒ¼ãƒ‰ã—çµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
+# ƒy[ƒW‚ğƒ[ƒh‚µI‚í‚é‚Ü‚Å‘Ò‚Â
 while ($ie.Busy) {sleep -milliseconds 50}
 
-# ãƒãƒ¼é–¢é€£ã¯ã™ã¹ã¦æ¶ˆã—ã¦ IE ã‚’å¯è¦–åŒ–
+# ƒo[ŠÖ˜A‚Í‚·‚×‚ÄÁ‚µ‚Ä IE ‚ğ‰Â‹‰»
 $ie.StatusBar = $false
 $ie.ToolBar = $false
 $ie.MenuBar = $false
@@ -1192,14 +1415,14 @@ $ie.Visible = $true
 
 while ($ie.Busy) {sleep -seconds 10}
 
-# IE ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’å‰é¢ã«æŒã£ã¦ãã‚‹
+# IE ‚ÌƒEƒBƒ“ƒhƒE‚ğ‘O–Ê‚É‚Á‚Ä‚­‚é
 $wsh = new-object -com WScript.Shell
 
 #$wsh.AppActivate('Explorer')
 
 while (-not $wsh.AppActivate('Explorer')) {sleep -seconds 5}
 
-# ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚­ãƒ£ãƒ—ãƒãƒ£
+# ƒXƒNƒŠ[ƒ“ƒLƒƒƒvƒ`ƒƒ
 $bitmap = new-object Drawing.Bitmap($ie.Width, $ie.Height)
 $graphics = [Drawing.Graphics]::FromImage($bitmap)
 $graphics.CopyFromScreen($ie.Left, $ie.Top, 0, 0, $bitmap.Size)
@@ -1210,7 +1433,7 @@ $ie.Quit()
 
 
 -------
-â– ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚ŒãŸã‚½ãƒ•ãƒˆ
+¡ƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚½ƒ\ƒtƒg
 Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' |
 	Get-ItemProperty |
 		sort displayname |
@@ -1222,7 +1445,7 @@ DisplayName
 DisplayIcon
 DisplayVersion
 Publisher
-ãƒ»ãƒ»ãƒ»
+EEE
 
 Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' | %{ Write-Output( $_.GetValue('DisplayName') +"`t"+ $_.GetValue('Publisher') ) }
 
@@ -1232,7 +1455,7 @@ Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' |
 		 ft -auto
 
 -------
-â– ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®è¿½åŠ ã¨å‰Šé™¤
+¡ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì’Ç‰Á‚Æíœ
 http://mtgpowershell.blogspot.jp/2010/06/blog-post_12.html
 $path = '\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
 Get-ChildItem -Path ( ('HKLM:'+$path), ('HKCU:'+$path) ) |
@@ -1243,7 +1466,7 @@ Get-ChildItem -Path ( ('HKLM:'+$path), ('HKCU:'+$path) ) |
 
 
 -------
-â– IPã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ»ã‚µãƒ–ãƒãƒƒãƒˆã®è¡¨ç¤º
+¡IPƒAƒhƒŒƒXEƒTƒuƒlƒbƒg‚Ì•\¦
 Param( [String]$indata1, [String]$indata2 )
 
 # Calc IP Address Range form Net-Mask Description
@@ -1323,7 +1546,7 @@ exit
 
 ======================================================================
 ======================================================================
-â– PowerShellã§ã‚µãƒ¼ãƒã§å‹•ã„ã¦ã„ã‚‹ãƒ—ãƒ­ã‚»ã‚¹ã‚’çŸ¥ã‚ŠãŸã„
+¡PowerShell‚ÅƒT[ƒo‚Å“®‚¢‚Ä‚¢‚éƒvƒƒZƒX‚ğ’m‚è‚½‚¢
 http://tech.guitarrapc.com/entry/2013/01/08/030100
 Paformance Counter
 ======================================================================
@@ -1457,12 +1680,12 @@ seaport               0     0
 mediago               0     0
 
 
-Get-Counter : ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚µãƒ³ãƒ—ãƒ«ã®ã„ãšã‚Œã‹ã«å«ã¾ã‚Œã‚‹ãƒ‡ãƒ¼ã‚¿ãŒç„¡åŠ¹ã§ã™ã€‚å„ PerformanceCounterSample ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® Status ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’
-è¡¨ç¤ºã—ã¦ã€æœ‰åŠ¹ãªãƒ‡ãƒ¼ã‚¿ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚
-ç™ºç”Ÿå ´æ‰€ è¡Œ:1 æ–‡å­—:27
+Get-Counter : ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[‚ÌƒTƒ“ƒvƒ‹‚Ì‚¢‚¸‚ê‚©‚ÉŠÜ‚Ü‚ê‚éƒf[ƒ^‚ª–³Œø‚Å‚·BŠe PerformanceCounterSample ƒIƒuƒWƒFƒNƒg‚Ì Status ƒvƒƒpƒeƒB‚ğ
+•\¦‚µ‚ÄA—LŒø‚Èƒf[ƒ^‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚±‚Æ‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B
+”­¶êŠ s:1 •¶š:27
 + while($true){ (Get-Counter <<<<  "\Process(*)\% Processor Time").CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::ro
 und($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 30 | ft -auto; Start-Sleep -Seconds 30 }
-    + CategoryInfo          : InvalidResult: (:) [Get-Counter]ã€Exception
+    + CategoryInfo          : InvalidResult: (:) [Get-Counter]AException
     + FullyQualifiedErrorId : CounterApiError,Microsoft.PowerShell.Commands.GetCounterCommand
 
 
@@ -1505,8 +1728,8 @@ PS C:\> Get-Counter -ListSet Process
 CounterSetName     : Process
 MachineName        : .
 CounterSetType     : MultiInstance
-Description        : Process ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€å®Ÿè¡Œä¸­ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¨ã‚·ã‚¹ãƒ†ãƒ å‡¦ç†ã‚’ç›£è¦–ã™ã‚‹ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ãŒã‚ã‚Šã¾ã™ã€‚
-                     ãƒ—ãƒ­ã‚»ã‚¹å†…ã®ã™ã¹ã¦ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã¯åŒã˜ã‚¢ãƒ‰ãƒ¬ã‚¹é ˜åŸŸã‚’å…±æœ‰ã—ã€åŒã˜ãƒ‡ãƒ¼ã‚¿ã¸ã‚¢ã‚¯ã‚»ã‚¹ã—ã¾ã™ã€‚
+Description        : Process ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAÀs’†‚ÌƒvƒƒOƒ‰ƒ€‚ÆƒVƒXƒeƒ€ˆ—‚ğŠÄ‹‚·‚éƒJƒEƒ“ƒ^[‚ª‚ ‚è‚Ü‚·B
+                     ƒvƒƒZƒX“à‚Ì‚·‚×‚Ä‚ÌƒXƒŒƒbƒh‚Í“¯‚¶ƒAƒhƒŒƒX—Ìˆæ‚ğ‹¤—L‚µA“¯‚¶ƒf[ƒ^‚ÖƒAƒNƒZƒX‚µ‚Ü‚·B
 Paths              : {\Process(*)\% Processor Time, \Process(*)\% User Time, \Process(*)\% Privileged Time, \Process(*)
                      \Virtual Bytes Peak...}
 PathsWithInstances : {\Process(Idle)\% Processor Time, \Process(System)\% Processor Time, \Process(smss)\% Processor Ti
@@ -1548,114 +1771,114 @@ PS> Get-Counter -ListSet * | Select-Object CounterSetName, Description | ft -aut
 
 CounterSetName                                Description
 --------------                                -----------
-TBS counters                                  TPM ãƒ™ãƒ¼ã‚¹ ã‚µãƒ¼ãƒ“ã‚¹ ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã§ã™ã€‚
-WSMan Quota Statistics                        WS-Management ãƒ—ãƒ­ã‚»ã‚¹ã®ã‚¯ã‚©ãƒ¼ã‚¿ä½¿ç”¨çŠ¶æ³ã¨é•åã«é–¢ã™ã‚‹æƒ…å ±ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚
+TBS counters                                  TPM ƒx[ƒX ƒT[ƒrƒX ƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[‚Å‚·B
+WSMan Quota Statistics                        WS-Management ƒvƒƒZƒX‚ÌƒNƒH[ƒ^g—pó‹µ‚Æˆá”½‚ÉŠÖ‚·‚éî•ñ‚ğ•\¦‚µ‚Ü‚·B
 BranchCache                                   Counters for measuring bandwidth and latency for BranchCache.
-Synchronization                               ã‚«ãƒ¼ãƒãƒ«åŒæœŸã®ãŸã‚ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã§æ§‹æˆã•ã‚Œã¾ã™ã€‚åŒæœŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã€å„ãƒ—...
-Event Tracing for Windows                     ã“ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã¯ã€Windows ã‚¤ãƒ™ãƒ³ãƒˆ ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚° ã‚µãƒ–ã‚·ã‚¹...
-Processor Information                         ãƒ—ãƒ­ã‚»ãƒƒã‚µæƒ…å ±ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆã«ã¯ã€ãƒ—ãƒ­ã‚»ãƒƒã‚µã®å‡¦ç†çŠ¶...
-Event Tracing for Windows Session             ã“ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã¯ã€å€‹ã€…ã® Windows ã‚¤ãƒ™ãƒ³ãƒˆ ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚° ...
-Per Processor Network Activity Cycles         Per Processor Network Activity Cycles ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆã¯ã€å„ãƒ—ãƒ­ã‚»ãƒƒ...
-Per Processor Network Interface Card Activity Per Processor Network Interface Card Activity ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆã¯ã€ãƒ—...
-Distributed Routing Table                     åˆ†æ•£ãƒ«ãƒ¼ãƒ†ã‚£ãƒ³ã‚° ãƒ†ãƒ¼ãƒ–ãƒ« (DRT) ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã€ãƒ­ãƒ¼ã‚«...
-Netlogon                                      Netlogon ãƒ­ã‚°ã‚ªãƒ³ã®ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ã‚’æ¸¬å®šã™ã‚‹ãŸã‚ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã§ã™ã€‚
-RemoteFX Network                              ã‚»ãƒƒã‚·ãƒ§ãƒ³ã‚ãŸã‚Šã® RemoteFX ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆ...
-RemoteFX Graphics                             RemoteFX ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚° ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã€RemoteFX ã‚°ãƒ©...
+Synchronization                               ƒJ[ƒlƒ‹“¯Šú‚Ì‚½‚ß‚ÌƒJƒEƒ“ƒ^[‚Å\¬‚³‚ê‚Ü‚·B“¯ŠúƒIƒuƒWƒFƒNƒg‚ÍAŠeƒv...
+Event Tracing for Windows                     ‚±‚ÌƒRƒŒƒNƒVƒ‡ƒ“‚ÌƒJƒEƒ“ƒ^[‚ÍAWindows ƒCƒxƒ“ƒg ƒgƒŒ[ƒVƒ“ƒO ƒTƒuƒVƒX...
+Processor Information                         ƒvƒƒZƒbƒTî•ñƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[ ƒZƒbƒg‚É‚ÍAƒvƒƒZƒbƒT‚Ìˆ—ó...
+Event Tracing for Windows Session             ‚±‚ÌƒRƒŒƒNƒVƒ‡ƒ“‚ÌƒJƒEƒ“ƒ^[‚ÍAŒÂX‚Ì Windows ƒCƒxƒ“ƒg ƒgƒŒ[ƒVƒ“ƒO ...
+Per Processor Network Activity Cycles         Per Processor Network Activity Cycles ƒJƒEƒ“ƒ^[ ƒZƒbƒg‚ÍAŠeƒvƒƒZƒb...
+Per Processor Network Interface Card Activity Per Processor Network Interface Card Activity ƒJƒEƒ“ƒ^[ ƒZƒbƒg‚ÍAƒv...
+Distributed Routing Table                     •ªUƒ‹[ƒeƒBƒ“ƒO ƒe[ƒuƒ‹ (DRT) ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚ÍAƒ[ƒJ...
+Netlogon                                      Netlogon ƒƒOƒIƒ“‚ÌƒpƒtƒH[ƒ}ƒ“ƒX‚ğ‘ª’è‚·‚é‚½‚ß‚ÌƒJƒEƒ“ƒ^[‚Å‚·B
+RemoteFX Network                              ƒZƒbƒVƒ‡ƒ“‚ ‚½‚è‚Ì RemoteFX ƒlƒbƒgƒ[ƒN ƒJƒEƒ“ƒ^[‚ÌƒJƒEƒ“ƒ^[ ƒZƒbƒg...
+RemoteFX Graphics                             RemoteFX ƒGƒ“ƒR[ƒfƒBƒ“ƒO ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚ÍARemoteFX ƒOƒ‰...
 Windows Media Player Metadata                 Windows Media Player Metadata
-HTTP Service                                  HTTP ã‚µãƒ¼ãƒ“ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚»ãƒƒãƒˆ
-HTTP Service Url Groups                       URL ã‚°ãƒ«ãƒ¼ãƒ—å›ºæœ‰ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚»ãƒƒãƒˆ
-HTTP Service Request Queues                   è¦æ±‚ã‚­ãƒ¥ãƒ¼ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚»ãƒƒãƒˆ
-Power Meter                                   ã“ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆã¯ã€é›»åŠ›ã®è¨ˆæ¸¬ã¨å‰²ã‚Šå½“ã¦ã«é–¢ã™ã‚‹æƒ…å ±ã‚’ç¤ºã—ã¾ã™ã€‚
+HTTP Service                                  HTTP ƒT[ƒrƒX ƒJƒEƒ“ƒ^[‚ÌƒZƒbƒg
+HTTP Service Url Groups                       URL ƒOƒ‹[ƒvŒÅ—LƒJƒEƒ“ƒ^[‚ÌƒZƒbƒg
+HTTP Service Request Queues                   —v‹ƒLƒ…[ ƒJƒEƒ“ƒ^[‚ÌƒZƒbƒg
+Power Meter                                   ‚±‚ÌƒJƒEƒ“ƒ^[ ƒZƒbƒg‚ÍA“d—Í‚ÌŒv‘ª‚ÆŠ„‚è“–‚Ä‚ÉŠÖ‚·‚éî•ñ‚ğ¦‚µ‚Ü‚·B
 ServiceModelEndpoint 4.0.0.0                  ServiceModel performance counters for endpoint
 ServiceModelOperation 4.0.0.0                 ServiceModelOperation 4.0.0.0 performance counters
 ServiceModelService 4.0.0.0                   ServiceModel performance counters for service
-Teredo Client                                 Teredo ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®çµ±è¨ˆã§ã™ã€‚
-Teredo Server                                 ã“ã®ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã§ãƒ›ã‚¹ãƒˆã•ã‚Œã¦ã„ã‚‹ Teredo ã‚µãƒ¼ãƒãƒ¼ã®çµ±è¨ˆã§ã™ã€‚
-IPHTTPS Global                                ã“ã®ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã§ã® IPHTTPS ã‚µãƒ¼ãƒãƒ¼ã®çµ±è¨ˆã§ã™ã€‚
-IPHTTPS Session                               ã“ã® IPHTTPS ã‚µãƒ¼ãƒãƒ¼ã§ã®ã‚»ãƒƒã‚·ãƒ§ãƒ³å˜ä½ã®çµ±è¨ˆã§ã™ã€‚
-Teredo Relay                                  ã“ã®ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ä¸Šã§ãƒ›ã‚¹ãƒˆã•ã‚Œã¦ã„ã‚‹ Teredo ãƒªãƒ¬ãƒ¼ã®çµ±è¨ˆã§ã™ã€‚
-IPsec IKEv1 IPv6                              IPsec IKEv1 IPv6 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 6 ã‚’ä»‹ã—ãŸãƒˆ...
-IPsec IKEv1 IPv4                              IPsec IKEv1 IPv4 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 4 ã‚’ä»‹ã—ãŸãƒˆ...
-IPsec IKEv2 IPv6                              IPsec IKEv2 IPv6 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 6 ã‚’ä»‹ã—ãŸãƒˆ...
-IPsec AuthIP IPv6                             IPsec AuthIP IPv6 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 6 ã‚’ä»‹ã—ãŸ...
-IPsec AuthIP IPv4                             IPsec AuthIP IPv4 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 4 ã‚’ä»‹ã—ãŸ...
-IPsec IKEv2 IPv4                              IPsec IKEv2 IPv4 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 4 ã‚’ä»‹ã—ãŸãƒˆ...
+Teredo Client                                 Teredo ƒNƒ‰ƒCƒAƒ“ƒg‚Ì“Œv‚Å‚·B
+Teredo Server                                 ‚±‚ÌƒRƒ“ƒsƒ…[ƒ^[‚ÅƒzƒXƒg‚³‚ê‚Ä‚¢‚é Teredo ƒT[ƒo[‚Ì“Œv‚Å‚·B
+IPHTTPS Global                                ‚±‚ÌƒRƒ“ƒsƒ…[ƒ^[‚Å‚Ì IPHTTPS ƒT[ƒo[‚Ì“Œv‚Å‚·B
+IPHTTPS Session                               ‚±‚Ì IPHTTPS ƒT[ƒo[‚Å‚ÌƒZƒbƒVƒ‡ƒ“’PˆÊ‚Ì“Œv‚Å‚·B
+Teredo Relay                                  ‚±‚ÌƒRƒ“ƒsƒ…[ƒ^[ã‚ÅƒzƒXƒg‚³‚ê‚Ä‚¢‚é Teredo ƒŠƒŒ[‚Ì“Œv‚Å‚·B
+IPsec IKEv1 IPv6                              IPsec IKEv1 IPv6 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 6 ‚ğ‰î‚µ‚½ƒg...
+IPsec IKEv1 IPv4                              IPsec IKEv1 IPv4 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 4 ‚ğ‰î‚µ‚½ƒg...
+IPsec IKEv2 IPv6                              IPsec IKEv2 IPv6 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 6 ‚ğ‰î‚µ‚½ƒg...
+IPsec AuthIP IPv6                             IPsec AuthIP IPv6 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 6 ‚ğ‰î‚µ‚½...
+IPsec AuthIP IPv4                             IPsec AuthIP IPv4 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 4 ‚ğ‰î‚µ‚½...
+IPsec IKEv2 IPv4                              IPsec IKEv2 IPv4 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 4 ‚ğ‰î‚µ‚½ƒg...
 Generic IKEv1, AuthIP, and IKEv2              Generic IKEv1, AuthIP, and IKEv2 is the set of Internet Protocol secur...
-Client Side Caching                           å¸¯åŸŸå¹…æ¶ˆè²»ã‚’å‰Šæ¸›ã™ã‚‹ SMB BranchCache ã®ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-Offline Files                                 ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-Fax Service                                   FAX ã‚µãƒ¼ãƒ“ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆ
-Authorization Manager Applications            æ‰¿èªãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¸€é€£ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-Peer Name Resolution Protocol                 ãƒ”ã‚¢åè§£æ±ºãƒ—ãƒ­ãƒˆã‚³ãƒ« (PNRP) ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã€ä½¿ç”¨å¯èƒ½ãª...
-WFPv6                                         WFPv6 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 6 ã‚’ä»‹ã—ãŸãƒˆãƒ©ãƒ•ã‚£ãƒƒã‚¯...
-WFP                                           WFP ã¯ã€ç‰¹å®šã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã«é©ç”¨ã—ãªã„ Windows...
-IPsec Driver                                  IPsec Driver ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 4 ã¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒ...
-WFPv4                                         WFPv4 ã¯ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ ãƒ—ãƒ­ãƒˆã‚³ãƒ« ãƒãƒ¼ã‚¸ãƒ§ãƒ³ 4 ã‚’ä»‹ã—ãŸãƒˆãƒ©ãƒ•ã‚£ãƒƒã‚¯...
-Pacer Pipe                                    Pacer Pipe ã®ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆã¯ã€ãƒ‘ã‚±ãƒƒãƒˆ ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©...
-Pacer Flow                                    Pacer Flow ã®ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ ã‚»ãƒƒãƒˆã¯ã€ãƒ‘ã‚±ãƒƒãƒˆ ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©...
-Terminal Services                             ã‚¿ãƒ¼ãƒŸãƒŠãƒ« ã‚µãƒ¼ãƒ“ã‚¹è¦ç´„æƒ…å ±
+Client Side Caching                           ‘Ñˆæ•Á”ï‚ğíŒ¸‚·‚é SMB BranchCache ‚ÌƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+Offline Files                                 ƒIƒtƒ‰ƒCƒ“ ƒtƒ@ƒCƒ‹‚ÌƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+Fax Service                                   FAX ƒT[ƒrƒX ƒJƒEƒ“ƒ^[ ƒZƒbƒg
+Authorization Manager Applications            ³”Fƒ}ƒl[ƒWƒƒ[ ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ ƒIƒuƒWƒFƒNƒg‚Ìˆê˜A‚ÌƒJƒEƒ“ƒ^[
+Peer Name Resolution Protocol                 ƒsƒA–¼‰ğŒˆƒvƒƒgƒRƒ‹ (PNRP) ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚ÍAg—p‰Â”\‚È...
+WFPv6                                         WFPv6 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 6 ‚ğ‰î‚µ‚½ƒgƒ‰ƒtƒBƒbƒN...
+WFP                                           WFP ‚ÍA“Á’è‚ÌƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“‚É“K—p‚µ‚È‚¢ Windows...
+IPsec Driver                                  IPsec Driver ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 4 ‚ÆƒCƒ“ƒ^[ƒlƒb...
+WFPv4                                         WFPv4 ‚ÍAƒCƒ“ƒ^[ƒlƒbƒg ƒvƒƒgƒRƒ‹ ƒo[ƒWƒ‡ƒ“ 4 ‚ğ‰î‚µ‚½ƒgƒ‰ƒtƒBƒbƒN...
+Pacer Pipe                                    Pacer Pipe ‚ÌƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[ ƒZƒbƒg‚ÍAƒpƒPƒbƒg ƒXƒPƒWƒ…[ƒ‰...
+Pacer Flow                                    Pacer Flow ‚ÌƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[ ƒZƒbƒg‚ÍAƒpƒPƒbƒg ƒXƒPƒWƒ…[ƒ‰...
+Terminal Services                             ƒ^[ƒ~ƒiƒ‹ ƒT[ƒrƒX—v–ñî•ñ
 WorkflowServiceHost 4.0.0.0                   WorkflowServiceHost performance counters for workflow service
-MSDTC Bridge 4.0.0.0                          MSDTC Bridge 4.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-ServiceModelEndpoint 3.0.0.0                  ServiceModelEndpoint 3.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿
-ServiceModelOperation 3.0.0.0                 ServiceModelOperation 3.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿
-ServiceModelService 3.0.0.0                   ServiceModelService 3.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿
-SMSvcHost 3.0.0.0                             SMSvcHost 3.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿
-SMSvcHost 4.0.0.0                             SMSvcHost 4.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-.NET CLR Memory                               CLR ã‚¬ãƒ™ãƒ¼ã‚¸ ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ ãƒ’ãƒ¼ãƒ—ã®ã‚«ã‚¦ãƒ³ã‚¿ã§ã™ã€‚
-.NET CLR Interop                              CLR ç›¸äº’é‹ç”¨æ©Ÿèƒ½ã®çµ±è¨ˆã§ã™ã€‚
-.NET CLR Exceptions                           CLR ä¾‹å¤–å‡¦ç†ã®ãƒ©ãƒ³ã‚¿ã‚¤ãƒ çµ±è¨ˆã§ã™ã€‚
-.NET CLR Loading                              CLR ã‚¯ãƒ©ã‚¹ ãƒ­ãƒ¼ãƒ€ãƒ¼ã®çµ±è¨ˆ
-.NET CLR LocksAndThreads                      CLR ãƒ­ãƒƒã‚¯ãŠã‚ˆã³ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ±è¨ˆã§ã™ã€‚
-.NET CLR Jit                                  CLR Jit ã®çµ±è¨ˆã§ã™ã€‚
-.NET CLR Remoting                             CLR ãƒªãƒ¢ãƒ¼ãƒˆå‡¦ç†ã®çµ±è¨ˆã§ã™ã€‚
-.NET CLR Security                             CLR ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã®çµ±è¨ˆã§ã™ã€‚
-ASP.NET                                       ASP.NET ã‚°ãƒ­ãƒ¼ãƒãƒ« ãƒ‘ãƒ¼ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-ASP.NET Applications                          ASP.NET ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ ãƒ‘ãƒ¼ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-ASP.NET v4.0.30319                            ASP.NET ã‚°ãƒ­ãƒ¼ãƒãƒ« ãƒ‘ãƒ¼ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-ASP.NET Apps v4.0.30319                       ASP.NET ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ ãƒ‘ãƒ¼ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-ASP.NET State Service                         ASP.NET çŠ¶æ…‹ã‚µãƒ¼ãƒ“ã‚¹
-Windows Workflow Foundation                   Windows Workflow Foundation ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿
-WF (System.Workflow) 4.0.0.0                  Windows Workflow Foundation ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
-LogicalDisk                                   Logical Disk ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒãƒ¼ãƒ‰ ãƒ‡ã‚£ã‚¹ã‚¯ã¾ãŸã¯å›º...
-PhysicalDisk                                  Physical Disk ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒãƒ¼ãƒ‰ ãƒ‡ã‚£ã‚¹ã‚¯ã¾ãŸã¯å›º...
-Server                                        Server ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒ­ãƒ¼ã‚«ãƒ« ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã¨ãƒãƒƒ...
-Server Work Queues                            Server Work Queues ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ã‚­ãƒ¥ãƒ¼ã®é•·ã•ãŠã‚ˆã³...
-Redirector                                    Redirector ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒ­ãƒ¼ã‚«ãƒ« ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã‹...
-Browser                                       Browser ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€é€šçŸ¥ã€åˆ—æŒ™ãŠã‚ˆã³ Browser ä¼é€...
-Cache                                         Cache ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰èª­ã¿å–ã‚‹å¿…è¦ãªã—ã«...
-Processor                                     Processor ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒ—ãƒ­ã‚»ãƒƒã‚µã®å‡¦ç†çŠ¶æ³ã®ã‚¢ã‚¹...
-Memory                                        Memory ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ç‰©ç†ãƒ¡ãƒ¢ãƒªãŠã‚ˆã³ä»®æƒ³ãƒ¡ãƒ¢ãƒªã®å‹•...
-Objects                                       Object ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒ—ãƒ­ã‚»ã‚¹ã€ã‚¹ãƒ¬ãƒƒãƒ‰ã€ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒ...
-Paging File                                   Paging File ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒšãƒ¼ã‚¸ãƒ³ã‚° ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç›£è¦–...
-System                                        System ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ ãƒ—ãƒ­ã‚»ãƒƒã‚µã®è¤‡...
-Process                                       Process ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€å®Ÿè¡Œä¸­ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¨ã‚·ã‚¹ãƒ†ãƒ ...
-Thread                                        Thread ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ã‚¹ãƒ¬ãƒƒãƒ‰å‹•ä½œã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆã‚’è¨ˆæ¸¬...
-Job Object                                    ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«åå‰ã‚’ä»˜ã‘ã‚‰ã‚ŒãŸã‚¸ãƒ§ãƒ– ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã‚ˆã£ã¦åé›†ã•ã‚ŒãŸã‚¢ã‚«...
-Job Object Details                            ã‚¸ãƒ§ãƒ– ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚»ã‚¹ã«ã¤ã„ã¦ã®è©³ç´°ãªãƒ‘ãƒ•...
-ReadyBoost Cache                              ReadyBoost ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«é–¢ã™ã‚‹ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹çµ±è¨ˆæƒ…å ±ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚
-RAS Port                                      RAS ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç¨®é¡ã¯ã€ãŠä½¿ã„ã®ã‚·ã‚¹ãƒ†ãƒ ã® RAS ãƒ‡ãƒã‚¤ã‚¹ã®å„ãƒãƒ¼ãƒˆã‚’...
-RAS Total                                     RAS ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç¨®é¡ã¯ã€ãŠä½¿ã„ã®ã‚·ã‚¹ãƒ†ãƒ ã® RAS ãƒ‡ãƒã‚¤ã‚¹ã®ã™ã¹ã¦ã‚’çµ±...
-.NET CLR Data                                 .Net CLR ãƒ‡ãƒ¼ã‚¿ã§ã™ã€‚
-.NET CLR Networking                           ãƒ˜ãƒ«ãƒ—ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚
-.NET CLR Networking 4.0.0.0                   System.Net åå‰ç©ºé–“ã®ã‚¯ãƒ©ã‚¹ã®ã‚«ã‚¦ãƒ³ã‚¿ã§ã™ã€‚
-.NET Data Provider for Oracle                 System.Data.OracleClient ã®ã‚«ã‚¦ãƒ³ã‚¿ã§ã™ã€‚
-.NET Data Provider for SqlServer              System.Data.SqlClient ã®ã‚«ã‚¦ãƒ³ã‚¿ã§ã™ã€‚
-Print Queue                                   å°åˆ·ã‚­ãƒ¥ãƒ¼ã«é–¢ã™ã‚‹ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹çµ±è¨ˆæƒ…å ±ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚
-Telephony                                     ãƒ†ãƒ¬ãƒ•ã‚©ãƒ‹ãƒ¼ ã‚·ã‚¹ãƒ†ãƒ ã§ã™ã€‚
-NBT Connection                                NBT æ¥ç¶šãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€ãƒ­ãƒ¼ã‚«ãƒ« ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã¨ãƒªãƒ¢...
-Network Interface                             Network Interface ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€TCP/IP ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯...
-IPv4                                          IP ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€IP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦é€å—ä¿¡ã•ã‚Œ...
-ICMP                                          ICMP ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ã‚¿ã‚¤ãƒ—ã«ã¯ã€ICMP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚·ã‚¹ãƒ†ãƒ ã«...
-TCPv4                                         TCP ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§ã¯ã€TCP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦é€å—ä¿¡ã•...
-UDPv4                                         UDP ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€UDP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦é€å—ä¿¡ã•...
-IPv6                                          IP ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€IP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦é€å—ä¿¡ã•ã‚Œ...
-ICMPv6                                        ICMP ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ã‚¿ã‚¤ãƒ—ã«ã¯ã€ICMP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚·ã‚¹ãƒ†ãƒ ã«...
-TCPv6                                         TCP ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§ã¯ã€TCP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦é€å—ä¿¡ã•...
-UDPv6                                         UDP ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¯ã€UDP ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã‚’ä½¿ç”¨ã—ã¦é€å—ä¿¡ã•...
-Terminal Services Session                     ã‚¿ãƒ¼ãƒŸãƒŠãƒ« ã‚µãƒ¼ãƒ“ã‚¹å„ã‚»ãƒƒã‚·ãƒ§ãƒ³ã®ãƒªã‚½ãƒ¼ã‚¹ ãƒ¢ãƒ‹ã‚¿ãƒ¼ã§ã™ã€‚
-USB                                           USB I/O ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
+MSDTC Bridge 4.0.0.0                          MSDTC Bridge 4.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+ServiceModelEndpoint 3.0.0.0                  ServiceModelEndpoint 3.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^
+ServiceModelOperation 3.0.0.0                 ServiceModelOperation 3.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^
+ServiceModelService 3.0.0.0                   ServiceModelService 3.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^
+SMSvcHost 3.0.0.0                             SMSvcHost 3.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^
+SMSvcHost 4.0.0.0                             SMSvcHost 4.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+.NET CLR Memory                               CLR ƒKƒx[ƒW ƒRƒŒƒNƒVƒ‡ƒ“ ƒq[ƒv‚ÌƒJƒEƒ“ƒ^‚Å‚·B
+.NET CLR Interop                              CLR ‘ŠŒİ‰^—p‹@”\‚Ì“Œv‚Å‚·B
+.NET CLR Exceptions                           CLR —áŠOˆ—‚Ìƒ‰ƒ“ƒ^ƒCƒ€“Œv‚Å‚·B
+.NET CLR Loading                              CLR ƒNƒ‰ƒX ƒ[ƒ_[‚Ì“Œv
+.NET CLR LocksAndThreads                      CLR ƒƒbƒN‚¨‚æ‚ÑƒXƒŒƒbƒh‚Ì“Œv‚Å‚·B
+.NET CLR Jit                                  CLR Jit ‚Ì“Œv‚Å‚·B
+.NET CLR Remoting                             CLR ƒŠƒ‚[ƒgˆ—‚Ì“Œv‚Å‚·B
+.NET CLR Security                             CLR ƒZƒLƒ…ƒŠƒeƒB‚Ì“Œv‚Å‚·B
+ASP.NET                                       ASP.NET ƒOƒ[ƒoƒ‹ ƒp[ƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+ASP.NET Applications                          ASP.NET ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ ƒp[ƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+ASP.NET v4.0.30319                            ASP.NET ƒOƒ[ƒoƒ‹ ƒp[ƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+ASP.NET Apps v4.0.30319                       ASP.NET ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ ƒp[ƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+ASP.NET State Service                         ASP.NET ó‘ÔƒT[ƒrƒX
+Windows Workflow Foundation                   Windows Workflow Foundation ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^
+WF (System.Workflow) 4.0.0.0                  Windows Workflow Foundation ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^[
+LogicalDisk                                   Logical Disk ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒn[ƒh ƒfƒBƒXƒN‚Ü‚½‚ÍŒÅ...
+PhysicalDisk                                  Physical Disk ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒn[ƒh ƒfƒBƒXƒN‚Ü‚½‚ÍŒÅ...
+Server                                        Server ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒ[ƒJƒ‹ ƒRƒ“ƒsƒ…[ƒ^[‚Æƒlƒb...
+Server Work Queues                            Server Work Queues ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒLƒ…[‚Ì’·‚³‚¨‚æ‚Ñ...
+Redirector                                    Redirector ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒ[ƒJƒ‹ ƒRƒ“ƒsƒ…[ƒ^[‚©...
+Browser                                       Browser ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍA’Ê’mA—ñ‹“‚¨‚æ‚Ñ Browser “`‘—...
+Cache                                         Cache ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒfƒBƒXƒN‚©‚ç“Ç‚İæ‚é•K—v‚È‚µ‚É...
+Processor                                     Processor ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒvƒƒZƒbƒT‚Ìˆ—ó‹µ‚ÌƒAƒX...
+Memory                                        Memory ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍA•¨—ƒƒ‚ƒŠ‚¨‚æ‚Ñ‰¼‘zƒƒ‚ƒŠ‚Ì“®...
+Objects                                       Object ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒvƒƒZƒXAƒXƒŒƒbƒhAƒ~ƒ…[ƒeƒb...
+Paging File                                   Paging File ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒy[ƒWƒ“ƒO ƒtƒ@ƒCƒ‹‚ğŠÄ‹...
+System                                        System ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒRƒ“ƒ|[ƒlƒ“ƒg ƒvƒƒZƒbƒT‚Ì•¡...
+Process                                       Process ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAÀs’†‚ÌƒvƒƒOƒ‰ƒ€‚ÆƒVƒXƒeƒ€...
+Thread                                        Thread ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒXƒŒƒbƒh“®ì‚ÌƒAƒXƒyƒNƒg‚ğŒv‘ª...
+Job Object                                    ƒAƒNƒeƒBƒu‚É–¼‘O‚ğ•t‚¯‚ç‚ê‚½ƒWƒ‡ƒu ƒIƒuƒWƒFƒNƒg‚É‚æ‚Á‚ÄûW‚³‚ê‚½ƒAƒJ...
+Job Object Details                            ƒWƒ‡ƒu ƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚éƒAƒNƒeƒBƒu‚ÈƒvƒƒZƒX‚É‚Â‚¢‚Ä‚ÌÚ×‚Èƒpƒt...
+ReadyBoost Cache                              ReadyBoost ƒLƒƒƒbƒVƒ…‚ÉŠÖ‚·‚éƒpƒtƒH[ƒ}ƒ“ƒX“Œvî•ñ‚ğ•\¦‚µ‚Ü‚·B
+RAS Port                                      RAS ƒIƒuƒWƒFƒNƒg‚Ìí—Ş‚ÍA‚¨g‚¢‚ÌƒVƒXƒeƒ€‚Ì RAS ƒfƒoƒCƒX‚ÌŠeƒ|[ƒg‚ğ...
+RAS Total                                     RAS ƒIƒuƒWƒFƒNƒg‚Ìí—Ş‚ÍA‚¨g‚¢‚ÌƒVƒXƒeƒ€‚Ì RAS ƒfƒoƒCƒX‚Ì‚·‚×‚Ä‚ğ“...
+.NET CLR Data                                 .Net CLR ƒf[ƒ^‚Å‚·B
+.NET CLR Networking                           ƒwƒ‹ƒv‚Íg—p‚Å‚«‚Ü‚¹‚ñB
+.NET CLR Networking 4.0.0.0                   System.Net –¼‘O‹óŠÔ‚ÌƒNƒ‰ƒX‚ÌƒJƒEƒ“ƒ^‚Å‚·B
+.NET Data Provider for Oracle                 System.Data.OracleClient ‚ÌƒJƒEƒ“ƒ^‚Å‚·B
+.NET Data Provider for SqlServer              System.Data.SqlClient ‚ÌƒJƒEƒ“ƒ^‚Å‚·B
+Print Queue                                   ˆóüƒLƒ…[‚ÉŠÖ‚·‚éƒpƒtƒH[ƒ}ƒ“ƒX“Œvî•ñ‚ğ•\¦‚µ‚Ü‚·B
+Telephony                                     ƒeƒŒƒtƒHƒj[ ƒVƒXƒeƒ€‚Å‚·B
+NBT Connection                                NBT Ú‘±ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAƒ[ƒJƒ‹ ƒRƒ“ƒsƒ…[ƒ^[‚ÆƒŠƒ‚...
+Network Interface                             Network Interface ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍATCP/IP ƒlƒbƒgƒ[ƒN...
+IPv4                                          IP ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAIP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‘—óM‚³‚ê...
+ICMP                                          ICMP ƒIƒuƒWƒFƒNƒg ƒ^ƒCƒv‚É‚ÍAICMP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‚¢‚éƒVƒXƒeƒ€‚É...
+TCPv4                                         TCP ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚Å‚ÍATCP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‘—óM‚³...
+UDPv4                                         UDP ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAUDP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‘—óM‚³...
+IPv6                                          IP ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAIP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‘—óM‚³‚ê...
+ICMPv6                                        ICMP ƒIƒuƒWƒFƒNƒg ƒ^ƒCƒv‚É‚ÍAICMP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‚¢‚éƒVƒXƒeƒ€‚É...
+TCPv6                                         TCP ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚Å‚ÍATCP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‘—óM‚³...
+UDPv6                                         UDP ƒpƒtƒH[ƒ}ƒ“ƒX ƒIƒuƒWƒFƒNƒg‚É‚ÍAUDP ƒvƒƒgƒRƒ‹‚ğg—p‚µ‚Ä‘—óM‚³...
+Terminal Services Session                     ƒ^[ƒ~ƒiƒ‹ ƒT[ƒrƒXŠeƒZƒbƒVƒ‡ƒ“‚ÌƒŠƒ\[ƒX ƒ‚ƒjƒ^[‚Å‚·B
+USB                                           USB I/O ƒJƒEƒ“ƒ^[
 .NET Memory Cache 4.0                         System.Runtime.Caching.MemoryCache Performance Counters
-MSDTC Bridge 3.0.0.0                          MSDTC Bridge 3.0.0.0 ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ ã‚«ã‚¦ãƒ³ã‚¿
-Search Indexer                                ã‚¤ãƒ³ãƒ‡ã‚¯ã‚µãƒ¼ PlugIn çµ±è¨ˆã§ã™
+MSDTC Bridge 3.0.0.0                          MSDTC Bridge 3.0.0.0 ƒpƒtƒH[ƒ}ƒ“ƒX ƒJƒEƒ“ƒ^
+Search Indexer                                ƒCƒ“ƒfƒNƒT[ PlugIn “Œv‚Å‚·
 
 
 PS> (Get-Counter '\Process(*)\% Processor Time' -SampleInterval 10).CounterSamples | select InstanceName, Status, @{label="CPU";expression={[Math]::round($_.CookedValue / $Env:NUMBER_OF_PROCESSORS, 2)}}| Sort-Object CPU -Descending | Select-Object -First 15 | ft -auto
@@ -1794,3 +2017,32 @@ Win32_PerfFormattedData_WindowsWorkflowFoundation3000_WindowsWorkflowFoundation
 Win32_PerfFormattedData_WindowsWorkflowFoundation4000_WFSystemWorkflow4000
 Win32_PerfFormattedData_WorkflowServiceHost4000_WorkflowServiceHost4000
 Win32_PerfFormattedData_WSearchIdxPi_SearchIndexer
+
+======================================================================
+¡PowerShell‚Åƒtƒ@ƒCƒ‹‚ğƒRƒs[Awavegain‚Å‰¹—ÊŠm”F
+
+$target_dir = '\\10.112.36.70\HAP_Internal\MUSIC\'
+$wk_dir  = 'C:\Users\ishi\Desktop\Gain\'
+
+$wk_flac = $wk_dir+'wk.flac'
+$wk_wav  = $wk_dir+'wk.wav'
+$pg_flag = $wk_dir+'flac.exe'
+$pg_wvgn = $wk_dir+'wavegain.exe'
+
+Get-ChildItem $target_dir -File -Recurse | Sort-Object FullName |
+	%{
+		$f = $_.Name
+		Copy-Item $_.FullName $wk_flac
+#			Write-Output ('D1: ' + $_.FullName + "`t" + $wk_flac + "`t" + $?)
+		$r = &$pg_flag -d -f $wk_flac 2>&1
+		$r = &$pg_wvgn       $wk_wav  2>&1
+#			Write-Output ($r)
+
+		$r | %{ if( $_ -match '([-\+]\d+\.\d+) dB' ){Write-Output( $matches[1] + "`t" + $f )} }
+
+		trap{
+			Write-Output 'Exception Occured.'
+			Write-Output $Error[0]
+			Write-Output $Error[0].InvocationInfo.PositionMessage
+		}
+	}
