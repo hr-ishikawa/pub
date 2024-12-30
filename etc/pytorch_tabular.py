@@ -2,6 +2,7 @@
 
 # pipy pytorch-tabular 1.1.1 https://pypi.org/project/pytorch-tabular/#usage  
 # github pytorch_tabular
+# Documant PyTorch Tabular https://pytorch-tabular.readthedocs.io/en/latest/
 
 # pip install -U “pytorch_tabular[extra]”
 # pip install -U “pytorch_tabular”
