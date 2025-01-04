@@ -1,53 +1,51 @@
-Perplexity: boostの入手・インストールを含めた、lightgbm をwindows, CUDA対応のビルド完全手順
+Perplexity: boostの入手・インストールを含めた、Anaconda環境での、lightgbm をwindows, CUDA対応のビルド手順
 
-LightGBMをWindows環境でCUDA対応でビルドする完全手順を以下に示します。Boostの入手とインストールも含めています。
+Anaconda環境が「アクティブ」な状態でのLightGBMの正確なビルドとインストール手順は以下の通りです：
 
-## 必要な環境の準備
-
-1. Visual Studio（C++開発環境）をインストール
-2. CMakeをダウンロードしてインストール
-3. Git for Windowsをインストール
-4. CUDA Toolkitをインストール（NVIDIAの公式サイトから最新版を入手）
-
-## Boostのインストール
-
-1. Boostの公式サイトから最新版（例：boost_1_80_0.zip）をダウンロード
-2. ダウンロードしたZIPファイルを`C:\local\`に展開（例：`C:\local\boost_1_80_0`）
-3. コマンドプロンプトを管理者権限で開き、以下のコマンドを実行:
+1. Anaconda環境のアクティブ化:
    ```
-   cd C:\local\boost_1_80_0
-   bootstrap.bat
-   b2 --toolset=msvc-14.2 address-model=64 --build-type=complete stage
+   conda activate your_environment_name
+   ```
+   (your_environment_nameは作成した環境の名前に置き換えてください)
+
+2. 必要な依存関係のインストール:
+   ```
+   conda install cmake
+   conda install -c conda-forge boost
    ```
 
-## LightGBMのビルド
-
-1. ソースコードの取得:
+3. LightGBMのソースコードの取得:
    ```
    git clone --recursive https://github.com/microsoft/LightGBM
    cd LightGBM
    ```
 
-2. ビルドディレクトリの作成と移動:
+4. ビルドディレクトリの作成とCMakeの実行:
    ```
    mkdir build
    cd build
+   cmake -A x64 -DUSE_GPU=1 -DUSE_CUDA=1 ..
    ```
 
-3. CMakeの実行:
-   ```
-   cmake -A x64 -DUSE_GPU=1 -DUSE_CUDA=1 -DBOOST_ROOT=C:/local/boost_1_80_0 -DBOOST_LIBRARYDIR=C:/local/boost_1_80_0/stage/lib ..
-   ```
-
-4. ビルドの実行:
+5. ビルドの実行:
    ```
    cmake --build . --target ALL_BUILD --config Release
    ```
 
-5. Pythonパッケージのインストール:
+6. Pythonパッケージのインストール:
    ```
    cd ../python-package
-   python setup.py install --precompile
+   python setup.py install
+   ```
+
+この手順を踏むことで、Anaconda環境内でLightGBMをビルドし、インストールすることができます。環境がアクティブな状態でこれらのコマンドを実行することで、LightGBMは自動的にその環境のサイトパッケージディレクトリにインストールされ、Pythonから直接インポートして使用できるようになります。
+
+Citations:
+[1] https://effegma.com/install-anaconda/
+[2] https://freelance.shiftinc.jp/column/python-anaconda
+[3] https://zenn.dev/makio/articles/69e38f5c90033e
+[4] https://qiita.com/t2y/items/2a3eb58103e85d8064b6
+[5] https://qiita.com/ozaki_physics/items/985188feb92570e5b82d
    ```
 
 ## 動作確認
