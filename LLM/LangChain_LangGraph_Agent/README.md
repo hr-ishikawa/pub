@@ -3,6 +3,14 @@
 https://gihyo.jp/book/2024/978-4-297-14530-9  
 https://github.com/GenerativeAgents/agent-book  
 
+---
+### 11.2　18のエージェントデザインパターン
+- パッシブゴールクリエイター (Passive Goal Creator)  
+与えられた入力や状況から“暗黙の目標”を推定・生成するコンポーネント／設計パターン   
+入力クエリ => Prompt + LLM で目標を作成 => 次段へ   
+
+---
+
 ## 目次
 
 ### 第1章　LLMアプリケーション開発の基礎
