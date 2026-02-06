@@ -23,5 +23,6 @@ from pprint import pprint
 tokenizer = Dictionary().create()
 
 text = '今日は、良い天気です。'
-pprint([(t.surface(), t.part_of_speech()) for t in tokenizer.tokenize(text)])
+tokens = tokenizer.tokenize(text)
+pprint([(t.surface(), t.part_of_speech()) for t in tokens])
 ```
