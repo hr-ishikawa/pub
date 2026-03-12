@@ -57,9 +57,9 @@ pprint(get_hyperparameter_config('zeroshot_2025_12_18_gpu')['TABM'])
 
 #### Model Informations
 
-predictor.leaderboard(silent=True)
-predictor.model_names()
-predictor.info()
+predictor.leaderboard(silent=True)  
+predictor.model_names()  
+predictor.info()  
 
 #### Install
 
