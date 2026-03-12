@@ -53,4 +53,16 @@ pprint(get_hyperparameter_config('zeroshot_2025_12_18_gpu')['TABM'])
   'weight_decay': 0.0},
  {'ag_args': {'name_suffix': '_r124', 'priority': -17}, ...},
 ...}]
-'''
+```
+
+#### Model Informations
+
+predictor.leaderboard(silent=True)
+predictor.model_names()
+predictor.info()
+
+#### Install
+
+pip install torch==2.9.1+cu128 torchvision==0.24.1+cu128 torchaudio==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128  
+pip install autogluon.tabular[tabarena] autogluon.multimodal  
+
