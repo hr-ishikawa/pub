@@ -1,4 +1,7 @@
-## 現場で活用するためのAIエージェント実践入門 講談社サイエンティフィック社
+## 現場で活用するためのAIエージェント実践入門 
+講談社サイエンティフィック社  
+太田真人／宮脇峻平／西見公宏／後藤勇輝／阿田木勇八・著  
+発行 2025/07/15  
 
 https://www.kspub.co.jp/book/detail/5401408.html  
 https://github.com/masamasa59/genai-agent-advanced-book  
