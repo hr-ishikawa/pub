@@ -1,4 +1,4 @@
-### LLM API を使ってLLMをやってみる
+### LLM API を使っていろいろやってみる
 Geminiには無料使用枠がある。  
 Gemini APIの各モデルの利用料金については以下を参照  
 https://ai.google.dev/gemini-api/docs/pricing?hl=ja  
